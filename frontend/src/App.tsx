@@ -16,17 +16,11 @@ function App() {
     
 
     return (
-        <div id="App">
-            <img src={logo} id="logo" alt="logo"/>
-            <div id="result" className="result">{resultText}</div>
-            <div id="input" className="input-box">
-                <div id="result" className="result">{resultText}</div>
-<div>
-    {name && <p>Container: {name}</p>}
-</div>
-                <button className="btn" onClick={greet}>Greet</button>
+        <div className='bg-white w-screen h-screen justify-center flex'>
+            
+                <button className="bg-red-500 rounded" onClick={greet}>Greet</button>
             </div>
-        </div>
+
     )
 }
 
