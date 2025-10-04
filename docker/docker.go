@@ -40,10 +40,11 @@ func (d *Docker) Startup(ctx context.Context) {
 }
 
 // Greet returns a greeting for the given name
-func (d *Docker) ContainersList() []string {
+func (d *Docker) ContainersList() []container.Summary {
 	containers, err := d.cli.ContainerList(context.Background(), container.ListOptions{All: true})
 	if err != nil {
 		panic(err)
 	}
-	return containers[0].Names
+
+	return containers
 }

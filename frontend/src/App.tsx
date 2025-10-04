@@ -8,9 +8,8 @@ function App() {
     const [name, setName] = useState<string>();
 
     function greet() {
-    ContainersList().then((resp: string[]) => {
-        setName(resp[0])               // guarda primeiro container
-        setResultText(resp[0] ?? "")   // mostra também no resultText
+    ContainersList().then((resp: any) => {
+        console.log(resp)
     })
 }
 
