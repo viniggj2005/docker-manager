@@ -5,3 +5,11 @@
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
+
+export function LoadImage(arg1) {
+  return window['go']['main']['App']['LoadImage'](arg1);
+}
+
+export function SaveImage(arg1, arg2) {
+  return window['go']['main']['App']['SaveImage'](arg1, arg2);
+}

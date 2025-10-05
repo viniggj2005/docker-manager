@@ -1,24 +1,23 @@
-import {useState} from 'react';
-import logo from './assets/images/logo-universal.png';
-import './App.css';
-import {ContainersList} from "../wailsjs/go/docker/Docker";
+import './index.css';
+import ContainersListView from './components/ContainersList';
+import ImagemView from './components/image';
 
 function App() {
-    const [resultText, setResultText] = useState("Please enter your name below 👇");
-    const [name, setName] = useState<string>();
-
-    function greet() {
-    ContainersList().then((resp: any) => {
-        console.log(resp)
-    })
-}
+ 
 
     
 
     return (
-        <div className='bg-white w-screen h-screen justify-center flex'>
+        <div className=' bg-white w-screen h-screen justify-center flex'>
+            <div className='bg-[#0082a8] bg-opacity-20 w-screen h-screen justify-center flex'>
+
             
-                <button className="bg-red-500 rounded" onClick={greet}>Greet</button>
+            <div className='w-fit h-fit bg-transparent'>
+                <ContainersListView/>
+                <ImagemView/>
+            </div>
+            </div>
+                
             </div>
 
     )

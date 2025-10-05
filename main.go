@@ -20,7 +20,7 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:  "docker-manager-go",
+		Title:  "Docker Manager",
 		Width:  1024,
 		Height: 768,
 		AssetServer: &assetserver.Options{
