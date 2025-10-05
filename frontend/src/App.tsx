@@ -14,7 +14,7 @@ function App() {
             
             <div className='w-fit h-fit bg-transparent'>
                 <ContainersListView/>
-                <ImagemView/>
+                {/* <ImagemView/> */}
             </div>
             </div>
                 

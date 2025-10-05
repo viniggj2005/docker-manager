@@ -2,6 +2,7 @@ package docker
 
 import (
 	"context"
+	"io"
 	"log"
 
 	"github.com/docker/docker/api/types/container"
@@ -39,7 +40,6 @@ func (d *Docker) Startup(ctx context.Context) {
 	}
 }
 
-// Greet returns a greeting for the given name
 func (d *Docker) ContainersList() []container.Summary {
 	containers, err := d.cli.ContainerList(context.Background(), container.ListOptions{All: true})
 	if err != nil {
@@ -48,3 +48,56 @@ func (d *Docker) ContainersList() []container.Summary {
 
 	return containers
 }
+
+func (d *Docker) ContainerLogs(containerId string) string {
+	logs, err := d.cli.ContainerLogs(context.Background(), containerId, container.LogsOptions{ShowStdout: true,
+		ShowStderr: true,
+		Follow:     false,
+		Timestamps: false,
+		Details:    false})
+	if err != nil {
+		panic(err)
+	}
+	defer logs.Close()
+
+	buf, err := io.ReadAll(logs)
+	if err != nil {
+		panic(err)
+	}
+	return string(buf)
+}
+
+// func (a *App) StreamLogs(containerID string) error {
+// 	reader, err := a.cli.ContainerLogs(
+// 		context.Background(),
+// 		containerID,
+// 		container.LogsOptions{
+// 			ShowStdout: true,
+// 			ShowStderr: true,
+// 			Follow:     true,
+// 			Timestamps: false,
+// 		},
+// 	)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	defer reader.Close()
+
+// 	scanner := bufio.NewScanner(reader)
+// 	for scanner.Scan() {
+// 		line := scanner.Text()
+// 		runtime.EventsEmit(a.Ctx, "container-log", line)
+// 	}
+// 	return scanner.Err()
+// }
+//#####################################################
+// no frontend
+// import { EventsOn } from "../wailsjs/runtime";
+
+// useEffect(() => {
+//   EventsOn("container-log", (msg: string) => {
+//     console.log(msg);
+//     // ou atualizar um state:
+//     setLogs(prev => prev + "\n" + msg);
+//   });
+// }, []);

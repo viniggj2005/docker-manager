@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ContainersList } from "../../wailsjs/go/docker/Docker";
+import { ContainersList,ContainerLogs } from "../../wailsjs/go/docker/Docker";
 
 type Port = {
   IP?: string;
@@ -91,6 +91,16 @@ export default function ContainersListView() {
       setError(e?.message || "Falha ao listar containers");
     }
   };
+  const fetchLogs=async(id:string)=>{
+    console.log("entrei no fetch logs")
+    try{
+      const resp= await ContainerLogs(id)
+      console.log("Response:",resp)
+    }catch (e:any){
+      console.log("ERROR:",e)
+
+    }
+  }
 
   useEffect(() => {
     fetchData();
@@ -146,7 +156,8 @@ export default function ContainersListView() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((c) => (
+            {items.map((c) => {
+              return(
               <div
                 key={c.Id}
                 className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md"
@@ -168,6 +179,12 @@ export default function ContainersListView() {
                   >
                     {c.State}
                   </span>
+                  <button
+            onClick={()=>fetchLogs(c.Id)}
+            className="rounded-2xl border border-red-500 bg-white px-3 py-1.5 text-sm text-red-500 hover:bg-red-500 hover:text-white"
+          >
+            logs
+          </button>
                 </div>
 
                 <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
@@ -210,8 +227,8 @@ export default function ContainersListView() {
                     </button>
                   </div>
                 </div>
-              </div>
-            ))}
+              </div>)
+})}
           </div>
         )}
 

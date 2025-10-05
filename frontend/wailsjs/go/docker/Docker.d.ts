@@ -3,6 +3,8 @@
 import {container} from '../models';
 import {context} from '../models';
 
+export function ContainerLogs(arg1:string):Promise<string>;
+
 export function ContainersList():Promise<Array<container.Summary>>;
 
 export function Startup(arg1:context.Context):Promise<void>;
