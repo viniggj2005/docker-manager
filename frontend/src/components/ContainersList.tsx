@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ContainersList,ContainerLogs } from "../../wailsjs/go/docker/Docker";
-import { CiPlay1 } from "react-icons/ci";
+import { ContainersList,ContainerLogs, ContainerPause, ContainerUnPause,ContainerRename } from "../../wailsjs/go/docker/Docker";
+import { IoMdCloseCircleOutline } from "react-icons/io";
+import { GoPencil } from "react-icons/go";
+import { CiPlay1,CiPause1 } from "react-icons/ci";
 type Port = {
   IP?: string;
   PrivatePort: number;
@@ -66,7 +68,7 @@ function fmtPorts(ports?: Port[]) {
     .map((p) => {
       const pub = p.PublicPort ? `${p.PublicPort}` : "";
       const priv = `${p.PrivatePort}`;
-      const arrow = pub ? "→" : "";
+      const arrow = pub ? "->" : "";
       return `${pub}${arrow}${priv}/${p.Type}`;
     })
     .join(", ");
@@ -79,6 +81,8 @@ function fmtName(names: string[]) {
 
 const ContainersListView=()=> {
   const [items, setItems] = useState<ContainerItem[] | null>(null);
+  const [editNameModal,setEditNameModal]=useState<Boolean>(false);
+  const [newName, setNewName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
 
@@ -102,6 +106,29 @@ const ContainersListView=()=> {
     }
   }
 
+  const handleRename = async(name: string, id: string) => {
+  try{
+await ContainerRename(id,name)
+await fetchData()
+    setEditNameModal(false);
+  }catch(e:any){
+    console.log(e)
+  }
+};
+ const changeContainerStage=async(id:string,state:string)=>{
+    console.log("entrei no fetch logs")
+    try{
+      if(state==="paused"){
+        await ContainerUnPause(id)
+      }else if(state==="running"){
+        await ContainerPause(id)
+      }
+      await fetchData()
+    }catch (e:any){
+      console.log("ERROR:",e)
+
+    }
+  }
   useEffect(() => {
     fetchData();
     timerRef.current = window.setInterval(fetchData, 2000);
@@ -159,14 +186,62 @@ const ContainersListView=()=> {
             {items.map((c) => {
               return(
               <div
-                key={c.Id}
-                className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="text-base font-medium text-slate-900">
-                      {fmtName(c.Names)}
-                    </div>
+                  key={c.Id}
+                  className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                    <div className="relative w-fit">
+                          <div className="relative inline-block peer">
+                            <div className="text-base font-medium text-slate-900 hover:text-slate-700">
+                              {fmtName(c.Names)}
+                            </div>
+
+                              {!editNameModal && (
+                                <button
+                                  onClick={() => setEditNameModal(true)}
+                                  className="absolute -top-1 -right-6 bg-white border border-slate-300 
+                                            rounded-full p-1 shadow-sm hover:bg-slate-100 
+                                            opacity-0 peer-hover:opacity-100 transition-opacity duration-150"
+                                  title="Editar nome"
+                                >
+                                  <GoPencil className="text-slate-700 w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
+
+                            {editNameModal && (
+                              <div
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-20
+                                          bg-white border border-slate-200 rounded-xl shadow-lg p-3
+                                          w-48 flex flex-col items-center gap-2 animate-fade-in"
+                              >
+                                <button
+                                  onClick={() => setEditNameModal(false)}
+                                  className="absolute -top-2 -right-2 text-red-500 hover:text-red-600"
+                                  title="Fechar"
+                                >
+                                  <IoMdCloseCircleOutline className="w-5 h-5" />
+                                </button>
+
+                                <input
+                                  type="text"
+                                  placeholder="Novo nome"
+                                  className="w-full border border-slate-300 rounded-lg px-2 py-1 text-sm
+                                            focus:outline-none focus:ring focus:ring-blue-200"
+                                  value={newName}
+                                  onChange={(e) => setNewName(e.target.value)}
+                                />
+
+                                <button
+                                  onClick={() => handleRename(newName, c.Id)}
+                                  className="bg-blue-600 text-white text-xs px-3 py-1 rounded-lg hover:bg-blue-700"
+                                >
+                                  Enviar
+                                </button>
+                              </div>
+                            )}
+                          </div>
                     <div className="mt-0.5 text-xs text-slate-500">
                       {c.Image}
                     </div>
@@ -186,10 +261,11 @@ const ContainersListView=()=> {
             logs
           </button>
               <button
-            onClick={()=>fetchLogs(c.Id)}
-            className="rounded-2xl border border-red-500 bg-white px-3 py-1.5 text-sm text-red-500 hover:bg-red-500 hover:text-white"
+              title={`${c.State==="paused"?"Despausar container":"Pausar Container"}`}
+            onClick={()=>changeContainerStage(c.Id,c.State)}
+            className="rounded-2xl border border-black bg-white px-3 py-1.5 text-sm text-black hover:bg-gray-700 hover:text-white"
           >
-           <CiPlay1 />
+           {c.State==="paused"?<CiPlay1 />:<CiPause1 />}
           </button>
                 </div>
 

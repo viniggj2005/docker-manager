@@ -10,6 +10,14 @@ export function ContainerPause(arg1) {
   return window['go']['docker']['Docker']['ContainerPause'](arg1);
 }
 
+export function ContainerRename(arg1, arg2) {
+  return window['go']['docker']['Docker']['ContainerRename'](arg1, arg2);
+}
+
+export function ContainerUnPause(arg1) {
+  return window['go']['docker']['Docker']['ContainerUnPause'](arg1);
+}
+
 export function ContainersList() {
   return window['go']['docker']['Docker']['ContainersList']();
 }

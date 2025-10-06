@@ -55,6 +55,18 @@ func (d *Docker) ContainerPause(containerId string) {
 		fmt.Println(err)
 	}
 }
+func (d *Docker) ContainerUnPause(containerId string) {
+	err := d.cli.ContainerUnpause(context.Background(), containerId)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+func (d *Docker) ContainerRename(containerId, newName string) {
+	err := d.cli.ContainerRename(context.Background(), containerId, newName)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
 
 func (d *Docker) ContainerLogs(containerId string) string {
 	logs, err := d.cli.ContainerLogs(context.Background(), containerId, container.LogsOptions{ShowStdout: true,
