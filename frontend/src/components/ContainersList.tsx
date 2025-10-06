@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ContainersList,ContainerLogs } from "../../wailsjs/go/docker/Docker";
-
+import { CiPlay1 } from "react-icons/ci";
 type Port = {
   IP?: string;
   PrivatePort: number;
@@ -77,7 +77,7 @@ function fmtName(names: string[]) {
   return names[0].startsWith("/") ? names[0].slice(1) : names[0];
 }
 
-export default function ContainersListView() {
+const ContainersListView=()=> {
   const [items, setItems] = useState<ContainerItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
@@ -185,6 +185,12 @@ export default function ContainersListView() {
           >
             logs
           </button>
+              <button
+            onClick={()=>fetchLogs(c.Id)}
+            className="rounded-2xl border border-red-500 bg-white px-3 py-1.5 text-sm text-red-500 hover:bg-red-500 hover:text-white"
+          >
+           <CiPlay1 />
+          </button>
                 </div>
 
                 <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
@@ -239,3 +245,6 @@ export default function ContainersListView() {
     </div>
   );
 }
+
+
+export default ContainersListView

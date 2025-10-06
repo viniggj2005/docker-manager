@@ -2,6 +2,7 @@ package docker
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log"
 
@@ -47,6 +48,12 @@ func (d *Docker) ContainersList() []container.Summary {
 	}
 
 	return containers
+}
+func (d *Docker) ContainerPause(containerId string) {
+	err := d.cli.ContainerPause(context.Background(), containerId)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func (d *Docker) ContainerLogs(containerId string) string {

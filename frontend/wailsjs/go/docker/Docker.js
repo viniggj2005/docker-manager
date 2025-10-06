@@ -6,6 +6,10 @@ export function ContainerLogs(arg1) {
   return window['go']['docker']['Docker']['ContainerLogs'](arg1);
 }
 
+export function ContainerPause(arg1) {
+  return window['go']['docker']['Docker']['ContainerPause'](arg1);
+}
+
 export function ContainersList() {
   return window['go']['docker']['Docker']['ContainersList']();
 }
