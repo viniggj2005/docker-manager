@@ -24,6 +24,7 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
           message: "Logs buscados com sucesso!",
           position: "bottomRight",
         });
+        console.log(resp)
         setLogs(resp ?? "");
       } catch (e: any) {
         iziToast.error({
@@ -52,13 +53,10 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [setLogsModal]);
 
- const display = filter
-  ? logs
-      .split(/<br\s*\/?>/)
-      .filter((line) =>
-        line.toLowerCase().includes(filter.toLowerCase())
-      )
-      .join("<br>")
+  const display = filter
+  ? logs.split(/<br\s*\/?>/i)
+        .filter(line => line.toLowerCase().includes(filter.toLowerCase()))
+        .join("<br>")
   : logs;
 
 
