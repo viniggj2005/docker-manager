@@ -1,5 +1,6 @@
-import { FiSearch, FiPause, FiPlay } from "react-icons/fi";
+import iziToast from "izitoast";
 import { IoMdCloseCircleOutline } from "react-icons/io";
+import { FiSearch, FiPause, FiPlay } from "react-icons/fi";
 import { ContainerLogs } from "../../../wailsjs/go/docker/Docker";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 interface LogsProps {
@@ -26,18 +27,16 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
     const scrollRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        let cancelled = false;
         (async () => {
             try {
                 const resp = await ContainerLogs(id);
-                if (!cancelled) setLogs(resp ?? "");
+                iziToast.success({message:"Logs buscados com sucesso!",position:"bottomRight"})
+        setLogs(resp ?? "");
             } catch (e: any) {
-                if (!cancelled) setLogs(`ERROR: ${e?.message ?? String(e)}`);
+                iziToast.error({title: 'Erro',
+    message: e,position:"bottomRight"})
             }
         })();
-        return () => {
-            cancelled = true;
-        };
     }, [id]);
 
     //   useEffect(() => {

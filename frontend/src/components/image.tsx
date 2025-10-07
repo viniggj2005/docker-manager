@@ -16,7 +16,7 @@ const ImagemView =()=>{
 
 
 return(
-    // no JSX
+    
 <img src={src} alt="imagem" />
 )
 

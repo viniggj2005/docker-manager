@@ -1,12 +1,13 @@
+import iziToast from "izitoast";
+import LogsModal from "./LogsModal";
 import { GoPencil } from "react-icons/go";
 import { MdContentCopy } from "react-icons/md";
 import { CiPlay1, CiPause1 } from "react-icons/ci";
 import { FaLongArrowAltRight } from "react-icons/fa";
-import EditContainerNameModal from "./EditContainerNameModal";
 import React, { useEffect, useRef, useState } from "react";
-import { ContainersList, ContainerPause, ContainerUnPause, ContainerRename } from "../../../wailsjs/go/docker/Docker";
+import EditContainerNameModal from "./EditContainerNameModal";
 import ContainersListSkeleton from "./ContainersListSkeleton";
-import LogsModal from "./LogsModal";
+import { ContainersList, ContainerPause, ContainerUnPause, ContainerRename } from "../../../wailsjs/go/docker/Docker";
 
 type Port = {
   IP?: string;
@@ -92,7 +93,8 @@ const ContainersListView: React.FC = () => {
       await fetchData();
       setEditNameModalId(null);
     } catch (e: any) {
-      console.log(e);
+      iziToast.error({title: 'Erro',
+    message: e,position:"bottomRight"})
     }
   };
   const handdleOpenLogs=async()=>{
@@ -107,7 +109,8 @@ const ContainersListView: React.FC = () => {
 
       await fetchData()
     } catch (e: any) {
-      console.log("ERROR:", e)
+      iziToast.error({title: 'Erro',
+    message: e,position:"bottomRight"})
     }
   }
 
