@@ -1,5 +1,5 @@
 import './index.css';
-import ContainersListView from './components/ContainersList';
+import ContainersListView from './components/containers/ContainersList';
 import ImagemView from './components/image';
 
 function App() {

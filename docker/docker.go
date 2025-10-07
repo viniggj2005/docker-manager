@@ -1,13 +1,16 @@
 package docker
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
 	"log"
+	"regexp"
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
+	"github.com/docker/docker/pkg/stdcopy"
 )
 
 type Docker struct {
@@ -49,6 +52,7 @@ func (d *Docker) ContainersList() []container.Summary {
 
 	return containers
 }
+
 func (d *Docker) ContainerPause(containerId string) {
 	err := d.cli.ContainerPause(context.Background(), containerId)
 	if err != nil {
@@ -79,11 +83,23 @@ func (d *Docker) ContainerLogs(containerId string) string {
 	}
 	defer logs.Close()
 
-	buf, err := io.ReadAll(logs)
+	raw, err := io.ReadAll(logs)
 	if err != nil {
 		panic(err)
 	}
-	return string(buf)
+	isMux := len(raw) >= 8 && (raw[0] == 0 || raw[0] == 1 || raw[0] == 2) && raw[1] == 0 && raw[2] == 0 && raw[3] == 0
+
+	var out string
+	if isMux {
+		var stdout, stderr bytes.Buffer
+		_, _ = stdcopy.StdCopy(&stdout, &stderr, bytes.NewReader(raw))
+		out = stdout.String() + stderr.String()
+	} else {
+		out = string(raw)
+	}
+	reANSI := regexp.MustCompile(`\x1B\[[0-9;]*[A-Za-z]`)
+	out = reANSI.ReplaceAllString(out, "")
+	return string(out)
 }
 
 // func (a *App) StreamLogs(containerID string) error {
