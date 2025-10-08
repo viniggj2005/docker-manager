@@ -1,9 +1,9 @@
-import iziToast from "izitoast";
-import "izitoast/dist/css/iziToast.min.css";
-import { IoMdCloseCircleOutline } from "react-icons/io";
-import { FiSearch } from "react-icons/fi";
-import { ContainerLogs } from "../../../wailsjs/go/docker/Docker";
-import React, { useEffect, useRef, useState } from "react";
+import iziToast from 'izitoast';
+import { FiSearch } from 'react-icons/fi';
+import 'izitoast/dist/css/iziToast.min.css';
+import { IoMdCloseCircleOutline } from 'react-icons/io';
+import React, { useEffect, useRef, useState } from 'react';
+import { ContainerLogs } from '../../../wailsjs/go/docker/Docker';
 
 interface LogsProps {
   id: string;
@@ -11,9 +11,9 @@ interface LogsProps {
 }
 
 const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
-  const [logs, setLogs] = useState<string>("");
-  const [filter, setFilter] = useState<string>("");
   const firstScrollDone = useRef(false);
+  const [logs, setLogs] = useState<string>('');
+  const [filter, setFilter] = useState<string>('');
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -21,16 +21,16 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
       try {
         const resp = await ContainerLogs(id);
         iziToast.success({
-          message: "Logs buscados com sucesso!",
-          position: "bottomRight",
+          message: 'Logs buscados com sucesso!',
+          position: 'bottomRight',
         });
-        console.log(resp)
-        setLogs(resp ?? "");
+        console.log(resp);
+        setLogs(resp ?? '');
       } catch (e: any) {
         iziToast.error({
-          title: "Erro",
+          title: 'Erro',
           message: e?.message ?? String(e),
-          position: "bottomRight",
+          position: 'bottomRight',
         });
       }
     })();
@@ -47,18 +47,18 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setLogsModal(false);
+      if (e.key === 'Escape') setLogsModal(false);
     };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, [setLogsModal]);
 
   const display = filter
-  ? logs.split(/<br\s*\/?>/i)
-        .filter(line => line.toLowerCase().includes(filter.toLowerCase()))
-        .join("<br>")
-  : logs;
-
+    ? logs
+        .split(/<br\s*\/?>/i)
+        .filter((line) => line.toLowerCase().includes(filter.toLowerCase()))
+        .join('<br>')
+    : logs;
 
   const closeOnBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) setLogsModal(false);

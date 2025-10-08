@@ -2,12 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-
-:root{
-    --exit-red: #e7000b;
-    --dark-gray: #202020;
-    --medium-gray: #6c6c6c;
-    --light-gray: #d9d9d9;
-    --system-black: #000000;
-    --system-white: #ffffff;
+:root {
+  --exit-red: #e7000b;
+  --dark-gray: #202020;
+  --medium-gray: #6c6c6c;
+  --light-gray: #d9d9d9;
+  --system-black: #000000;
+  --system-white: #ffffff;
 }

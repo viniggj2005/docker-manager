@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
-const ContainersListSkeleton:React.FC=()=>{
-const skeleton = useMemo(
+const ContainersListSkeleton: React.FC = () => {
+  const skeleton = useMemo(
     () =>
       Array.from({ length: 6 }).map((_, i) => (
         <div
@@ -15,11 +15,7 @@ const skeleton = useMemo(
       )),
     []
   );
-    return(
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {skeleton}
-          </div>
-    )
-}
+  return <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">{skeleton}</div>;
+};
 
-export default ContainersListSkeleton
+export default ContainersListSkeleton;

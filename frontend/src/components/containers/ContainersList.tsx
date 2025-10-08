@@ -1,19 +1,24 @@
-import iziToast from "izitoast";
-import LogsModal from "./LogsModal";
-import { GoPencil } from "react-icons/go";
-import { MdContentCopy } from "react-icons/md";
-import { CiPlay1, CiPause1 } from "react-icons/ci";
-import { FaLongArrowAltRight } from "react-icons/fa";
-import React, { useEffect, useRef, useState } from "react";
-import EditContainerNameModal from "./EditContainerNameModal";
-import ContainersListSkeleton from "./ContainersListSkeleton";
-import { ContainersList, ContainerPause, ContainerUnPause, ContainerRename } from "../../../wailsjs/go/docker/Docker";
+import iziToast from 'izitoast';
+import LogsModal from './LogsModal';
+import { GoPencil } from 'react-icons/go';
+import { MdContentCopy } from 'react-icons/md';
+import { CiPlay1, CiPause1 } from 'react-icons/ci';
+import { FaLongArrowAltRight } from 'react-icons/fa';
+import React, { useEffect, useRef, useState } from 'react';
+import EditContainerNameModal from './EditContainerNameModal';
+import ContainersListSkeleton from './ContainersListSkeleton';
+import {
+  ContainersList,
+  ContainerPause,
+  ContainerUnPause,
+  ContainerRename,
+} from '../../../wailsjs/go/docker/Docker';
 
 type Port = {
   IP?: string;
+  Type: string;
   PrivatePort: number;
   PublicPort?: number;
-  Type: string;
 };
 
 type NetworkSettings = {
@@ -23,39 +28,39 @@ type NetworkSettings = {
 type ContainerItem = {
   Id: string;
   Image: string;
-  ImageID?: string;
+  State: string;
+  Ports?: Port[];
   Names: string[];
+  Status?: string;
+  ImageID?: string;
   Command?: string;
   Created?: number;
-  State: string;
-  Status?: string;
-  Ports?: Port[];
-  NetworkSettings?: NetworkSettings;
   Labels?: Record<string, string>;
+  NetworkSettings?: NetworkSettings;
 };
 
 function classState(state: string) {
   const s = state?.toLowerCase();
-  if (s === "running") return "bg-emerald-100 text-emerald-700";
-  if (s === "exited") return "bg-rose-100 text-[var(--exit-red)]";
-  if (s === "paused") return "bg-amber-100 text-amber-700";
-  return "bg-[var(--light-gray)]text-[var(--system-black)]";
+  if (s === 'paused') return 'bg-amber-100 text-amber-700';
+  if (s === 'running') return 'bg-emerald-100 text-emerald-700';
+  if (s === 'exited') return 'bg-rose-100 text-[var(--exit-red)]';
+  return 'bg-[var(--light-gray)]text-[var(--system-black)]';
 }
 
 function fmtAgo(created?: number) {
-  if (!created) return "-";
+  if (!created) return '-';
   const ms = Date.now() - created * 1000;
   const sec = Math.max(1, Math.floor(ms / 1000));
   const units: [number, string][] = [
-    [60, "s"],
-    [60, "min"],
-    [24, "h"],
-    [7, "d"],
-    [4.345, "sem"],
-    [12, "m"],
+    [60, 's'],
+    [60, 'min'],
+    [24, 'h'],
+    [7, 'd'],
+    [4.345, 'sem'],
+    [12, 'm'],
   ];
   let v = sec;
-  let label = "s";
+  let label = 's';
   for (let i = 0; i < units.length; i++) {
     const [k, l] = units[i];
     if (v < k) {
@@ -69,21 +74,26 @@ function fmtAgo(created?: number) {
 }
 
 function fmtName(names: string[]) {
-  if (!names || names.length === 0) return "—";
-  return names[0].startsWith("/") ? names[0].slice(1) : names[0];
+  if (!names || names.length === 0) return '—';
+  return names[0].startsWith('/') ? names[0].slice(1) : names[0];
 }
 
 const ContainersListView: React.FC = () => {
-  const [items, setItems] = useState<ContainerItem[] | null>(null);
-  const [editNameModalId, setEditNameModalId] = useState<string | null>(null);
-  const [LogsModalId, setLogsModalId] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
+  const [items, setItems] = useState<ContainerItem[] | null>(null);
+  const [LogsModalId, setLogsModalId] = useState<string | null>(null);
+  const [editNameModalId, setEditNameModalId] = useState<string | null>(null);
 
   const fetchData = async () => {
     try {
       const resp = await ContainersList();
       setItems(resp || []);
     } catch (e: any) {
+      iziToast.error({
+        title: 'Erro',
+        message: e,
+        position: 'bottomRight',
+      });
     }
   };
 
@@ -93,26 +103,28 @@ const ContainersListView: React.FC = () => {
       await fetchData();
       setEditNameModalId(null);
     } catch (e: any) {
-      iziToast.error({title: 'Erro',
-    message: e,position:"bottomRight"})
+      iziToast.error({
+        title: 'Erro',
+        message: e,
+        position: 'bottomRight',
+      });
     }
   };
-  const handdleOpenLogs=async()=>{
-
-  }
 
   const changeContainerStage = async (id: string, state: string) => {
-    console.log("entrei no fetch logs")
     try {
-      if (state === "paused") await ContainerUnPause(id)
-      else if (state === "running") await ContainerPause(id)
+      if (state === 'paused') await ContainerUnPause(id);
+      else if (state === 'running') await ContainerPause(id);
 
-      await fetchData()
+      await fetchData();
     } catch (e: any) {
-      iziToast.error({title: 'Erro',
-    message: e,position:"bottomRight"})
+      iziToast.error({
+        title: 'Erro',
+        message: e,
+        position: 'bottomRight',
+      });
     }
-  }
+  };
 
   useEffect(() => {
     fetchData();
@@ -126,9 +138,7 @@ const ContainersListView: React.FC = () => {
     <div className="w-full h-full">
       <div className="mx-auto max-w-8xl p-6">
         <header className="mb-4 flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-[var(--system-black)]">
-            Containers
-          </h1>
+          <h1 className="text-2xl font-semibold text-[var(--system-black)]">Containers</h1>
           <button
             onClick={fetchData}
             className="rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-md text-[var(--system-black)] hover:bg-[var(--light-gray)]"
@@ -138,7 +148,7 @@ const ContainersListView: React.FC = () => {
         </header>
 
         {!items ? (
-        <ContainersListSkeleton/>
+          <ContainersListSkeleton />
         ) : items.length === 0 ? (
           <div className="rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)]">
             Nenhum container encontrado.
@@ -147,8 +157,8 @@ const ContainersListView: React.FC = () => {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((container) => {
               const name = fmtName(container.Names);
-              const isEditing = editNameModalId === container.Id;
               const isSeeing = LogsModalId === container.Id;
+              const isEditing = editNameModalId === container.Id;
               return (
                 <div
                   key={container.Id}
@@ -160,7 +170,6 @@ const ContainersListView: React.FC = () => {
                         <div className="inline-block text-xl font-medium text-[var(--system-black)] hover:text-[var(--system-black)] peer">
                           {fmtName(container.Names)}
                         </div>
-
                         {!isEditing && (
                           <button
                             onClick={() => setEditNameModalId(container.Id)}
@@ -182,12 +191,9 @@ const ContainersListView: React.FC = () => {
                             setEditNameModal={() => setEditNameModalId(null)}
                           />
                         )}
-                        {isSeeing &&
-                        <LogsModal
-                        id={container.Id}
-                        setLogsModal={() => setLogsModalId(null)}
-                        />
-                        }
+                        {isSeeing && (
+                          <LogsModal id={container.Id} setLogsModal={() => setLogsModalId(null)} />
+                        )}
                       </div>
 
                       <div className="mt-0.5 text-lg text-[var(--medium-gray)]">
@@ -209,45 +215,47 @@ const ContainersListView: React.FC = () => {
                       logs
                     </button>
                     <button
-                      title={`${container.State === "paused" ? "Despausar container" : "Pausar Container"}`}
+                      title={`${container.State === 'paused' ? 'Despausar container' : 'Pausar Container'}`}
                       onClick={() => changeContainerStage(container.Id, container.State)}
                       className="rounded-2xl  bg-[var(--system-[var(--system-white)])] px-3 py-1.5 text-sm text-[var(--system-black)] hover:bg-[var(--medium-gray)] hover:text-[var(--system-white)]"
                     >
-                      {container.State === "paused" ? <CiPlay1 className="w-6 h-6" /> : <CiPause1 className="w-6 h-6" />}
+                      {container.State === 'paused' ? (
+                        <CiPlay1 className="w-6 h-6" />
+                      ) : (
+                        <CiPause1 className="w-6 h-6" />
+                      )}
                     </button>
                   </div>
 
                   <div className="mt-4 grid grid-cols-2 gap-3 text-md">
                     <div className="rounded-xl border border-[var(--light-gray)]bg-slate-50 p-3">
-                      <div className="text-[14px] uppercase text-[var(--medium-gray)]">
-                        Criado
-                      </div>
+                      <div className="text-[14px] uppercase text-[var(--medium-gray)]">Criado</div>
                       <div className="mt-0.5 font-medium text-[var(--dark-gray)]">
                         {fmtAgo(container.Created)}
                       </div>
                     </div>
                     <div className="rounded-xl border border-[var(--light-gray)]bg-slate-50 p-3">
-                      <div className="text-[14px] uppercase text-[var(--medium-gray)]">
-                        Status
-                      </div>
+                      <div className="text-[14px] uppercase text-[var(--medium-gray)]">Status</div>
                       <div className="mt-0.5 font-medium text-[var(--dark-gray)]">
-                        {container.Status || "—"}
+                        {container.Status || '—'}
                       </div>
                     </div>
                     <div className="col-span-2 rounded-xl border border-[var(--light-gray)]bg-slate-50 p-3">
-                      <div className="text-[14px] uppercase text-[var(--medium-gray)]">
-                        Portas
-                      </div>
+                      <div className="text-[14px] uppercase text-[var(--medium-gray)]">Portas</div>
                       <div className="mt-0.5 font-mono text-sm text-[var(--dark-gray)]">
-                        {container?.Ports?.map(port => (
-                          <span className="flex" key={`${port.IP}-${port.PrivatePort}-${port.Type ?? ''}`}>
-                            {port.IP} {port.PrivatePort}&nbsp;<FaLongArrowAltRight />&nbsp;{port.PublicPort}/{port.Type}
+                        {container?.Ports?.map((port) => (
+                          <span
+                            className="flex"
+                            key={`${port.IP}-${port.PrivatePort}-${port.Type ?? ''}`}
+                          >
+                            {port.IP} {port.PrivatePort}&nbsp;
+                            <FaLongArrowAltRight />
+                            &nbsp;{port.PublicPort}/{port.Type}
                           </span>
                         ))}
                       </div>
                     </div>
                   </div>
-
                   <div className="mt-4 flex items-center justify-between">
                     <div className="text-[14px] text-[var(--medium-gray)]">
                       {container.Id.slice(0, 12)}
@@ -261,18 +269,17 @@ const ContainersListView: React.FC = () => {
                       </button>
                     </div>
                   </div>
-                </div>)
+                </div>
+              );
             })}
           </div>
         )}
-
         <footer className="mt-6 text-xs text-[var(--medium-gray)]">
           Atualiza a cada 2s. Clique em “Atualizar” para forçar agora.
         </footer>
       </div>
     </div>
   );
-}
+};
 
-
-export default ContainersListView
+export default ContainersListView;
