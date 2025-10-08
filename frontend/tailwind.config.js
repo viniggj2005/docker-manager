@@ -5,6 +5,7 @@ export default {
     'text-emerald-400',
     'text-cyan-400',
     'text-amber-300',
+    'bg-[var(--accent-green)]',
     'text-yellow-300',
     'text-rose-400',
     'text-red-500',

@@ -1,0 +1,95 @@
+import React from 'react';
+import { DockerImageIcon } from '../icons';
+import { FaTrashCan, FaTag } from 'react-icons/fa6';
+import { MdContentCopy } from 'react-icons/md';
+import { confirmToast } from '../utils/ConfirmToast';
+import { copyToClipboard } from '../utils/clipboard';
+import { RemoveImage } from '../../../wailsjs/go/docker/Docker';
+import { DockerImageInfo } from '../../interfaces/ContainerImagesInterfaces';
+import {
+  ParseNameAndTag,
+  EpochToDateStr,
+  FmtAgo,
+  FormatBytes,
+} from '../../functions/TreatmentFunction';
+
+interface Props {
+  img: DockerImageInfo;
+  onDeleted?: () => void;
+}
+
+const ImageCard: React.FC<Props> = ({ img, onDeleted }) => {
+  const { name, tag } = ParseNameAndTag(img.RepoTags);
+  const id = img.Id ?? '';
+
+  const handleDelete = () => {
+    confirmToast({
+      id: id,
+      title: `Imagem ${name}:${tag} deletada!`,
+      message: `Deseja deletar a imagem: ${name}:${tag} ?`,
+      onConfirm: async () => {
+        await RemoveImage(id);
+        onDeleted?.();
+      },
+    });
+  };
+
+  return (
+    <div className="rounded-2xl p-4 transition bg-[var(--system-white)] border border-[var(--light-gray)] hover:border-[var(--light-gray)]">
+      <div className="flex items-start gap-3">
+        <div className="p-2 rounded-xl bg-[var(--system-white)] border border-[var(--light-gray)]">
+          <DockerImageIcon />
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-semibold truncate">{name}</span>
+            <span className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1 bg-[var(--system-white)] border border-[var(--light-gray)]">
+              <FaTag />
+              {tag}
+            </span>
+            {!img.RepoTags?.length && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--system-white)] border border-[var(--light-gray)] text-[var(--system-black)]">
+                dangling
+              </span>
+            )}
+          </div>
+
+          <div className="mt-1 text-sm flex flex-wrap gap-x-4 gap-y-1">
+            <span title="Tamanho">{FormatBytes(img.Size)}</span>
+            <span title="Criado">
+              {EpochToDateStr(img.Created)} <span>({FmtAgo(img.Created)} atrás)</span>
+            </span>
+            <span title="Containers que usam">{img.Containers === -1 ? '' : img.Containers}</span>
+          </div>
+        </div>
+
+        <button
+          onClick={handleDelete}
+          title="Fechar"
+          className="cursor-pointer relative text-[var(--exit-red)]"
+        >
+          <FaTrashCan className="w-5 h-5 text-[var(--exit-red)]" />
+        </button>
+      </div>
+
+      <div className="mt-3 flex items-center gap-2">
+        <button
+          onClick={() => copyToClipboard(id.replace('sha256:', ''), 'ID da imagem copiado')}
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[var(--system-white)] border border-[var(--light-gray)] hover:border-[var(--accent-green)]"
+        >
+          <MdContentCopy /> Copiar ID
+        </button>
+
+        <button
+          onClick={() => copyToClipboard(`${name}:${tag}`, 'Nome:tag copiado')}
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[var(--system-white)] border border-[var(--light-gray)] hover:border-[var(--accent-green)]"
+        >
+          <MdContentCopy /> Copiar nome:tag
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default ImageCard;

@@ -22,6 +22,18 @@ export function ContainersList() {
   return window['go']['docker']['Docker']['ContainersList']();
 }
 
+export function ImagesList() {
+  return window['go']['docker']['Docker']['ImagesList']();
+}
+
+export function PruneImages() {
+  return window['go']['docker']['Docker']['PruneImages']();
+}
+
+export function RemoveImage(arg1) {
+  return window['go']['docker']['Docker']['RemoveImage'](arg1);
+}
+
 export function Startup(arg1) {
   return window['go']['docker']['Docker']['Startup'](arg1);
 }

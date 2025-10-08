@@ -13,6 +13,7 @@ import {
   ContainerUnPause,
   ContainerRename,
 } from '../../../wailsjs/go/docker/Docker';
+import { FmtAgo, FmtName } from '../../functions/TreatmentFunction';
 
 type Port = {
   IP?: string;
@@ -45,37 +46,6 @@ function classState(state: string) {
   if (s === 'running') return 'bg-emerald-100 text-emerald-700';
   if (s === 'exited') return 'bg-rose-100 text-[var(--exit-red)]';
   return 'bg-[var(--light-gray)]text-[var(--system-black)]';
-}
-
-function fmtAgo(created?: number) {
-  if (!created) return '-';
-  const ms = Date.now() - created * 1000;
-  const sec = Math.max(1, Math.floor(ms / 1000));
-  const units: [number, string][] = [
-    [60, 's'],
-    [60, 'min'],
-    [24, 'h'],
-    [7, 'd'],
-    [4.345, 'sem'],
-    [12, 'm'],
-  ];
-  let v = sec;
-  let label = 's';
-  for (let i = 0; i < units.length; i++) {
-    const [k, l] = units[i];
-    if (v < k) {
-      label = l;
-      break;
-    }
-    v = Math.floor(v / k);
-    label = l;
-  }
-  return `${v} ${label} atrás`;
-}
-
-function fmtName(names: string[]) {
-  if (!names || names.length === 0) return '—';
-  return names[0].startsWith('/') ? names[0].slice(1) : names[0];
 }
 
 const ContainersListView: React.FC = () => {
@@ -156,7 +126,7 @@ const ContainersListView: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((container) => {
-              const name = fmtName(container.Names);
+              const name = FmtName(container.Names);
               const isSeeing = LogsModalId === container.Id;
               const isEditing = editNameModalId === container.Id;
               return (
@@ -168,7 +138,7 @@ const ContainersListView: React.FC = () => {
                     <div>
                       <div className="relative w-fit">
                         <div className="inline-block text-xl font-medium text-[var(--system-black)] hover:text-[var(--system-black)] peer">
-                          {fmtName(container.Names)}
+                          {FmtName(container.Names)}
                         </div>
                         {!isEditing && (
                           <button
@@ -231,7 +201,7 @@ const ContainersListView: React.FC = () => {
                     <div className="rounded-xl border border-[var(--light-gray)]bg-slate-50 p-3">
                       <div className="text-[14px] uppercase text-[var(--medium-gray)]">Criado</div>
                       <div className="mt-0.5 font-medium text-[var(--dark-gray)]">
-                        {fmtAgo(container.Created)}
+                        {FmtAgo(container.Created)}
                       </div>
                     </div>
                     <div className="rounded-xl border border-[var(--light-gray)]bg-slate-50 p-3">

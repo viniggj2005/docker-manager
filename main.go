@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"docker-manager-go/docker"
+	"docker-manager-go/internals/docker"
 	"embed"
 
 	"github.com/wailsapp/wails/v2"

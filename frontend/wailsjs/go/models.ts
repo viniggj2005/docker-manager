@@ -128,6 +128,199 @@ export namespace container {
 
 }
 
+export namespace image {
+	
+	export class AttestationProperties {
+	    For: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new AttestationProperties(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.For = source["For"];
+	    }
+	}
+	export class DeleteResponse {
+	    Deleted?: string;
+	    Untagged?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new DeleteResponse(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Deleted = source["Deleted"];
+	        this.Untagged = source["Untagged"];
+	    }
+	}
+	export class ImageProperties {
+	    Platform: v1.Platform;
+	    // Go type: struct { Unpacked int64 "json:\"Unpacked\"" }
+	    Size: any;
+	    Containers: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ImageProperties(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Platform = this.convertValues(source["Platform"], v1.Platform);
+	        this.Size = this.convertValues(source["Size"], Object);
+	        this.Containers = source["Containers"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ManifestSummary {
+	    ID: string;
+	    Descriptor: v1.Descriptor;
+	    Available: boolean;
+	    // Go type: struct { Content int64 "json:\"Content\""; Total int64 "json:\"Total\"" }
+	    Size: any;
+	    Kind: string;
+	    ImageData?: ImageProperties;
+	    AttestationData?: AttestationProperties;
+	
+	    static createFrom(source: any = {}) {
+	        return new ManifestSummary(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.ID = source["ID"];
+	        this.Descriptor = this.convertValues(source["Descriptor"], v1.Descriptor);
+	        this.Available = source["Available"];
+	        this.Size = this.convertValues(source["Size"], Object);
+	        this.Kind = source["Kind"];
+	        this.ImageData = this.convertValues(source["ImageData"], ImageProperties);
+	        this.AttestationData = this.convertValues(source["AttestationData"], AttestationProperties);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class PruneReport {
+	    ImagesDeleted: DeleteResponse[];
+	    SpaceReclaimed: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new PruneReport(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.ImagesDeleted = this.convertValues(source["ImagesDeleted"], DeleteResponse);
+	        this.SpaceReclaimed = source["SpaceReclaimed"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class Summary {
+	    Containers: number;
+	    Created: number;
+	    Id: string;
+	    Labels: Record<string, string>;
+	    ParentId: string;
+	    Descriptor?: v1.Descriptor;
+	    Manifests?: ManifestSummary[];
+	    RepoDigests: string[];
+	    RepoTags: string[];
+	    SharedSize: number;
+	    Size: number;
+	    VirtualSize?: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new Summary(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Containers = source["Containers"];
+	        this.Created = source["Created"];
+	        this.Id = source["Id"];
+	        this.Labels = source["Labels"];
+	        this.ParentId = source["ParentId"];
+	        this.Descriptor = this.convertValues(source["Descriptor"], v1.Descriptor);
+	        this.Manifests = this.convertValues(source["Manifests"], ManifestSummary);
+	        this.RepoDigests = source["RepoDigests"];
+	        this.RepoTags = source["RepoTags"];
+	        this.SharedSize = source["SharedSize"];
+	        this.Size = source["Size"];
+	        this.VirtualSize = source["VirtualSize"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+
+}
+
 export namespace network {
 	
 	export class EndpointIPAMConfig {
