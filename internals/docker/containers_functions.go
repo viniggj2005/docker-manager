@@ -51,7 +51,7 @@ func (d *Docker) ContainersList() ([]container.Summary, error) {
 }
 
 func (d *Docker) ContainerRemove(containerId string) error {
-	err := d.cli.ContainerRemove(context.Background(), containerId, container.RemoveOptions{Force: true, RemoveVolumes: true, RemoveLinks: true})
+	err := d.cli.ContainerRemove(context.Background(), containerId, container.RemoveOptions{Force: true, RemoveVolumes: true})
 	if err != nil {
 		return &APIError{Code: 500, Message: err.Error()}
 	}

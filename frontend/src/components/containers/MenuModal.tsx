@@ -4,6 +4,7 @@ import { confirmToast } from '../utils/ConfirmToast';
 import { ContainerProps } from '../../interfaces/ContainerInterface';
 import ArrowTip from '../utils/ArrowTip';
 import { MdContentPasteSearch } from 'react-icons/md';
+import { ContainerRemove } from '../../../wailsjs/go/docker/Docker';
 const ContainersMenuModal: React.FC<ContainerProps> = ({
   id,
   name,
@@ -30,7 +31,7 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
       title: `Imagem ${name} deletada!`,
       message: `Deseja deletar a imagem: ${name} ?`,
       onConfirm: async () => {
-        console.log('deletado');
+        await ContainerRemove(id);
         onDeleted?.();
         setMenuModal?.(false);
       },

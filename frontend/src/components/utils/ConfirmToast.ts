@@ -15,7 +15,7 @@ export const confirmToast = (opts: {
     overlay: true,
     displayMode: 1,
     id: opts.id,
-    zindex: 10,
+    zindex: 99,
     message: opts.message,
     position: 'center',
     buttons: [
