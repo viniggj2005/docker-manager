@@ -6,7 +6,7 @@ import { confirmToast } from '../utils/ConfirmToast';
 import { copyToClipboard } from '../utils/clipboard';
 import { RemoveImage } from '../../../wailsjs/go/docker/Docker';
 import { MdContentCopy, MdContentPasteSearch } from 'react-icons/md';
-import { DockerImageInfo } from '../../interfaces/ContainerImagesInterfaces';
+import { ImageProps } from '../../interfaces/ContainerImagesInterfaces';
 import {
   ParseNameAndTag,
   EpochToDateStr,
@@ -14,15 +14,9 @@ import {
   FormatBytes,
 } from '../../functions/TreatmentFunction';
 
-interface Props {
-  img: DockerImageInfo;
-  onDeleted?: () => void;
-}
-
-const ImageCard: React.FC<Props> = ({ img, onDeleted }) => {
-  const { name, tag } = ParseNameAndTag(img.RepoTags);
+const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
   const id = img.Id ?? '';
-
+  const { name, tag } = ParseNameAndTag(img.RepoTags);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
 
   const handleDelete = () => {
@@ -42,7 +36,7 @@ const ImageCard: React.FC<Props> = ({ img, onDeleted }) => {
       <div className="flex flex-col flex-1">
         <div className="flex items-start gap-3">
           <div className="p-2 rounded-xl bg-[var(--system-white)] border border-[var(--light-gray)]">
-            <DockerImageIcon />
+            <DockerImageIcon className="text-[var(--docker-blue)]" />
           </div>
 
           <div className="min-w-0 flex-1">

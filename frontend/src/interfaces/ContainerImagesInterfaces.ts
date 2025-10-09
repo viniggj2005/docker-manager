@@ -11,3 +11,8 @@ export interface DockerImageInfo {
 }
 
 export type ViewMode = 'grid' | 'table';
+
+export interface ImageProps {
+  img: DockerImageInfo;
+  onDeleted?: () => void;
+}

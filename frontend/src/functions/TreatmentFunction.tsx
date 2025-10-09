@@ -52,3 +52,11 @@ export function EpochToDateStr(created?: number) {
   const d = new Date(created < 10_000_000_000 ? created * 1000 : created);
   return d.toLocaleString();
 }
+
+export function classState(state: string) {
+  const s = state?.toLowerCase();
+  if (s === 'paused') return 'bg-amber-100 text-amber-700';
+  if (s === 'running') return 'bg-emerald-100 text-emerald-700';
+  if (s === 'exited') return 'bg-rose-100 text-[var(--exit-red)]';
+  return 'bg-[var(--light-gray)]text-[var(--system-black)]';
+}

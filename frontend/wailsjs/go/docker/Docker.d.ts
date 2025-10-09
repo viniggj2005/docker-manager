@@ -8,6 +8,8 @@ export function ContainerLogs(arg1:string):Promise<string>;
 
 export function ContainerPause(arg1:string):Promise<void>;
 
+export function ContainerRemove(arg1:string):Promise<void>;
+
 export function ContainerRename(arg1:string,arg2:string):Promise<void>;
 
 export function ContainerUnPause(arg1:string):Promise<void>;

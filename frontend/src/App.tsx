@@ -5,7 +5,7 @@ import ListContainersImages from './components/containersImages/ListContainerIma
 function App() {
   return (
     <div className=" bg-[var(--system-white)] w-screen h-screen justify-center flex">
-      <div className="bg-[#0db7ed] bg-opacity-50 w-screen h-screen justify-center flex">
+      <div className="bg-white  w-screen h-screen justify-center flex">
         <div className="w-fit h-fit bg-transparent">
           <ContainersListView />
           <ListContainersImages />

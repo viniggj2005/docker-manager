@@ -10,6 +10,10 @@ export function ContainerPause(arg1) {
   return window['go']['docker']['Docker']['ContainerPause'](arg1);
 }
 
+export function ContainerRemove(arg1) {
+  return window['go']['docker']['Docker']['ContainerRemove'](arg1);
+}
+
 export function ContainerRename(arg1, arg2) {
   return window['go']['docker']['Docker']['ContainerRename'](arg1, arg2);
 }

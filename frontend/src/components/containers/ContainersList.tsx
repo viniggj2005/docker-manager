@@ -1,9 +1,12 @@
 import iziToast from 'izitoast';
 import LogsModal from './LogsModal';
 import { GoPencil } from 'react-icons/go';
+import { FiRefreshCw } from 'react-icons/fi';
 import { MdContentCopy } from 'react-icons/md';
+import { RiFileList2Line } from 'react-icons/ri';
 import { CiPlay1, CiPause1 } from 'react-icons/ci';
 import { FaLongArrowAltRight } from 'react-icons/fa';
+import { HiOutlineDotsVertical } from 'react-icons/hi';
 import React, { useEffect, useRef, useState } from 'react';
 import EditContainerNameModal from './EditContainerNameModal';
 import ContainersListSkeleton from './ContainersListSkeleton';
@@ -13,46 +16,15 @@ import {
   ContainerUnPause,
   ContainerRename,
 } from '../../../wailsjs/go/docker/Docker';
-import { FiRefreshCw } from 'react-icons/fi';
-import { FmtAgo, FmtName } from '../../functions/TreatmentFunction';
-
-type Port = {
-  IP?: string;
-  Type: string;
-  PrivatePort: number;
-  PublicPort?: number;
-};
-
-type NetworkSettings = {
-  Networks?: Record<string, { IPAddress?: string }>;
-};
-
-type ContainerItem = {
-  Id: string;
-  Image: string;
-  State: string;
-  Ports?: Port[];
-  Names: string[];
-  Status?: string;
-  ImageID?: string;
-  Command?: string;
-  Created?: number;
-  Labels?: Record<string, string>;
-  NetworkSettings?: NetworkSettings;
-};
-
-function classState(state: string) {
-  const s = state?.toLowerCase();
-  if (s === 'paused') return 'bg-amber-100 text-amber-700';
-  if (s === 'running') return 'bg-emerald-100 text-emerald-700';
-  if (s === 'exited') return 'bg-rose-100 text-[var(--exit-red)]';
-  return 'bg-[var(--light-gray)]text-[var(--system-black)]';
-}
+import { ContainerItem } from '../../interfaces/ContainerInterface';
+import { classState, FmtAgo, FmtName } from '../../functions/TreatmentFunction';
+import ContainersMenuModal from './MenuModal';
 
 const ContainersListView: React.FC = () => {
   const timerRef = useRef<number | null>(null);
   const [items, setItems] = useState<ContainerItem[] | null>(null);
   const [LogsModalId, setLogsModalId] = useState<string | null>(null);
+  const [MenuModalId, setMenuModalId] = useState<string | null>(null);
   const [editNameModalId, setEditNameModalId] = useState<string | null>(null);
 
   const fetchData = async () => {
@@ -131,6 +103,7 @@ const ContainersListView: React.FC = () => {
             {items.map((container) => {
               const name = FmtName(container.Names);
               const isSeeing = LogsModalId === container.Id;
+              const isOpened = MenuModalId === container.Id;
               const isEditing = editNameModalId === container.Id;
               return (
                 <div
@@ -168,7 +141,6 @@ const ContainersListView: React.FC = () => {
                           <LogsModal id={container.Id} setLogsModal={() => setLogsModalId(null)} />
                         )}
                       </div>
-
                       <div className="mt-0.5 text-lg text-[var(--medium-gray)]">
                         {container.Image}
                       </div>
@@ -183,14 +155,15 @@ const ContainersListView: React.FC = () => {
                     </span>
                     <button
                       onClick={() => setLogsModalId(container.Id)}
-                      className="rounded-2xl border border-[var(--exit-red)] bg-[var(--system-white)] px-3 py-1.5 text-md text-[var(--exit-red)] hover:bg-[var(--exit-red)] hover:text-[var(--system-white)]"
+                      title="Logs"
+                      className="rounded-2xl bbg-[var(--system-white)] px-3 py-1.5 text-md text-[var(--exit-red)] hover:scale-95"
                     >
-                      logs
+                      <RiFileList2Line className="h-6 w-6" />
                     </button>
                     <button
                       title={`${container.State === 'paused' ? 'Despausar container' : 'Pausar Container'}`}
                       onClick={() => changeContainerStage(container.Id, container.State)}
-                      className="rounded-2xl  bg-[var(--system-[var(--system-white)])] px-3 py-1.5 text-sm text-[var(--system-black)] hover:bg-[var(--medium-gray)] hover:text-[var(--system-white)]"
+                      className="rounded-2xl  bg-[var(--system-[var(--system-white)])] px-3 py-1.5 text-sm text-[var(--system-black)] hover:scale-95"
                     >
                       {container.State === 'paused' ? (
                         <CiPlay1 className="w-6 h-6" />
@@ -198,6 +171,27 @@ const ContainersListView: React.FC = () => {
                         <CiPause1 className="w-6 h-6" />
                       )}
                     </button>
+                    <div className="relative">
+                      <button
+                        title="menu"
+                        onClick={() => setMenuModalId(isOpened ? null : container.Id)}
+                        className="rounded-2xl  bg-[var(--system-[var(--system-white)])] px-3 py-1.5 text-sm text-[var(--system-black)] hover:scale-95"
+                      >
+                        <HiOutlineDotsVertical className="w-6 h-6" />
+                      </button>
+                      {isOpened && (
+                        <ContainersMenuModal
+                          isOpen={isOpened ? true : false}
+                          id={container.Id}
+                          name={container.Names?.[0] ?? name}
+                          setMenuModal={() => setMenuModalId(null)}
+                          onDeleted={async () => {
+                            await fetchData();
+                            setMenuModalId(null);
+                          }}
+                        />
+                      )}
+                    </div>
                   </div>
 
                   <div className="mt-4 grid grid-cols-2 gap-3 text-md">
@@ -235,7 +229,7 @@ const ContainersListView: React.FC = () => {
                     </div>
                     <div className="opacity-0 transition group-hover:opacity-100">
                       <button
-                        className="rounded-xl flex border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm text-[var(--system-black)] hover:bg-[var(--light-gray)]"
+                        className="rounded-xl flex border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm text-[var(--system-black)] hover:scale-95"
                         onClick={() => navigator.clipboard.writeText(container.Id)}
                       >
                         <MdContentCopy /> Copiar ID

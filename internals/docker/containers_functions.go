@@ -50,6 +50,14 @@ func (d *Docker) ContainersList() ([]container.Summary, error) {
 	return containers, nil
 }
 
+func (d *Docker) ContainerRemove(containerId string) error {
+	err := d.cli.ContainerRemove(context.Background(), containerId, container.RemoveOptions{Force: true, RemoveVolumes: true, RemoveLinks: true})
+	if err != nil {
+		return &APIError{Code: 500, Message: err.Error()}
+	}
+	return nil
+}
+
 // func (a *App) StreamLogs(containerID string) error {
 // 	reader, err := a.cli.ContainerLogs(
 // 		context.Background(),
