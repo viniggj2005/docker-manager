@@ -1,15 +1,15 @@
 import Toolbar from './Toolbar';
 import ImageCard from './ImageCard';
 import ImagesTable from './ImagesTable';
-import { useImages } from './UseImages';
+import { useImages } from './RequestsImages';
 import React, { useMemo, useState } from 'react';
 import { ParseNameAndTag } from '../../functions/TreatmentFunction';
 import { ViewMode } from '../../interfaces/ContainerImagesInterfaces';
 
 const ListContainersImages: React.FC = () => {
-  const { images, loading, fetchImages, setImages } = useImages();
   const [query, setQuery] = useState('');
   const [view, setView] = useState<ViewMode>('grid');
+  const { images, loading, fetchImages, setImages } = useImages();
 
   const filteredSorted = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -45,12 +45,13 @@ const ListContainersImages: React.FC = () => {
   return (
     <div className="w-full max-w-7xl mx-auto p-4 text-[var(--system-black)]">
       <Toolbar
-        query={query}
-        setQuery={setQuery}
         view={view}
+        query={query}
         setView={setView}
-        onRefresh={fetchImages}
         loading={loading}
+        setQuery={setQuery}
+        onRefresh={fetchImages}
+        onDeleted={handleDeleted}
       />
 
       {view === 'grid' ? (

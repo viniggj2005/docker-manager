@@ -1,17 +1,39 @@
 import React from 'react';
+import { FaTrashCan } from 'react-icons/fa6';
+import { confirmToast } from '../utils/ConfirmToast';
+import { PruneImages } from '../../../wailsjs/go/docker/Docker';
 import { ViewMode } from '../../interfaces/ContainerImagesInterfaces';
 import { FiSearch, FiRefreshCw, FiGrid, FiList } from 'react-icons/fi';
 
 interface Props {
   query: string;
-  setQuery: (v: string) => void;
   view: ViewMode;
-  setView: (v: ViewMode) => void;
-  onRefresh: () => void;
   loading: boolean;
+  onRefresh: () => void;
+  onDeleted?: () => void;
+  setQuery: (v: string) => void;
+  setView: (v: ViewMode) => void;
 }
 
-const Toolbar: React.FC<Props> = ({ query, setQuery, view, setView, onRefresh, loading }) => {
+const Toolbar: React.FC<Props> = ({
+  view,
+  query,
+  loading,
+  setView,
+  setQuery,
+  onRefresh,
+  onDeleted,
+}) => {
+  const handleDelete = () => {
+    confirmToast({
+      title: `Imagens sem uso deletadas!`,
+      message: `Deseja deletar as imagens sem uso ?`,
+      onConfirm: async () => {
+        await PruneImages();
+        onDeleted?.();
+      },
+    });
+  };
   return (
     <div className="flex flex-wrap items-center gap-3 mb-4">
       <div className="relative flex-1 min-w-[220px]">
@@ -26,27 +48,34 @@ const Toolbar: React.FC<Props> = ({ query, setQuery, view, setView, onRefresh, l
 
       <button
         onClick={onRefresh}
-        className="inline-flex items-center gap-2 px-3 py-2 rounded-xl transition bg-[var(--system-white)] text-[var(--system-black)] border border-[var(--light-gray)] hover:border-[var(--light-gray)]"
+        className="inline-flex items-center hover:scale-95  gap-2 px-3 py-2 rounded-xl transition bg-[var(--system-white)] text-[var(--system-black)] border border-[var(--light-gray)] hover:border-[var(--light-gray)]"
         title="Atualizar"
       >
-        <FiRefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+        <FiRefreshCw className={`h-4 w-4   ${loading ? 'animate-spin' : ''}`} />
         <span>Atualizar</span>
       </button>
 
       <div className="ml-auto flex items-center gap-2">
         <button
           onClick={() => setView('grid')}
-          className={`p-2 rounded-xl border transition ${view === 'grid' ? 'bg-[var(--system-white)] border-[var(--light-gray)]' : 'bg-[var(--system-white)] border-[var(--light-gray)] hover:border-[var(--light-gray)]'}`}
+          className={`p-2 rounded-xl border hover:scale-95  transition ${view === 'grid' ? 'bg-[var(--system-white)] border-[var(--light-gray)]' : 'bg-[var(--system-white)] border-[var(--light-gray)] hover:border-[var(--light-gray)]'}`}
           title="Grade"
         >
           <FiGrid className="h-4 w-4" />
         </button>
         <button
           onClick={() => setView('table')}
-          className={`p-2 rounded-xl border transition ${view === 'table' ? 'bg-[var(--System-white)] border-[var(--light-gray)]' : 'bg-[var(--system-white)] border-[var(--light-gray)] hover:border-[var(--light-gray)]'}`}
+          className={`p-2 rounded-xl border hover:scale-95  transition ${view === 'table' ? 'bg-[var(--system-white)] border-[var(--light-gray)]' : 'bg-[var(--system-white)] border-[var(--light-gray)] hover:border-[var(--light-gray)]'}`}
           title="Tabela"
         >
           <FiList className="h-4 w-4" />
+        </button>
+        <button
+          onClick={handleDelete}
+          className={`p-2 rounded-xl border bg-[var(--system-white)] hover:scale-95 transition`}
+          title="Tabela"
+        >
+          <FaTrashCan className="w-4 h-4 text-[var(--exit-red)]" />
         </button>
       </div>
     </div>

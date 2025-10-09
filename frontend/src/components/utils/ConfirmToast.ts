@@ -1,7 +1,7 @@
 import iziToast from 'izitoast';
 
 export const confirmToast = (opts: {
-  id: string;
+  id?: string;
   title: string;
   message: string;
   onConfirm: () => Promise<void> | void;

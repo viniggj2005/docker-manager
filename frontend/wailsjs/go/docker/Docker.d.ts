@@ -16,6 +16,8 @@ export function ContainersList():Promise<Array<container.Summary>>;
 
 export function ImagesList():Promise<Array<image.Summary>>;
 
+export function InspectImage(arg1:string):Promise<string>;
+
 export function PruneImages():Promise<image.PruneReport>;
 
 export function RemoveImage(arg1:string):Promise<Array<image.DeleteResponse>>;

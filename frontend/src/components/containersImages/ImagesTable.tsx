@@ -35,7 +35,7 @@ const ImagesTable: React.FC<Props> = ({ images, onDeleted }) => {
         return (
           <div
             key={id}
-            className="grid grid-cols-12 items-center px-4 py-2 text-sm border-b border-[var(--dark-gray)] hover:bg-[var(--system-white)]"
+            className="grid grid-cols-12 items-center px-4 py-2 text-md  bg-[var(--system-white)] hover:bg-[var(--light-gray)]"
           >
             <div className="col-span-5 flex items-center gap-2 min-w-0">
               <FiBox className="h-4 w-4 text-[var(--system-black)]" />
@@ -67,7 +67,7 @@ const ImagesTable: React.FC<Props> = ({ images, onDeleted }) => {
               <button
                 onClick={() => copyToClipboard(id.replace('sha256:', ''), 'ID copiado')}
                 title="Copiar Id da Imagem"
-                className="px-2 py-1 rounded-lg bg-[var(--system-white)] border border-[var(--light-gray)] hover:border-[var(--accent-green)]"
+                className="px-2 py-1 hover:scale-95 rounded-lg bg-[var(--system-white)] border border-[var(--light-gray)] "
               >
                 <MdContentCopy />
               </button>
@@ -85,7 +85,7 @@ const ImagesTable: React.FC<Props> = ({ images, onDeleted }) => {
                   })
                 }
                 title="Excluir imagem"
-                className="px-2 py-1 rounded-lg bg-[var(--system-white)] border border-[var(--light-gray)] hover:border-[var(--accent-green)]"
+                className="px-2 py-1 hover:scale-95 rounded-lg bg-[var(--system-white)] border border-[var(--light-gray)] "
               >
                 <FaTrashCan className="text-[var(--exit-red)]" />
               </button>

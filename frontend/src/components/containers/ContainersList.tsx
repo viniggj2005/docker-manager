@@ -13,6 +13,7 @@ import {
   ContainerUnPause,
   ContainerRename,
 } from '../../../wailsjs/go/docker/Docker';
+import { FiRefreshCw } from 'react-icons/fi';
 import { FmtAgo, FmtName } from '../../functions/TreatmentFunction';
 
 type Port = {
@@ -111,9 +112,11 @@ const ContainersListView: React.FC = () => {
           <h1 className="text-2xl font-semibold text-[var(--system-black)]">Containers</h1>
           <button
             onClick={fetchData}
-            className="rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-md text-[var(--system-black)] hover:bg-[var(--light-gray)]"
+            className="inline-flex items-center hover:scale-95  gap-2 px-3 py-2 rounded-xl transition bg-[var(--system-white)] text-[var(--system-black)] border border-[var(--light-gray)] hover:border-[var(--light-gray)]"
+            title="Atualizar"
           >
-            Atualizar
+            <FiRefreshCw className={`h-4 w-4   `} />
+            <span>Atualizar</span>
           </button>
         </header>
 

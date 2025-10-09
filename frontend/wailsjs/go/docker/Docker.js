@@ -26,6 +26,10 @@ export function ImagesList() {
   return window['go']['docker']['Docker']['ImagesList']();
 }
 
+export function InspectImage(arg1) {
+  return window['go']['docker']['Docker']['InspectImage'](arg1);
+}
+
 export function PruneImages() {
   return window['go']['docker']['Docker']['PruneImages']();
 }

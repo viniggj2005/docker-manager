@@ -1,10 +1,13 @@
 package docker
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/image"
+	"github.com/docker/docker/client"
 )
 
 func (d *Docker) ImagesList() ([]image.Summary, error) {
@@ -31,4 +34,25 @@ func (d *Docker) PruneImages() (image.PruneReport, error) {
 		return image.PruneReport{}, &APIError{Code: 500, Message: err.Error()}
 	}
 	return images, nil
+}
+
+func (d *Docker) InspectImage(imageId string) (string, error) {
+	var raw bytes.Buffer
+
+	_, err := d.cli.ImageInspect(
+		context.Background(),
+		imageId,
+		client.ImageInspectWithRawResponse(&raw),
+	)
+	if err != nil {
+		return "bytes.Buffer{}", err
+	}
+
+	var pretty bytes.Buffer
+	err = json.Indent(&pretty, raw.Bytes(), "", "  ")
+	if err != nil {
+		return "", err
+	}
+
+	return pretty.String(), nil
 }
