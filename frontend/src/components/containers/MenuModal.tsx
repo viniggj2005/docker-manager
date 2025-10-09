@@ -1,10 +1,13 @@
 import { FaTrashCan } from 'react-icons/fa6';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { confirmToast } from '../utils/ConfirmToast';
 import { ContainerProps } from '../../interfaces/ContainerInterface';
 import ArrowTip from '../utils/ArrowTip';
 import { MdContentPasteSearch } from 'react-icons/md';
-import { ContainerRemove } from '../../../wailsjs/go/docker/Docker';
+import { ContainerInspect, ContainerRemove } from '../../../wailsjs/go/docker/Docker';
+import iziToast from 'izitoast';
+import InspectModal from '../utils/InspectModal';
+import { FmtName } from '../../functions/TreatmentFunction';
 const ContainersMenuModal: React.FC<ContainerProps> = ({
   id,
   name,
@@ -13,6 +16,25 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   setMenuModal,
 }) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
+  const [isInspectOpen, setIsInspectOpen] = useState(false);
+  const [inspectData, setInspectData] = useState<string | null>(null);
+
+  const handleInspect = async () => {
+    try {
+      const data = await ContainerInspect(id);
+      setInspectData(data);
+      setInspectData(typeof data === 'string' ? data : JSON.stringify(data, null, 2));
+      iziToast.success({
+        title: 'Sucesso!',
+        message: 'Os dados da imagem foram Retornados!',
+        position: 'bottomRight',
+      });
+      console.log('INSPECTDATA', inspectData);
+      setIsInspectOpen(true);
+    } catch (e: any) {
+      iziToast.error({ title: 'Erro', message: String(e), position: 'bottomRight' });
+    }
+  };
 
   useEffect(() => {
     if (!isOpen) return;
@@ -60,13 +82,21 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
           <FaTrashCan className="w-5 h-5" />
         </button>
         <button
-          // onClick={() => setIsInspectOpen(true)}
+          onClick={() => handleInspect()}
           title="Inspecionar Container"
           className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
         >
           <MdContentPasteSearch className="w-6 h-6" />
         </button>
       </div>
+      {isInspectOpen && (
+        <InspectModal
+          title="Inspect do container"
+          name={`${FmtName([name])}`}
+          data={inspectData}
+          onClose={() => setIsInspectOpen(false)}
+        />
+      )}
     </div>
   );
 };

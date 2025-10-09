@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import InspectModal from './InspectModal';
+import InspectModal from '../utils/InspectModal';
 import { DockerImageIcon } from '../icons';
 import { FaTrashCan, FaTag } from 'react-icons/fa6';
 import { confirmToast } from '../utils/ConfirmToast';
 import { copyToClipboard } from '../utils/clipboard';
-import { RemoveImage } from '../../../wailsjs/go/docker/Docker';
+import { InspectImage, RemoveImage } from '../../../wailsjs/go/docker/Docker';
 import { MdContentCopy, MdContentPasteSearch } from 'react-icons/md';
 import { ImageProps } from '../../interfaces/ContainerImagesInterfaces';
 import {
@@ -13,11 +13,13 @@ import {
   FmtAgo,
   FormatBytes,
 } from '../../functions/TreatmentFunction';
+import iziToast from 'izitoast';
 
 const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
   const id = img.Id ?? '';
   const { name, tag } = ParseNameAndTag(img.RepoTags);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
+  const [inspectData, setInspectData] = useState<string | null>(null);
 
   const handleDelete = () => {
     confirmToast({
@@ -29,6 +31,23 @@ const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
         onDeleted?.();
       },
     });
+  };
+
+  const handleInspect = async () => {
+    try {
+      const data = await InspectImage(id);
+      setInspectData(data);
+      setInspectData(typeof data === 'string' ? data : JSON.stringify(data, null, 2));
+      iziToast.success({
+        title: 'Sucesso!',
+        message: 'Os dados da imagem foram Retornados!',
+        position: 'bottomRight',
+      });
+      console.log('INSPECTDATA', inspectData);
+      setIsInspectOpen(true);
+    } catch (e: any) {
+      iziToast.error({ title: 'Erro', message: String(e), position: 'bottomRight' });
+    }
   };
 
   return (
@@ -89,7 +108,9 @@ const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
         </button>
 
         <button
-          onClick={() => setIsInspectOpen(true)}
+          onClick={() => {
+            handleInspect();
+          }}
           title="Inspecionar Imagem"
           className="cursor-pointer hover:scale-95 text-[var(--system-black)]"
         >
@@ -98,7 +119,12 @@ const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
       </div>
 
       {isInspectOpen && (
-        <InspectModal id={id} name={`${name}:${tag}`} onClose={() => setIsInspectOpen(false)} />
+        <InspectModal
+          title="Inspect da imagem"
+          name={`${name}:${tag}`}
+          data={inspectData}
+          onClose={() => setIsInspectOpen(false)}
+        />
       )}
     </div>
   );

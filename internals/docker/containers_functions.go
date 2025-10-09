@@ -3,6 +3,7 @@ package docker
 import (
 	"context"
 	"docker-manager-go/internals/functions"
+	"encoding/json"
 
 	"fmt"
 
@@ -56,6 +57,20 @@ func (d *Docker) ContainerRemove(containerId string) error {
 		return &APIError{Code: 500, Message: err.Error()}
 	}
 	return nil
+}
+
+func (d *Docker) ContainerInspect(containerId string) (string, error) {
+	inspect, err := d.cli.ContainerInspect(context.Background(), containerId)
+	if err != nil {
+		return "", err
+	}
+
+	b, err := json.MarshalIndent(inspect, "", "  ")
+	if err != nil {
+		return "", err
+	}
+
+	return string(b), nil
 }
 
 // func (a *App) StreamLogs(containerID string) error {

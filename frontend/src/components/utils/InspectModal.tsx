@@ -5,14 +5,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { InspectImage } from '../../../wailsjs/go/docker/Docker';
 
 interface InspectProps {
-  id: string;
   name: string;
+  title: string;
+  data: string | null;
   onClose: () => void;
 }
 
-const InspectModal: React.FC<InspectProps> = ({ id, name, onClose }) => {
+const InspectModal: React.FC<InspectProps> = ({ name, data, title, onClose }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const [inspectData, setInspectData] = useState<string | null>(null);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -26,23 +26,6 @@ const InspectModal: React.FC<InspectProps> = ({ id, name, onClose }) => {
     if (e.target === e.currentTarget) onClose();
   };
 
-  const handleInspect = async () => {
-    try {
-      const data = await InspectImage(id);
-      setInspectData(typeof data === 'string' ? data : JSON.stringify(data, null, 2));
-      iziToast.success({
-        title: 'Sucesso!',
-        message: 'Os dados da imagem foram Retornados!',
-        position: 'bottomRight',
-      });
-    } catch (e: any) {
-      iziToast.error({ title: 'Erro', message: String(e), position: 'bottomRight' });
-    }
-  };
-  useEffect(() => {
-    handleInspect();
-  }, []);
-
   return (
     <div
       onClick={closeOnBackdrop}
@@ -54,7 +37,7 @@ const InspectModal: React.FC<InspectProps> = ({ id, name, onClose }) => {
         <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-white/10 px-5 py-3 bg-zinc-900/90">
           <div className="flex items-center gap-2">
             <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-            <h2 className="text-sm font-medium">Inspect da imagem</h2>
+            <h2 className="text-sm font-medium">{title}</h2>
             <span className="text-xs text-zinc-400">{name}</span>
           </div>
 
@@ -73,7 +56,7 @@ const InspectModal: React.FC<InspectProps> = ({ id, name, onClose }) => {
           ref={scrollRef}
           className="h-[calc(100%-52px)] overflow-y-auto px-5 py-4 font-mono text-xs whitespace-pre-wrap"
         >
-          {inspectData || 'Sem dados disponíveis'}
+          {data || 'Sem dados disponíveis'}
         </div>
       </div>
     </div>

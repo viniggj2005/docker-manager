@@ -4,6 +4,8 @@ import {container} from '../models';
 import {image} from '../models';
 import {context} from '../models';
 
+export function ContainerInspect(arg1:string):Promise<string>;
+
 export function ContainerLogs(arg1:string):Promise<string>;
 
 export function ContainerPause(arg1:string):Promise<void>;
