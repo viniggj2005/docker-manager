@@ -1,15 +1,6 @@
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
+import React, { useEffect, useRef } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
-import React, { useEffect, useRef, useState } from 'react';
-import { InspectImage } from '../../../wailsjs/go/docker/Docker';
-
-interface InspectProps {
-  name: string;
-  title: string;
-  data: string | null;
-  onClose: () => void;
-}
+type InspectProps = { name?: string; data?: string | null; title?: string; onClose: () => void };
 
 const InspectModal: React.FC<InspectProps> = ({ name, data, title, onClose }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -24,6 +15,26 @@ const InspectModal: React.FC<InspectProps> = ({ name, data, title, onClose }) =>
 
   const closeOnBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) onClose();
+  };
+
+  const highlightQuotedStrings = (text: string) => {
+    const regex = /"([^"\\]|\\.)*":/g;
+    const parts: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match;
+    let key = 0;
+    while ((match = regex.exec(text)) !== null) {
+      const idx = match.index;
+      if (lastIndex < idx) parts.push(text.slice(lastIndex, idx));
+      parts.push(
+        <span key={key++} className="text-[var(--orange-json)]">
+          {match[0]}
+        </span>
+      );
+      lastIndex = regex.lastIndex;
+    }
+    if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+    return parts;
   };
 
   return (
@@ -54,9 +65,9 @@ const InspectModal: React.FC<InspectProps> = ({ name, data, title, onClose }) =>
 
         <div
           ref={scrollRef}
-          className="h-[calc(100%-52px)] overflow-y-auto px-5 py-4 font-mono text-xs whitespace-pre-wrap"
+          className="h-[calc(100%-52px)] overflow-y-auto px-5 py-4 font-mono text-sm whitespace-pre-wrap"
         >
-          {data || 'Sem dados disponíveis'}
+          {data ? <div>{highlightQuotedStrings(String(data))}</div> : 'Sem dados disponíveis'}
         </div>
       </div>
     </div>
