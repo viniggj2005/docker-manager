@@ -1,13 +1,18 @@
-import { FaTrashCan } from 'react-icons/fa6';
-import React, { useEffect, useRef, useState } from 'react';
-import { confirmToast } from '../utils/ConfirmToast';
-import { ContainerProps } from '../../interfaces/ContainerInterface';
-import ArrowTip from '../utils/ArrowTip';
-import { MdContentPasteSearch } from 'react-icons/md';
-import { ContainerInspect, ContainerRemove } from '../../../wailsjs/go/docker/Docker';
 import iziToast from 'izitoast';
+import ArrowTip from '../utils/ArrowTip';
+import { FaTrashCan } from 'react-icons/fa6';
 import InspectModal from '../utils/InspectModal';
+import { confirmToast } from '../utils/ConfirmToast';
+import React, { useEffect, useRef, useState } from 'react';
 import { FmtName } from '../../functions/TreatmentFunction';
+import { MdContentPasteSearch, MdRestartAlt } from 'react-icons/md';
+import { ContainerProps } from '../../interfaces/ContainerInterface';
+import {
+  ContainerInspect,
+  ContainerRemove,
+  ContainerRestart,
+} from '../../../wailsjs/go/docker/Docker';
+
 const ContainersMenuModal: React.FC<ContainerProps> = ({
   id,
   name,
@@ -31,6 +36,13 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
       });
       console.log('INSPECTDATA', inspectData);
       setIsInspectOpen(true);
+    } catch (e: any) {
+      iziToast.error({ title: 'Erro', message: String(e), position: 'bottomRight' });
+    }
+  };
+  const handleRestart = async () => {
+    try {
+      await ContainerRestart(id);
     } catch (e: any) {
       iziToast.error({ title: 'Erro', message: String(e), position: 'bottomRight' });
     }
@@ -65,7 +77,7 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   return (
     <div
       ref={modalRef}
-      className="absolute left-full ml-2 -top-1/2 z-20 w-fit-translate-y-1/2 border border-[var(--light-gray)] rounded-xl shadow-lg"
+      className="absolute left-full  -top-14 z-20 w-fit-translate-y-1/2 border border-[var(--light-gray)] rounded-xl shadow-lg"
       role="dialog"
       aria-label="Menu do container"
     >
@@ -87,6 +99,13 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
           className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
         >
           <MdContentPasteSearch className="w-6 h-6" />
+        </button>
+        <button
+          onClick={() => handleRestart()}
+          title="Restart Container"
+          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
+        >
+          <MdRestartAlt className="w-6 h-6" />
         </button>
       </div>
       {isInspectOpen && (

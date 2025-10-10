@@ -22,6 +22,10 @@ export function ContainerRename(arg1, arg2) {
   return window['go']['docker']['Docker']['ContainerRename'](arg1, arg2);
 }
 
+export function ContainerRestart(arg1) {
+  return window['go']['docker']['Docker']['ContainerRestart'](arg1);
+}
+
 export function ContainerUnPause(arg1) {
   return window['go']['docker']['Docker']['ContainerUnPause'](arg1);
 }

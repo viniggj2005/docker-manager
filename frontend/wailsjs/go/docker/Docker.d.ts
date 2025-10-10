@@ -14,6 +14,8 @@ export function ContainerRemove(arg1:string):Promise<void>;
 
 export function ContainerRename(arg1:string,arg2:string):Promise<void>;
 
+export function ContainerRestart(arg1:string):Promise<void>;
+
 export function ContainerUnPause(arg1:string):Promise<void>;
 
 export function ContainersList():Promise<Array<container.Summary>>;

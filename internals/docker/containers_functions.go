@@ -73,6 +73,15 @@ func (d *Docker) ContainerInspect(containerId string) (string, error) {
 	return string(b), nil
 }
 
+func (d *Docker) ContainerRestart(containerId string) error {
+	time := 10
+	err := d.cli.ContainerRestart(context.Background(), containerId, container.StopOptions{Timeout: &time, Signal: "SIGTERM"})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // func (a *App) StreamLogs(containerID string) error {
 // 	reader, err := a.cli.ContainerLogs(
 // 		context.Background(),
