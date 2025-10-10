@@ -9,7 +9,7 @@ import { ViewMode } from '../../interfaces/ContainerImagesInterfaces';
 const ListContainersImages: React.FC = () => {
   const [query, setQuery] = useState('');
   const [view, setView] = useState<ViewMode>('grid');
-  const { images, loading, fetchImages, setImages } = useImages();
+  const { images, loading, fetchImages } = useImages();
 
   const filteredSorted = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -65,7 +65,15 @@ const ListContainersImages: React.FC = () => {
           ))}
         </div>
       ) : (
-        <ImagesTable images={filteredSorted} onDeleted={handleDeleted} />
+        <div className="flex flex-col gap-2">
+          {filteredSorted.map((img) => (
+            <ImagesTable
+              key={img.Id ?? Math.random().toString(36)}
+              img={img}
+              onDeleted={handleDeleted}
+            />
+          ))}
+        </div>
       )}
 
       {!loading && filteredSorted.length === 0 && (
