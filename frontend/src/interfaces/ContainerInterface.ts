@@ -1,15 +1,15 @@
-export type Port = {
+export interface Port {
   IP?: string;
   Type: string;
   PrivatePort: number;
   PublicPort?: number;
-};
+}
 
-export type NetworkSettings = {
+export interface NetworkSettings {
   Networks?: Record<string, { IPAddress?: string }>;
-};
+}
 
-export type ContainerItem = {
+export interface ContainerItem {
   Id: string;
   Image: string;
   State: string;
@@ -21,7 +21,12 @@ export type ContainerItem = {
   Created?: number;
   Labels?: Record<string, string>;
   NetworkSettings?: NetworkSettings;
-};
+}
+export interface ContainerStatsProps {
+  id: string;
+  name: string;
+  onClose: () => void;
+}
 
 export interface EditContainerNameModalProps {
   id: string;
@@ -36,4 +41,22 @@ export interface ContainerProps {
   name: string;
   setMenuModal: (state: boolean) => void;
   onDeleted?: () => void;
+}
+
+export interface StatsPayload {
+  containerId: string;
+  osType: string;
+  cpuPercent: number;
+  memPercent: number;
+  memUsage: number;
+  memLimit: number;
+  rxBytes: number;
+  txBytes: number;
+  pids: number;
+  time: number;
+}
+
+export interface LogsProps {
+  id: string;
+  setLogsModal: (state: boolean) => void;
 }

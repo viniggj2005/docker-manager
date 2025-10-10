@@ -1,9 +1,9 @@
 import React from 'react';
 import { FaTrashCan } from 'react-icons/fa6';
-import { confirmToast } from '../utils/ConfirmToast';
-import { PruneImages } from '../../../wailsjs/go/docker/Docker';
-import { ViewMode } from '../../interfaces/ContainerImagesInterfaces';
+import { confirmToast } from '../../utils/ConfirmToast';
+import { PruneImages } from '../../../../wailsjs/go/docker/Docker';
 import { FiSearch, FiRefreshCw, FiGrid, FiList } from 'react-icons/fi';
+import { ViewMode } from '../../../interfaces/ContainerImagesInterfaces';
 
 interface Props {
   query: string;

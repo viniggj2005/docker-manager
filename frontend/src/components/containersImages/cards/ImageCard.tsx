@@ -1,19 +1,19 @@
+import iziToast from 'izitoast';
 import React, { useState } from 'react';
-import InspectModal from '../utils/InspectModal';
-import { DockerImageIcon } from '../icons';
+import { DockerImageIcon } from '../../icons';
+import InspectModal from '../../utils/InspectModal';
 import { FaTrashCan, FaTag } from 'react-icons/fa6';
-import { confirmToast } from '../utils/ConfirmToast';
-import { copyToClipboard } from '../utils/clipboard';
-import { InspectImage, RemoveImage } from '../../../wailsjs/go/docker/Docker';
+import { confirmToast } from '../../utils/ConfirmToast';
+import { copyToClipboard } from '../../utils/clipboard';
 import { MdContentCopy, MdContentPasteSearch } from 'react-icons/md';
-import { ImageProps } from '../../interfaces/ContainerImagesInterfaces';
+import { ImageProps } from '../../../interfaces/ContainerImagesInterfaces';
+import { InspectImage, RemoveImage } from '../../../../wailsjs/go/docker/Docker';
 import {
   ParseNameAndTag,
   EpochToDateStr,
   FmtAgo,
   FormatBytes,
-} from '../../functions/TreatmentFunction';
-import iziToast from 'izitoast';
+} from '../../../functions/TreatmentFunction';
 
 const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
   const id = img.Id ?? '';

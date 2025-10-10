@@ -60,3 +60,7 @@ export function classState(state: string) {
   if (s === 'exited') return 'bg-rose-100 text-[var(--exit-red)]';
   return 'bg-[var(--light-gray)]text-[var(--system-black)]';
 }
+
+export function BytesToMB(n: number) {
+  return +(n / (1024 * 1024)).toFixed(1);
+}

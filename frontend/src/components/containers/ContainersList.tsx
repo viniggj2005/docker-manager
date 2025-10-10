@@ -1,5 +1,4 @@
 import iziToast from 'izitoast';
-import LogsModal from './LogsModal';
 import { GoPencil } from 'react-icons/go';
 import { FiRefreshCw } from 'react-icons/fi';
 import { MdContentCopy } from 'react-icons/md';
@@ -8,17 +7,18 @@ import { CiPlay1, CiPause1 } from 'react-icons/ci';
 import { FaLongArrowAltRight } from 'react-icons/fa';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
 import React, { useEffect, useRef, useState } from 'react';
-import EditContainerNameModal from './EditContainerNameModal';
-import ContainersListSkeleton from './ContainersListSkeleton';
 import {
   ContainersList,
   ContainerPause,
   ContainerUnPause,
   ContainerRename,
 } from '../../../wailsjs/go/docker/Docker';
+import LogsModal from './modals/LogsModal';
+import ContainersMenuModal from './modals/MenuModal';
 import { ContainerItem } from '../../interfaces/ContainerInterface';
+import EditContainerNameModal from './modals/EditContainerNameModal';
+import ContainersListSkeleton from './skeletons/ContainersListSkeleton';
 import { classState, FmtAgo, FmtName } from '../../functions/TreatmentFunction';
-import ContainersMenuModal from './MenuModal';
 
 const ContainersListView: React.FC = () => {
   const timerRef = useRef<number | null>(null);

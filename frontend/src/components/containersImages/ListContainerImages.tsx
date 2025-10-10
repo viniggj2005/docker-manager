@@ -1,7 +1,7 @@
-import Toolbar from './Toolbar';
-import ImageCard from './ImageCard';
-import ImagesTable from './ImagesTable';
+import Toolbar from './toolbar/Toolbar';
+import ImageCard from './cards/ImageCard';
 import { useImages } from './RequestsImages';
+import ImagesTable from './tables/ImagesTable';
 import React, { useMemo, useState } from 'react';
 import { ParseNameAndTag } from '../../functions/TreatmentFunction';
 import { ViewMode } from '../../interfaces/ContainerImagesInterfaces';

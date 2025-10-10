@@ -50,6 +50,18 @@ export function RemoveImage(arg1) {
   return window['go']['docker']['Docker']['RemoveImage'](arg1);
 }
 
+export function StartContainerStats(arg1) {
+  return window['go']['docker']['Docker']['StartContainerStats'](arg1);
+}
+
 export function Startup(arg1) {
   return window['go']['docker']['Docker']['Startup'](arg1);
+}
+
+export function StopContainerStats(arg1) {
+  return window['go']['docker']['Docker']['StopContainerStats'](arg1);
+}
+
+export function StreamStats(arg1, arg2) {
+  return window['go']['docker']['Docker']['StreamStats'](arg1, arg2);
 }

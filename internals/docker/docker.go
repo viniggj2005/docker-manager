@@ -1,17 +1,22 @@
+// internals/docker/docker.go
 package docker
 
 import (
 	"context"
 	"fmt"
 	"log"
+	"sync"
 
 	"github.com/docker/docker/client"
 )
 
 type Docker struct {
-	cli *client.Client
-	ctx context.Context
+	cli         *client.Client
+	ctx         context.Context
+	statsCancel map[string]context.CancelFunc
+	mu          sync.Mutex
 }
+
 type APIError struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
@@ -36,13 +41,13 @@ func NewDocker() *Docker {
 	}
 
 	return &Docker{
-		ctx: context.Background(),
-		cli: cli,
+		ctx:         context.Background(),
+		cli:         cli,
+		statsCancel: make(map[string]context.CancelFunc),
 	}
 }
 
+// sempre substitui pelo contexto do Wails
 func (d *Docker) Startup(ctx context.Context) {
-	if d.ctx == nil {
-		d.ctx = ctx
-	}
+	d.ctx = ctx
 }

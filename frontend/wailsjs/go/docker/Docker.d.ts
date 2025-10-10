@@ -28,4 +28,10 @@ export function PruneImages():Promise<image.PruneReport>;
 
 export function RemoveImage(arg1:string):Promise<Array<image.DeleteResponse>>;
 
+export function StartContainerStats(arg1:string):Promise<void>;
+
 export function Startup(arg1:context.Context):Promise<void>;
+
+export function StopContainerStats(arg1:string):Promise<void>;
+
+export function StreamStats(arg1:context.Context,arg2:string):Promise<void>;

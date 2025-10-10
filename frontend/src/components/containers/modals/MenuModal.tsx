@@ -1,17 +1,18 @@
 import iziToast from 'izitoast';
-import ArrowTip from '../utils/ArrowTip';
+import ArrowTip from '../../utils/ArrowTip';
 import { FaTrashCan } from 'react-icons/fa6';
-import InspectModal from '../utils/InspectModal';
-import { confirmToast } from '../utils/ConfirmToast';
+import InspectModal from '../../utils/InspectModal';
+import { confirmToast } from '../../utils/ConfirmToast';
+import ContainerStatsModal from './ContainerStatsModal';
 import React, { useEffect, useRef, useState } from 'react';
-import { FmtName } from '../../functions/TreatmentFunction';
-import { MdContentPasteSearch, MdRestartAlt } from 'react-icons/md';
-import { ContainerProps } from '../../interfaces/ContainerInterface';
+import { FmtName } from '../../../functions/TreatmentFunction';
+import { ContainerProps } from '../../../interfaces/ContainerInterface';
+import { MdContentPasteSearch, MdOutlineQueryStats, MdRestartAlt } from 'react-icons/md';
 import {
   ContainerInspect,
   ContainerRemove,
   ContainerRestart,
-} from '../../../wailsjs/go/docker/Docker';
+} from '../../../../wailsjs/go/docker/Docker';
 
 const ContainersMenuModal: React.FC<ContainerProps> = ({
   id,
@@ -21,6 +22,7 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   setMenuModal,
 }) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
+  const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
   const [inspectData, setInspectData] = useState<string | null>(null);
 
@@ -107,6 +109,13 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
         >
           <MdRestartAlt className="w-6 h-6" />
         </button>
+        <button
+          onClick={() => setIsStatsOpen(!isStatsOpen)}
+          title="Restart Container"
+          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
+        >
+          <MdOutlineQueryStats className="w-6 h-6" />
+        </button>
       </div>
       {isInspectOpen && (
         <InspectModal
@@ -115,6 +124,9 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
           data={inspectData}
           onClose={() => setIsInspectOpen(false)}
         />
+      )}
+      {isStatsOpen && (
+        <ContainerStatsModal id={id} name={name} onClose={() => setIsStatsOpen(false)} />
       )}
     </div>
   );

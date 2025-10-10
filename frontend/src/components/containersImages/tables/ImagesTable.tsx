@@ -2,16 +2,16 @@ import React from 'react';
 import { FiBox } from 'react-icons/fi';
 import { FaTrashCan } from 'react-icons/fa6';
 import { MdContentCopy } from 'react-icons/md';
-import { copyToClipboard } from '../utils/clipboard';
-import { confirmToast } from '../utils/ConfirmToast';
-import { RemoveImage } from '../../../wailsjs/go/docker/Docker';
-import { DockerImageInfo } from '../../interfaces/ContainerImagesInterfaces';
+import { copyToClipboard } from '../../utils/clipboard';
+import { confirmToast } from '../../utils/ConfirmToast';
+import { RemoveImage } from '../../../../wailsjs/go/docker/Docker';
+import { DockerImageInfo } from '../../../interfaces/ContainerImagesInterfaces';
 import {
   ParseNameAndTag,
   FmtAgo,
   FormatBytes,
   EpochToDateStr,
-} from '../../functions/TreatmentFunction';
+} from '../../../functions/TreatmentFunction';
 
 interface Props {
   images: DockerImageInfo[];
@@ -67,7 +67,7 @@ const ImagesTable: React.FC<Props> = ({ images, onDeleted }) => {
               <button
                 onClick={() => copyToClipboard(id.replace('sha256:', ''), 'ID copiado')}
                 title="Copiar Id da Imagem"
-                className="px-2 py-1 hover:scale-95 rounded-lg bg-[var(--system-white)] border border-[var(--light-gray)] "
+                className="px-2 py-1 hover:scale-90 rounded-lg"
               >
                 <MdContentCopy />
               </button>
@@ -85,7 +85,7 @@ const ImagesTable: React.FC<Props> = ({ images, onDeleted }) => {
                   })
                 }
                 title="Excluir imagem"
-                className="px-2 py-1 hover:scale-95 rounded-lg bg-[var(--system-white)] border border-[var(--light-gray)] "
+                className="px-2 py-1 hover:scale-90 rounded-lg"
               >
                 <FaTrashCan className="text-[var(--exit-red)]" />
               </button>
