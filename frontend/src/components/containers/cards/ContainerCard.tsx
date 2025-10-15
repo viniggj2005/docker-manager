@@ -47,24 +47,25 @@ const ContainerCard: React.FC<Props> = ({
   onTogglePause,
 }) => {
   return (
-    <div className="group rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-5 shadow-sm transition hover:shadow-md">
+    <div className="group rounded-2xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-5 shadow-sm transition hover:shadow-md">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="relative w-fit">
-            <div className="inline-block text-xl font-medium text-[var(--system-black)] hover:text-[var(--system-black)] peer">
+            <div className="inline-block text-xl font-medium text-[var(--system-black)] hover:scale-95 dark:text-[var(--system-white)] peer">
               {name}
             </div>
 
             {!isEditing && (
               <button
                 onClick={onOpenEdit}
-                className="absolute -top-1 -right-6 bg-[var(--system-white)] border border-[var(--medium-gray)]
+                className="absolute -top-1 -right-6 bg-[var(--system-white)] dark:bg-[var(--dark-primary)]
+                 border border-[var(--medium-gray)] dark:border-[var(--dark-tertiary)]
                           rounded-full p-1 shadow-md hover:bg-[var(--light-gray)]
                           opacity-0 peer-hover:opacity-100 hover:opacity-100 
                           transition-opacity duration-150 pointer-events-auto"
                 title="Editar nome"
               >
-                <GoPencil className="text-[var(--system-black)] w-4 h-4" />
+                <GoPencil className="text-[var(--system-black)] dark:text-[var(--system-white)] w-4 h-4" />
               </button>
             )}
 
@@ -80,7 +81,7 @@ const ContainerCard: React.FC<Props> = ({
             {isSeeing && <LogsModal id={container.Id} setLogsModal={onCloseLogs} />}
           </div>
 
-          <div className="mt-0.5 text-lg text-[var(--medium-gray)]">{container.Image}</div>
+          <div className="mt-0.5 text-lg text-[var(--medium-gray)] ">{container.Image}</div>
         </div>
 
         <StatusBadge state={container.State} title={container.Status || container.State} />
@@ -88,7 +89,7 @@ const ContainerCard: React.FC<Props> = ({
         <button
           onClick={onOpenLogs}
           title="Logs"
-          className="rounded-2xl bbg-[var(--system-white)] px-3 py-1.5 text-md text-[var(--exit-red)] hover:scale-95"
+          className="rounded-2xl bg-[var(--system-white)] dark:bg-[var(--dark-primary)] px-3 py-1.5 text-md text-[var(--exit-red)] hover:scale-95"
         >
           <RiFileList2Line className="h-6 w-6" />
         </button>
@@ -96,7 +97,7 @@ const ContainerCard: React.FC<Props> = ({
         <button
           title={`${container.State === 'paused' ? 'Despausar container' : 'Pausar Container'}`}
           onClick={() => onTogglePause(container.Id, container.State)}
-          className="rounded-2xl  bg-[var(--system-[var(--system-white)])] px-3 py-1.5 text-sm text-[var(--system-black)] hover:scale-95"
+          className="rounded-2xl  bg-[var(--system-white)] dark:bg-[var(--dark-primary)] px-3 py-1.5 text-sm dark:text-[var(--system-white)] text-[var(--system-black)] hover:scale-95"
         >
           {container.State === 'paused' ? (
             <CiPlay1 className="w-6 h-6" />
@@ -109,7 +110,7 @@ const ContainerCard: React.FC<Props> = ({
           <button
             title="menu"
             onClick={() => (isOpened ? onCloseMenu() : onOpenMenu())}
-            className="rounded-2xl  bg-[var(--system-[var(--system-white)])] px-3 py-1.5 text-sm text-[var(--system-black)] hover:scale-95"
+            className="rounded-2xl  bg-[var(--system-white)] dark:bg-[var(--dark-primary)] px-3 py-1.5 text-sm dark:text-[var(--system-white)] text-[var(--system-black)] hover:scale-95"
           >
             <HiOutlineDotsVertical className="w-6 h-6" />
           </button>
@@ -127,15 +128,11 @@ const ContainerCard: React.FC<Props> = ({
 
       <div className="mt-4 grid grid-cols-2 gap-3 text-md">
         <InfoTile label="Criado">
-          <span className="mt-0.5 font-medium text-[var(--dark-gray)]">
-            {FmtAgo(container.Created)}
-          </span>
+          <span className="mt-0.5 font-medium ">{FmtAgo(container.Created)}</span>
         </InfoTile>
 
         <InfoTile label="Status">
-          <span className="mt-0.5 font-medium text-[var(--dark-gray)]">
-            {container.Status || '—'}
-          </span>
+          <span className="mt-0.5 font-medium ">{container.Status || '—'}</span>
         </InfoTile>
 
         <InfoTile label="Portas" full>

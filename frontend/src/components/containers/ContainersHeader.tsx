@@ -5,10 +5,14 @@ type Props = { onRefresh: () => void };
 
 const ContainersHeader: React.FC<Props> = ({ onRefresh }) => (
   <header className="mb-4 flex items-center justify-between">
-    <h1 className="text-2xl font-semibold text-[var(--system-black)]">Containers</h1>
+    <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+      Containers
+    </h1>
     <button
       onClick={onRefresh}
-      className="inline-flex items-center hover:scale-95  gap-2 px-3 py-2 rounded-xl transition bg-[var(--system-white)] text-[var(--system-black)] border border-[var(--light-gray)] hover:border-[var(--light-gray)]"
+      className="inline-flex items-center hover:scale-95  gap-2 px-3 py-2 rounded-xl 
+      transition bg-[var(--system-white)] text-[var(--system-black)] dark:bg-[var(--dark-primary)] dark:text-[var(--grey-text)]
+        border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] "
       title="Atualizar"
     >
       <FiRefreshCw className="h-4 w-4" />

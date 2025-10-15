@@ -37,9 +37,9 @@ const Toolbar: React.FC<Props> = ({
   return (
     <div className="flex flex-wrap items-center gap-3 mb-4">
       <div className="relative flex-1 min-w-[220px]">
-        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--system-black)]" />
+        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--system-black)] dark:text-[var(--system-white)]" />
         <input
-          className="w-full pl-9 pr-3 py-2 rounded-xl outline-none transition bg-[var(--system-white)] border border-[var(--light-gray)] focus:border-[var(--light-gray)] text-[var(--system-black)] placeholder-[var(--light-gray)]"
+          className="w-full pl-9 pr-3 py-2 rounded-xl outline-none transition bg-[var(--system-white)] dark:bg-[var(--dark-primary)] dark:bg-[var(--dark-primary)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]   text-[var(--system-black)] placeholder-[var(--light-gray)]"
           placeholder="Buscar por nome, tag, id ou label"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -48,7 +48,7 @@ const Toolbar: React.FC<Props> = ({
 
       <button
         onClick={onRefresh}
-        className="inline-flex items-center hover:scale-95  gap-2 px-3 py-2 rounded-xl transition bg-[var(--system-white)] text-[var(--system-black)] border border-[var(--light-gray)] hover:border-[var(--light-gray)]"
+        className="inline-flex items-center hover:scale-95 dark:text-[var(--system-white)]  gap-2 px-3 py-2 rounded-xl transition bg-[var(--system-white)] dark:bg-[var(--dark-primary)] text-[var(--system-black)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] "
         title="Atualizar"
       >
         <FiRefreshCw className={`h-4 w-4   ${loading ? 'animate-spin' : ''}`} />
@@ -58,21 +58,21 @@ const Toolbar: React.FC<Props> = ({
       <div className="ml-auto flex items-center gap-2">
         <button
           onClick={() => setView('grid')}
-          className={`p-2 rounded-xl border hover:scale-95  transition ${view === 'grid' ? 'bg-[var(--system-white)] border-[var(--light-gray)]' : 'bg-[var(--system-white)] border-[var(--light-gray)] hover:border-[var(--light-gray)]'}`}
+          className={`p-2 rounded-xl border hover:scale-95 dark:text-[var(--system-white)]  transition ${view === 'grid' ? 'bg-[var(--system-white)] dark:bg-[var(--dark-primary)] border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]' : 'bg-[var(--system-white)] dark:bg-[var(--dark-primary)] border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]'}`}
           title="Grade"
         >
           <FiGrid className="h-4 w-4" />
         </button>
         <button
           onClick={() => setView('table')}
-          className={`p-2 rounded-xl border hover:scale-95  transition ${view === 'table' ? 'bg-[var(--system-white)] border-[var(--light-gray)]' : 'bg-[var(--system-white)] border-[var(--light-gray)] hover:border-[var(--light-gray)]'}`}
+          className={`p-2 rounded-xl border hover:scale-95 dark:text-[var(--system-white)]  transition ${view === 'table' ? 'bg-[var(--system-white)] dark:bg-[var(--dark-primary)] border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]' : 'bg-[var(--system-white)] dark:bg-[var(--dark-primary)] border-[var(--light-gray)]  dark:border-[var(--dark-tertiary)]'}`}
           title="Tabela"
         >
           <FiList className="h-4 w-4" />
         </button>
         <button
           onClick={handleDelete}
-          className={`p-2 rounded-xl border bg-[var(--system-white)] hover:scale-95 transition`}
+          className={`p-2 rounded-xl border  bg-[var(--system-white)] border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]  dark:bg-[var(--dark-primary)] hover:scale-95 transition`}
           title="Tabela"
         >
           <FaTrashCan className="w-4 h-4 text-[var(--exit-red)]" />

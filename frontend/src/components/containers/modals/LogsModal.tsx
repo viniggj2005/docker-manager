@@ -63,16 +63,16 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
   return (
     <div
       onClick={closeOnBackdrop}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--light-overlay)]  dark:bg-[var(--dark-overlay)] backdrop-blur-sm"
       aria-modal
       role="dialog"
     >
-      <div className="relative w-[min(90vw,900px)] h-[min(80vh,650px)] rounded-2xl border border-white/10 bg-zinc-900 shadow-2xl text-zinc-100">
-        <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-white/10 px-5 py-3 bg-zinc-900/90">
+      <div className="relative w-[min(90vw,900px)] h-[min(80vh,650px)] rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] shadow-2xl dark:text-[var(--system-white)]">
+        <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] px-5 py-3 dark:bg-[var(--dark-primary)]">
           <div className="flex items-center gap-2">
             <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
             <h2 className="text-sm font-medium">Logs do contêiner</h2>
-            <span className="text-xs text-zinc-400">#{id.slice(0, 12)}</span>
+            <span className="text-xs text-[var(--grey-text)]">#{id.slice(0, 12)}</span>
           </div>
 
           <div className="ml-auto flex items-center gap-2">
@@ -82,7 +82,7 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
                 placeholder="Filtrar"
-                className="pl-7 pr-3 py-1.5 text-sm bg-zinc-800/70 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/60"
+                className="pl-7 pr-3 py-1.5 text-sm dark:bg-[var(--dark-secondary)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/60"
               />
             </div>
             <button

@@ -43,7 +43,7 @@ const ListContainersImages: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-4 text-[var(--system-black)]">
+    <div className="w-full max-w-7xl mx-auto p-4 text-[var(--system-black)] dark:text-[var(--system-white)]">
       <Toolbar
         view={view}
         query={query}
@@ -77,7 +77,7 @@ const ListContainersImages: React.FC = () => {
       )}
 
       {!loading && filteredSorted.length === 0 && (
-        <div className="mt-10 text-center text-[var(--system-black)]">
+        <div className="mt-10 text-center text-[var(--system-black)] dark:text-[var(--system-white)]">
           Nenhuma imagem encontrada.
         </div>
       )}

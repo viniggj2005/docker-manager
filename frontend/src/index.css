@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 :root {
   --exit-red: #e7000b;
@@ -8,9 +8,17 @@
   --medium-gray: #6c6c6c;
   --light-gray: #d9d9d9;
   --system-black: #000000;
-  --system-white: #ffffff;
+  --system-white: rgb(255 255 255);
   --docker-blue: #1d63ed;
   --accent-green: #16a34a;
   --orange-json: #e07a0d;
-  --light-red: rgb(251 113 133 / var(--tw-text-opacity, 1));
+  --light-red: rgba(251 113 133 / var(--tw-text-opacity, 1));
+
+  --light-overlay: rgb(255 255 255/ 0.6);
+
+  --dark-overlay: rgb(0 0 0 / 0.6);
+  --dark-primary: rgb(24, 24, 27);
+  --dark-secondary: rgb(39, 39, 42);
+  --dark-tertiary: rgb(255 255 255 / 0.1);
+  --grey-text: rgb(161 161 170/ 1);
 }

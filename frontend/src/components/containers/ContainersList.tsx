@@ -1,9 +1,9 @@
 import iziToast from 'izitoast';
-import ContainerCard from './cards/ContainerCard';
 import { FiRefreshCw } from 'react-icons/fi';
+import ContainerCard from './cards/ContainerCard';
 import React, { useEffect, useRef, useState } from 'react';
+import { FmtName } from '../../functions/TreatmentFunction';
 import { ContainerItem } from '../../interfaces/ContainerInterface';
-import { FmtAgo, FmtName } from '../../functions/TreatmentFunction';
 import ContainersListSkeleton from './skeletons/ContainersListSkeleton';
 import {
   ContainersList,
@@ -60,10 +60,14 @@ const ContainersListView: React.FC = () => {
     <div className="w-full h-full">
       <div className="mx-auto max-w-8xl p-6">
         <header className="mb-4 flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-[var(--system-black)]">Containers</h1>
+          <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+            Containers
+          </h1>
           <button
             onClick={fetchData}
-            className="inline-flex items-center hover:scale-95  gap-2 px-3 py-2 rounded-xl transition bg-[var(--system-white)] text-[var(--system-black)] border border-[var(--light-gray)] hover:border-[var(--light-gray)]"
+            className="inline-flex items-center hover:scale-95  gap-2 px-3 py-2
+             rounded-xl transition bg-[var(--system-white)] text-[var(--system-black)] dark:text-[var(--system-white)] border dark:border-[var(--dark-tertiary)] 
+             border-[var(--light-gray)] hover:border-[var(--light-gray)] dark:bg-[var(--dark-secondary)]"
             title="Atualizar"
           >
             <FiRefreshCw className="h-4 w-4" />
@@ -74,7 +78,7 @@ const ContainersListView: React.FC = () => {
         {!items ? (
           <ContainersListSkeleton />
         ) : items.length === 0 ? (
-          <div className="rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)]">
+          <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]  bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
             Nenhum container encontrado.
           </div>
         ) : (
@@ -111,7 +115,7 @@ const ContainersListView: React.FC = () => {
           </div>
         )}
 
-        <footer className="mt-6 text-xs text-[var(--medium-gray)]">
+        <footer className="mt-6 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)] ">
           Atualiza a cada 2s. Clique em “Atualizar” para forçar agora.
         </footer>
       </div>

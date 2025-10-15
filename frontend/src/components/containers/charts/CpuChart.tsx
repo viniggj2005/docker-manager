@@ -49,8 +49,13 @@ function CPUChartBase({ points }: Props) {
     scales: {
       x: {
         type: 'time',
-        time: { unit: 'second', tooltipFormat: 'HH:mm:ss' },
-        ticks: { maxRotation: 0, autoSkip: true },
+        time: { unit: 'second', tooltipFormat: 'HH:mm:ss', displayFormats: { second: 'HH:mm:ss' } },
+        ticks: {
+          maxRotation: 0,
+          autoSkip: true,
+          autoSkipPadding: 20,
+          maxTicksLimit: 8,
+        },
         grid: { display: false },
       },
       y: {

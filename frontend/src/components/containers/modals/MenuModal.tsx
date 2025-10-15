@@ -79,13 +79,13 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   return (
     <div
       ref={modalRef}
-      className="absolute left-full  -top-14 z-20 w-fit-translate-y-1/2 border border-[var(--light-gray)] rounded-xl shadow-lg"
+      className="absolute left-full  -top-14 z-20 w-fit-translate-y-1/2 border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] rounded-xl shadow-lg"
       role="dialog"
       aria-label="Menu do container"
     >
       <ArrowTip position="left" size={8} color="var(--system-white)" offset={14} />
       <div
-        className="bg-[var(--system-white)] rounded-xl shadow-lg p-3 flex flex-col items-stretch gap-2"
+        className="bg-[var(--system-white)] dark:bg-[var(--dark-primary)] rounded-xl shadow-lg p-3 flex flex-col items-stretch gap-2"
         style={{ transformOrigin: 'center left' }}
       >
         <button
@@ -98,21 +98,21 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
         <button
           onClick={() => handleInspect()}
           title="Inspecionar Container"
-          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
+          className="w-full flex items-center dark:text-[var(--system-white)] justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
         >
           <MdContentPasteSearch className="w-6 h-6" />
         </button>
         <button
           onClick={() => handleRestart()}
           title="Restart Container"
-          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
+          className="w-full flex items-center dark:text-[var(--system-white)] justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
         >
           <MdRestartAlt className="w-6 h-6" />
         </button>
         <button
           onClick={() => setIsStatsOpen(!isStatsOpen)}
           title="Restart Container"
-          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
+          className="w-full flex items-center dark:text-[var(--system-white)] justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
         >
           <MdOutlineQueryStats className="w-6 h-6" />
         </button>

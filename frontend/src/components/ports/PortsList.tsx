@@ -9,7 +9,7 @@ type Port = {
 };
 
 const PortsList: React.FC<{ ports?: Port[] }> = ({ ports }) => (
-  <div className="mt-0.5 font-mono text-sm text-[var(--dark-gray)]">
+  <div className="mt-0.5 font-mono text-sm text-[var(--dark-gray)] dark:text-[var(--system-white)]">
     {ports?.map((port) => (
       <span className="flex" key={`${port.IP}-${port.PrivatePort}-${port.Type ?? ''}`}>
         {port.IP} {port.PrivatePort}&nbsp;

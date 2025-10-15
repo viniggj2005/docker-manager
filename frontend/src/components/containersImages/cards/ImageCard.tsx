@@ -51,22 +51,22 @@ const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
   };
 
   return (
-    <div className="rounded-2xl p-4 transition bg-[var(--system-white)] border border-[var(--light-gray)] hover:border-[var(--light-gray)] flex justify-between">
+    <div className="rounded-2xl p-4 transition bg-[var(--system-white)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] flex justify-between">
       <div className="flex flex-col flex-1">
         <div className="flex items-start gap-3">
-          <div className="p-2 rounded-xl bg-[var(--system-white)] border border-[var(--light-gray)]">
+          <div className="p-2 rounded-xl bg-[var(--system-white)] dark:bg-[var(--dark-primary)] dark:border-[var(--dark-tertiary)]  border border-[var(--light-gray)]">
             <DockerImageIcon className="text-[var(--docker-blue)]" />
           </div>
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-semibold truncate">{name}</span>
-              <span className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1 bg-[var(--system-white)] border border-[var(--light-gray)]">
+              <span className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1 bg-[var(--system-white)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]">
                 <FaTag />
                 {tag}
               </span>
               {!img.RepoTags?.length && (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--system-white)] border border-[var(--light-gray)] text-[var(--system-black)]">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--system-white)] dark:bg-[var(--dark-primary)] border border-[var(--light-gray)] dark:text-[var(--system-white)] text-[var(--system-black)] dark:border-[var(--dark-tertiary)]">
                   dangling
                 </span>
               )}
@@ -84,14 +84,14 @@ const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
         <div className="mt-3 flex items-center gap-3">
           <button
             onClick={() => copyToClipboard(id.replace('sha256:', ''), 'ID da imagem copiado')}
-            className="inline-flex hover:scale-95 items-center gap-2 px-3 py-1.5 rounded-xl bg-[var(--system-white)] border border-[var(--light-gray)]"
+            className="inline-flex hover:scale-95 items-center gap-2 px-3 py-1.5 rounded-xl dark:text-[var(--system-white)] bg-[var(--system-white)] dark:bg-[var(--dark-secondary)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]"
           >
             <MdContentCopy /> Copiar ID
           </button>
 
           <button
             onClick={() => copyToClipboard(`${name}:${tag}`, 'Nome:tag copiado')}
-            className="inline-flex items-center hover:scale-95 gap-2 px-3 py-1.5 rounded-xl bg-[var(--system-white)] border border-[var(--light-gray)]"
+            className="inline-flex items-center hover:scale-95 gap-2 px-3 py-1.5 rounded-xl dark:text-[var(--system-white)] bg-[var(--system-white)] dark:bg-[var(--dark-secondary)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]"
           >
             <MdContentCopy /> Copiar nome:tag
           </button>
@@ -112,7 +112,7 @@ const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
             handleInspect();
           }}
           title="Inspecionar Imagem"
-          className="cursor-pointer hover:scale-95 text-[var(--system-black)]"
+          className="cursor-pointer hover:scale-95 text-[var(--system-black)] dark:text-[var(--system-white)]"
         >
           <MdContentPasteSearch className="w-6 h-6" />
         </button>
