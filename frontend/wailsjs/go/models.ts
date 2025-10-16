@@ -397,6 +397,45 @@ export namespace network {
 
 }
 
+export namespace terminal {
+	
+	export class SSHConn {
+	    Host: string;
+	    Port: number;
+	    User: string;
+	    Password: string;
+	    Key: number[];
+	    KeyPath: string;
+	    Passphrase: string;
+	    KnownHostsPath: string;
+	    InsecureIgnoreHostKey: boolean;
+	    Cols: number;
+	    Rows: number;
+	    Timeout: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new SSHConn(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Host = source["Host"];
+	        this.Port = source["Port"];
+	        this.User = source["User"];
+	        this.Password = source["Password"];
+	        this.Key = source["Key"];
+	        this.KeyPath = source["KeyPath"];
+	        this.Passphrase = source["Passphrase"];
+	        this.KnownHostsPath = source["KnownHostsPath"];
+	        this.InsecureIgnoreHostKey = source["InsecureIgnoreHostKey"];
+	        this.Cols = source["Cols"];
+	        this.Rows = source["Rows"];
+	        this.Timeout = source["Timeout"];
+	    }
+	}
+
+}
+
 export namespace v1 {
 	
 	export class Platform {

@@ -2,6 +2,7 @@ import './index.css';
 import ToggleThemeButton from './components/buttons/ToggleThemeButton';
 import ContainersListView from './components/containers/ContainersList';
 import ListContainersImages from './components/containersImages/ListContainerImages';
+import SshTerminal from './components/terminal/Terminal';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
           <ContainersListView />
           <ListContainersImages />
           <ToggleThemeButton />
+          <SshTerminal />
         </div>
       </div>
     </div>
