@@ -2,6 +2,7 @@ import iziToast from 'izitoast';
 import ArrowTip from '../../utils/ArrowTip';
 import { FaTrashCan } from 'react-icons/fa6';
 import InspectModal from '../../utils/InspectModal';
+import { useTheme } from '../../../hooks/use-theme';
 import { confirmToast } from '../../utils/ConfirmToast';
 import ContainerStatsModal from './ContainerStatsModal';
 import React, { useEffect, useRef, useState } from 'react';
@@ -21,6 +22,7 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   onDeleted,
   setMenuModal,
 }) => {
+  const theme = useTheme();
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
@@ -83,7 +85,12 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
       role="dialog"
       aria-label="Menu do container"
     >
-      <ArrowTip position="left" size={8} color="var(--system-white)" offset={14} />
+      <ArrowTip
+        position="left"
+        size={8}
+        color={`${theme.theme === 'dark' ? 'var(--dark-secondary)' : 'var(--system-white)'} `}
+        offset={14}
+      />
       <div
         className="bg-[var(--system-white)] dark:bg-[var(--dark-primary)] rounded-xl shadow-lg p-3 flex flex-col items-stretch gap-2"
         style={{ transformOrigin: 'center left' }}

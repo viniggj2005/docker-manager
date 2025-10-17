@@ -3,28 +3,23 @@ import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import React, { useEffect, useRef, useState } from 'react';
 import { EventsOn } from '../../../../wailsjs/runtime/runtime';
-import type { terminal as termNS } from '../../../../wailsjs/go/models';
-import { IoMdCloseCircleOutline, IoIosExpand, IoIosContract } from 'react-icons/io';
+import TerminalModalHeader from '../headers/TerminalModalHeader';
+import { TerminalProps } from '../../../interfaces/TerminalInterfaces';
 import { ConnectWith, Send, Resize, Disconnect } from '../../../../wailsjs/go/terminal/Terminal';
 
-type SSHConn = termNS.SSHConn;
-type Props = { open: boolean; onClose: () => void; cfg: SSHConn; title?: string };
-
-const HEADER_H = 52;
-
-export default function TerminalModal({ open, onClose, cfg, title = 'Terminal SSH' }: Props) {
-  const hostRef = useRef<HTMLDivElement | null>(null);
-  const termRef = useRef<Terminal | null>(null);
+const TerminalModal: React.FC<TerminalProps> = ({ open, onClose, cfg, title = 'Terminal SSH' }) => {
   const fitRef = useRef<FitAddon | null>(null);
+  const termRef = useRef<Terminal | null>(null);
   const roRef = useRef<ResizeObserver | null>(null);
+  const hostRef = useRef<HTMLDivElement | null>(null);
 
-  const [maximized, setMaximized] = useState(false);
   const [docked, setDocked] = useState(false);
+  const [maximized, setMaximized] = useState(false);
   const [dockHeight, setDockHeight] = useState(420);
 
-  const resizingRef = useRef(false);
   const startYRef = useRef(0);
   const startHRef = useRef(420);
+  const resizingRef = useRef(false);
 
   useEffect(() => {
     if (!open) return;
@@ -42,15 +37,19 @@ export default function TerminalModal({ open, onClose, cfg, title = 'Terminal SS
 
   useEffect(() => {
     if (!open) return;
-
     const term = new Terminal({
-      fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
-      fontSize: 13,
+      fontSize: 18,
       lineHeight: 1,
-      cursorBlink: true,
       convertEol: true,
       scrollback: 5000,
+      cursorBlink: true,
       allowProposedApi: true,
+      fontFamily: 'Courier New',
+      cursorInactiveStyle: 'none',
+      theme: {
+        background: '#5E2750',
+        foreground: 'var(--grey-text)',
+      },
     });
     const fit = new FitAddon();
     term.loadAddon(fit);
@@ -85,16 +84,16 @@ export default function TerminalModal({ open, onClose, cfg, title = 'Terminal SS
     window.addEventListener('resize', onWinResize);
 
     return () => {
+      Disconnect();
       sub.dispose();
+      term.dispose();
+      ro.disconnect();
       offData && offData();
       offExit && offExit();
-      ro.disconnect();
       roRef.current = null;
-      window.removeEventListener('resize', onWinResize);
-      Disconnect();
-      term.dispose();
-      termRef.current = null;
       fitRef.current = null;
+      termRef.current = null;
+      window.removeEventListener('resize', onWinResize);
     };
   }, [open, cfg]);
 
@@ -125,6 +124,7 @@ export default function TerminalModal({ open, onClose, cfg, title = 'Terminal SS
       const next = Math.max(240, Math.min(window.innerHeight - 80, startHRef.current + delta));
       setDockHeight(next);
     };
+
     const onUp = () => {
       resizingRef.current = false;
       window.removeEventListener('mousemove', onMove);
@@ -135,8 +135,8 @@ export default function TerminalModal({ open, onClose, cfg, title = 'Terminal SS
   };
 
   const containerBase =
-    'relative shadow-2xl text-[var(--system-black)] dark:text-[var(--system-white)] ' +
-    'bg-[var(--system-white)] dark:bg-[var(--dark-primary)] ';
+    'relative shadow-2xl overflow-hidden text-[var(--system-black)] dark:text-[var(--system-white)] ';
+
   const modalSize =
     'w-[min(90vw,1100px)] h-[min(85vh,780px)] rounded-2xl border ' +
     'border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]';
@@ -177,79 +177,21 @@ export default function TerminalModal({ open, onClose, cfg, title = 'Terminal SS
           />
         )}
 
-        <Header
+        <TerminalModalHeader
           title={title}
-          maximized={maximized}
           docked={docked}
+          onClose={onClose}
+          maximized={maximized}
           onToggleMax={() => setMaximized((v) => !v)}
           onToggleDock={() => setDocked((v) => !v)}
-          onClose={onClose}
         />
 
-        <div className="flex h-[calc(100%-52px)] flex-col">
-          <div ref={hostRef} className="flex-1 min-h-0 w-full" />
+        <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg pl-2 pt-1 bg-[#5E2750]">
+          <div ref={hostRef} className="flex-1 min-h-0 w-full " />
         </div>
       </div>
     </div>
   );
-}
+};
 
-function Header({
-  title,
-  maximized,
-  docked,
-  onToggleMax,
-  onToggleDock,
-  onClose,
-}: {
-  title: string;
-  maximized: boolean;
-  docked: boolean;
-  onToggleMax: () => void;
-  onToggleDock: () => void;
-  onClose: () => void;
-}) {
-  return (
-    <div
-      className="sticky top-0 z-10 flex items-center gap-3 border-b
-                 border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]
-                 px-5 py-3 dark:bg-[var(--dark-primary)]"
-      style={{ height: HEADER_H }}
-    >
-      <div className="flex items-center gap-2">
-        <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-        <h2 className="text-sm font-medium">{title}</h2>
-        <span className="text-xs text-zinc-400">{docked ? 'Painel' : 'Modal'}</span>
-      </div>
-
-      <div className="ml-auto flex items-center gap-2">
-        <button
-          onClick={onToggleDock}
-          className="text-zinc-400 hover:text-zinc-200 text-xs px-2 py-1 rounded border border-transparent hover:border-zinc-600"
-          title={docked ? 'Desancorar (modal)' : 'Ancorar embaixo (painel)'}
-          type="button"
-        >
-          {docked ? 'Desancorar' : 'Ancorar'}
-        </button>
-
-        <button
-          onClick={onToggleMax}
-          className="text-zinc-400 hover:text-zinc-200"
-          title={maximized ? 'Restaurar' : 'Tela cheia'}
-          type="button"
-        >
-          {maximized ? <IoIosContract className="h-5 w-5" /> : <IoIosExpand className="h-5 w-5" />}
-        </button>
-
-        <button
-          onClick={onClose}
-          className="ml-1 text-rose-400 hover:text-rose-300"
-          title="Fechar"
-          type="button"
-        >
-          <IoMdCloseCircleOutline className="h-5 w-5" />
-        </button>
-      </div>
-    </div>
-  );
-}
+export default TerminalModal;

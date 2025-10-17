@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ArrowTip from '../../utils/ArrowTip';
+import { useTheme } from '../../../hooks/use-theme';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 import { EditContainerNameModalProps } from '../../../interfaces/ContainerInterface';
 
@@ -9,6 +10,7 @@ const EditContainerNameModal: React.FC<EditContainerNameModalProps> = ({
   handleRename,
   setEditNameModal,
 }) => {
+  const theme = useTheme();
   const [newName, setNewName] = useState(name);
 
   return (
@@ -18,7 +20,12 @@ const EditContainerNameModal: React.FC<EditContainerNameModalProps> = ({
       bg-[var(--system-white)] border border-[var(--light-gray)] rounded-xl shadow-lg p-3
       w-48 flex flex-col items-center gap-2 animate-fade-in"
     >
-      <ArrowTip position="bottom" size={8} color="currentColor" offset={14} />
+      <ArrowTip
+        position="bottom"
+        size={8}
+        color={`${theme.theme === 'dark' ? 'var(--dark-secondary)' : 'var(--system-white)'} `}
+        offset={14}
+      />
       <button
         onClick={() => setEditNameModal(false)}
         className="absolute  cursor-pointer -top-2 -right-2 text-[var(--exit-red)] hover:text-[var(--exit-red)]"
