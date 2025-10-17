@@ -15,7 +15,14 @@ export default {
     'text-sky-400',
   ],
   theme: {
-    extend: {},
+    // extend: {
+    //   colors: {
+    //     "red": {
+    //       DEFAULT: '#e7000b',
+    //       light: "#e7000b"
+    //     }
+    //   }
+    // },
   },
   plugins: [],
 };

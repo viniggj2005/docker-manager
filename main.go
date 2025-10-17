@@ -2,10 +2,16 @@ package main
 
 import (
 	"context"
+	"docker-manager-go/internals/db"
 	"docker-manager-go/internals/docker"
+	"docker-manager-go/internals/src/auth"
+	"docker-manager-go/internals/src/handlers"
 	"docker-manager-go/internals/terminal"
 	"embed"
+	"log"
+	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -15,10 +21,18 @@ import (
 var assets embed.FS
 
 func main() {
+	e := godotenv.Load()
+	if e != nil {
+		log.Fatalf("Erro ao carregar env .env file: %s", e)
+	}
 
+	db.InitDb()
 	app := NewApp()
 	docker := docker.NewDocker()
 	term := &terminal.Terminal{}
+	sm := auth.NewManager(8 * time.Hour)
+	authHandler := handlers.NewAuthHandler(db.DB, sm)
+	userHandler := handlers.NewUserHandler(db.DB, sm)
 
 	err := wails.Run(&options.App{
 		Title:  "Docker Manager",
@@ -32,11 +46,16 @@ func main() {
 			app.startup(ctx)
 			term.Startup(ctx)
 			docker.Startup(ctx)
+			authHandler.Startup(ctx)
+			userHandler.Startup(ctx)
+
 		},
 		Bind: []interface{}{
 			app,
-			docker,
 			term,
+			docker,
+			authHandler,
+			userHandler,
 		},
 	})
 

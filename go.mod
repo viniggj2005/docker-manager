@@ -6,8 +6,11 @@ toolchain go1.24.6
 
 require (
 	github.com/docker/docker v28.0.0+incompatible
+	github.com/joho/godotenv v1.5.1
 	github.com/wailsapp/wails/v2 v2.10.2
+	github.com/whatisusername/gorm-sqlcipher v1.5.6
 	golang.org/x/crypto v0.43.0
+	gorm.io/gorm v1.31.0
 )
 
 require (
@@ -26,6 +29,8 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/jchv/go-winloader v0.0.0-20210711035445-715c2860da7e // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/labstack/echo/v4 v4.13.3 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/leaanthony/go-ansi-parser v1.6.1 // indirect
@@ -37,6 +42,7 @@ require (
 	github.com/moby/docker-image-spec v1.3.1 // indirect
 	github.com/moby/term v0.5.2 // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
+	github.com/mutecomm/go-sqlcipher/v4 v4.4.2 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.1 // indirect
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect

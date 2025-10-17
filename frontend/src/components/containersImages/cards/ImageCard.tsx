@@ -1,6 +1,6 @@
 import iziToast from 'izitoast';
 import React, { useState } from 'react';
-import { DockerImageIcon } from '../../icons';
+import { DockerImageIcon } from '../../Icons';
 import InspectModal from '../../utils/InspectModal';
 import { FaTrashCan, FaTag } from 'react-icons/fa6';
 import { confirmToast } from '../../utils/ConfirmToast';
