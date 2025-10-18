@@ -1,5 +1,4 @@
 import { IoMdCloseCircleOutline, IoIosExpand, IoIosContract } from 'react-icons/io';
-const HEADER_H = 52;
 export default function TerminalModalHeader({
   title,
   docked,
@@ -17,11 +16,10 @@ export default function TerminalModalHeader({
 }) {
   return (
     <div
-      className="sticky top-0 z-10 flex items-center gap-3 border-b  rounded-t-2xl
+      className="sticky h-[52px] top-0 z-10 flex items-center gap-3 border-b  rounded-t-2xl
                  border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]
                  bg-[var(--system-white)] dark:bg-[var(--dark-primary)]
                  px-5 py-3 "
-      style={{ height: HEADER_H }}
     >
       <div className="flex items-center gap-2">
         <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />

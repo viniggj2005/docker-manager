@@ -1,6 +1,6 @@
 import iziToast from 'izitoast';
+import { ImagesList } from '../../../wailsjs/go/docker/Docker';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ImagesList, PruneImages } from '../../../wailsjs/go/docker/Docker';
 import { DockerImageInfo } from '../../interfaces/ContainerImagesInterfaces';
 
 export const useImages = (pollMs = 2000) => {

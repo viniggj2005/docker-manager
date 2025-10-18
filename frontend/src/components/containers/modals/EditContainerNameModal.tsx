@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ArrowTip from '../../utils/ArrowTip';
 import { useTheme } from '../../../hooks/use-theme';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
-import { EditContainerNameModalProps } from '../../../interfaces/ContainerInterface';
+import { EditContainerNameModalProps } from '../../../interfaces/ContainerInterfaces';
 
 const EditContainerNameModal: React.FC<EditContainerNameModalProps> = ({
   id,

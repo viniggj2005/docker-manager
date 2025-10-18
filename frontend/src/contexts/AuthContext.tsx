@@ -1,19 +1,7 @@
 import { EventsOn } from '../../wailsjs/runtime/runtime';
 import { loginApi, logoutApi } from '../components/login/Auth';
+import { AuthContextType, LoginResponse, UserDTO } from '../interfaces/AuthInterfaces';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-
-type UserDTO = { id: number; nome: string; email: string };
-type LoginResponse = { token: string; user: UserDTO };
-
-type AuthContextType = {
-  loading: boolean;
-  token: string | null;
-  user: UserDTO | null;
-  error: string | null;
-  isAuthenticated: boolean;
-  logout: () => Promise<void>;
-  login: (email: string, password: string) => Promise<void>;
-};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -21,9 +9,9 @@ let tokenRef: { current: string | null } = { current: null };
 export const getToken = () => tokenRef.current;
 
 export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<UserDTO | null>(null);
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<UserDTO | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const login = async (email: string, password: string) => {
@@ -59,8 +47,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   useEffect(() => {
     const off = EventsOn('auth:changed', (isLogged: boolean) => {
       if (!isLogged) {
-        setToken(null);
         setUser(null);
+        setToken(null);
         tokenRef.current = null;
       }
     });
@@ -71,13 +59,13 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
 
   const value = useMemo(
     () => ({
-      token,
       user,
-      isAuthenticated: Boolean(token),
-      loading,
       error,
       login,
+      token,
       logout,
+      loading,
+      isAuthenticated: Boolean(token),
     }),
     [token, user, loading, error]
   );

@@ -1,14 +1,8 @@
 import React from 'react';
 import { FaLongArrowAltRight } from 'react-icons/fa';
+import { PortInterface } from '../../interfaces/PortsInterfaces';
 
-type Port = {
-  IP?: string;
-  PrivatePort: number;
-  PublicPort?: number;
-  Type?: string;
-};
-
-const PortsList: React.FC<{ ports?: Port[] }> = ({ ports }) => (
+const PortsList: React.FC<{ ports?: PortInterface[] }> = ({ ports }) => (
   <div className="mt-0.5 font-mono text-sm text-[var(--dark-gray)] dark:text-[var(--system-white)]">
     {ports?.map((port) => (
       <span className="flex" key={`${port.IP}-${port.PrivatePort}-${port.Type ?? ''}`}>

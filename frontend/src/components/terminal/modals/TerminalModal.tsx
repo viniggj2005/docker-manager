@@ -47,7 +47,7 @@ const TerminalModal: React.FC<TerminalProps> = ({ open, onClose, cfg, title = 'T
       fontFamily: 'Courier New',
       cursorInactiveStyle: 'none',
       theme: {
-        background: '#5E2750',
+        background: '#5e2750',
         foreground: 'var(--grey-text)',
       },
     });
@@ -172,7 +172,7 @@ const TerminalModal: React.FC<TerminalProps> = ({ open, onClose, cfg, title = 'T
         {docked && !maximized && (
           <div
             onMouseDown={onDockGripDown}
-            className="h-2 cursor-row-resize bg-transparent hover:bg-white/5 dark:hover:bg-white/10 rounded-t-2xl"
+            className="h-2 cursor-row-resize bg-transparent hover:scale-95  rounded-t-2xl"
             title="Arraste para redimensionar"
           />
         )}
@@ -186,7 +186,7 @@ const TerminalModal: React.FC<TerminalProps> = ({ open, onClose, cfg, title = 'T
           onToggleDock={() => setDocked((v) => !v)}
         />
 
-        <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg pl-2 pt-1 bg-[#5E2750]">
+        <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg pl-2 pt-1 bg-[var(--terminal-background)]">
           <div ref={hostRef} className="flex-1 min-h-0 w-full " />
         </div>
       </div>

@@ -11,7 +11,7 @@ import ContainersMenuModal from '../modals/MenuModal';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
 import { FmtAgo } from '../../../functions/TreatmentFunction';
 import EditContainerNameModal from '../modals/EditContainerNameModal';
-import { ContainerItem } from '../../../interfaces/ContainerInterface';
+import { ContainerItem } from '../../../interfaces/ContainerInterfaces';
 
 type Props = {
   container: ContainerItem;

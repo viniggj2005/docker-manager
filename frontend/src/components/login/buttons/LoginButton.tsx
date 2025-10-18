@@ -1,24 +1,14 @@
 import React from 'react';
+import { LoginButtonProps } from '../../../interfaces/AuthInterfaces';
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & { full?: boolean };
-
-export default function Button({ full, children, ...rest }: Props) {
+const Button: React.FC<LoginButtonProps> = ({ full, children, ...rest }) => {
   return (
     <button
+      className="w-full pt-3 pr-4 rounded-lg border bg-transparent cursor-pointer opacity-5 font-semibold"
       {...rest}
-      style={{
-        width: full ? '100%' : undefined,
-        padding: '10px 14px',
-        borderRadius: 8,
-        border: '1px solid #222',
-        background: '#222',
-        color: '#fff',
-        fontWeight: 600,
-        cursor: 'pointer',
-        opacity: rest.disabled ? 0.6 : 1,
-      }}
     >
       {children}
     </button>
   );
-}
+};
+export default Button;

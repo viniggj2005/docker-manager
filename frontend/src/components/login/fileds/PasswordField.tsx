@@ -1,19 +1,11 @@
 import TextField from './TextField';
 import React, { useState } from 'react';
+import { PasswordFieldProps } from '../../../interfaces/AuthInterfaces';
 
-type Props = {
-  label: string;
-  name?: string;
-  value: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-  error?: string | null;
-  placeholder?: string;
-};
-
-export default function PasswordField(props: Props) {
+const PasswordField: React.FC<PasswordFieldProps> = (props) => {
   const [show, setShow] = useState(false);
   return (
-    <div style={{ position: 'relative' }}>
+    <div className="relative">
       <TextField
         label={props.label}
         type={show ? 'text' : 'password'}
@@ -25,19 +17,14 @@ export default function PasswordField(props: Props) {
       />
       <button
         type="button"
+        className="absolute right-[10px] top-[32px] bg-transparent hover:scale-95 border-none cursor-pointer"
         onClick={() => setShow((s) => !s)}
-        style={{
-          position: 'absolute',
-          right: 10,
-          top: 32,
-          background: 'transparent',
-          border: 'none',
-          cursor: 'pointer',
-        }}
         aria-label="alternar visibilidade da senha"
       >
         {show ? 'Ocultar' : 'Mostrar'}
       </button>
     </div>
   );
-}
+};
+
+export default PasswordField;

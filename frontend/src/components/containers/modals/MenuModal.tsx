@@ -7,7 +7,7 @@ import { confirmToast } from '../../utils/ConfirmToast';
 import ContainerStatsModal from './ContainerStatsModal';
 import React, { useEffect, useRef, useState } from 'react';
 import { FmtName } from '../../../functions/TreatmentFunction';
-import { ContainerProps } from '../../../interfaces/ContainerInterface';
+import { ContainerProps } from '../../../interfaces/ContainerInterfaces';
 import { MdContentPasteSearch, MdOutlineQueryStats, MdRestartAlt } from 'react-icons/md';
 import {
   ContainerInspect,

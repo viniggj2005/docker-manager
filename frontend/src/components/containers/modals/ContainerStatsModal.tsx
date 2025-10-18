@@ -4,7 +4,7 @@ import { IoMdCloseCircleOutline } from 'react-icons/io';
 import { EventsOn } from '../../../../wailsjs/runtime/runtime';
 import { BytesToMB } from '../../../functions/TreatmentFunction';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ContainerStatsProps, StatsPayload } from '../../../interfaces/ContainerInterface';
+import { ContainerStatsProps, StatsPayload } from '../../../interfaces/ContainerInterfaces';
 import { StartContainerStats, StopContainerStats } from '../../../../wailsjs/go/docker/Docker';
 
 const MAX_POINTS = 10;

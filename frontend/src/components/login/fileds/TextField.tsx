@@ -1,25 +1,14 @@
 import React from 'react';
+import { TextFieldProps } from '../../../interfaces/AuthInterfaces';
 
-type Props = React.InputHTMLAttributes<HTMLInputElement> & {
-  label: string;
-  error?: string | null;
-};
-
-export default function TextField({ label, error, ...rest }: Props) {
+const TextField: React.FC<TextFieldProps> = ({ label, error, ...rest }) => {
   return (
-    <label style={{ display: 'block', marginBottom: 12 }}>
-      <div style={{ fontSize: 12, marginBottom: 4 }}>{label}</div>
-      <input
-        {...rest}
-        style={{
-          width: '100%',
-          padding: '10px 12px',
-          border: '1px solid #ccc',
-          borderRadius: 8,
-          outline: 'none',
-        }}
-      />
-      {error ? <div style={{ color: '#b00020', fontSize: 12, marginTop: 4 }}>{error}</div> : null}
+    <label className="block mb-3">
+      <div className="text-sm mb-1">{label}</div>
+      <input {...rest} className="w-full pt-[10px] pr-[12px] border  rounded-xl outline-none " />
+      {error ? <div className="text-sm text-[var(--exit-red)] mt-1">{error}</div> : null}
     </label>
   );
-}
+};
+
+export default TextField;

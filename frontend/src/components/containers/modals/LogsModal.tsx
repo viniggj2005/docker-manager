@@ -3,7 +3,7 @@ import { FiSearch } from 'react-icons/fi';
 import 'izitoast/dist/css/iziToast.min.css';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 import React, { useEffect, useRef, useState } from 'react';
-import { LogsProps } from '../../../interfaces/ContainerInterface';
+import { LogsProps } from '../../../interfaces/ContainerInterfaces';
 import { ContainerLogs } from '../../../../wailsjs/go/docker/Docker';
 
 const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {

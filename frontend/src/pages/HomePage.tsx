@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { meApi } from '../components/login/Auth';
+import { myInfo } from '../components/login/Auth';
 import { useAuth } from '../contexts/AuthContext';
 import SshTerminal from '../components/terminal/Terminal';
 import ToggleThemeButton from '../components/buttons/ToggleThemeButton';
@@ -13,7 +13,7 @@ const HomePage: React.FC = () => {
     if (!token) return;
     (async () => {
       try {
-        const me = await meApi(token);
+        const me = await myInfo(token);
         console.log('me', me);
       } catch (e) {
         await logout();

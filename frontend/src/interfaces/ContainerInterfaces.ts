@@ -37,23 +37,23 @@ export interface EditContainerNameModalProps {
 
 export interface ContainerProps {
   id: string;
-  isOpen: boolean;
   name: string;
-  setMenuModal: (state: boolean) => void;
+  isOpen: boolean;
   onDeleted?: () => void;
+  setMenuModal: (state: boolean) => void;
 }
 
 export interface StatsPayload {
-  containerId: string;
-  osType: string;
-  cpuPercent: number;
-  memPercent: number;
-  memUsage: number;
-  memLimit: number;
-  rxBytes: number;
-  txBytes: number;
   pids: number;
   time: number;
+  osType: string;
+  txBytes: number;
+  rxBytes: number;
+  memUsage: number;
+  memLimit: number;
+  cpuPercent: number;
+  memPercent: number;
+  containerId: string;
 }
 
 export interface LogsProps {

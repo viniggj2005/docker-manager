@@ -1,27 +1,13 @@
 import React from 'react';
 import LoginForm from '../components/login/LoginForm';
 
-export default function LoginPage() {
+const LoginPage: React.FC = () => {
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'grid',
-        placeItems: 'center',
-        background: '#f6f7f9',
-        padding: 24,
-      }}
-    >
-      <div
-        style={{
-          background: '#fff',
-          padding: 24,
-          borderRadius: 12,
-          boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
-        }}
-      >
+    <div className="min-h-screen grid place-items-center bg-[var(--system-white)] dark:bg-[var(--dark-primary)] p-6">
+      <div className="shadow-md shadow-[var(--dark-primary)] dark:shadow-[var()]  rounded-xl bg-[var(--system-white)] dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)] p-6">
         <LoginForm />
       </div>
     </div>
   );
-}
+};
+export default LoginPage;

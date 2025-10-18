@@ -3,7 +3,7 @@ import { FiRefreshCw } from 'react-icons/fi';
 import ContainerCard from './cards/ContainerCard';
 import React, { useEffect, useRef, useState } from 'react';
 import { FmtName } from '../../functions/TreatmentFunction';
-import { ContainerItem } from '../../interfaces/ContainerInterface';
+import { ContainerItem } from '../../interfaces/ContainerInterfaces';
 import ContainersListSkeleton from './skeletons/ContainersListSkeleton';
 import {
   ContainersList,
