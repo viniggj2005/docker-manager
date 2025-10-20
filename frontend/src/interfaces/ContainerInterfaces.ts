@@ -60,3 +60,20 @@ export interface LogsProps {
   id: string;
   setLogsModal: (state: boolean) => void;
 }
+
+export interface ContainerCardProps {
+  container: ContainerItem;
+  name: string;
+  isSeeing: boolean;
+  isOpened: boolean;
+  isEditing: boolean;
+  onOpenLogs: () => void;
+  onOpenMenu: () => void;
+  onOpenEdit: () => void;
+  onCloseLogs: () => void;
+  onCloseMenu: () => void;
+  onCloseEdit: () => void;
+  onDeleted: () => Promise<void>;
+  onRename: (name: string, id: string) => Promise<void>;
+  onTogglePause: (id: string, state: string) => Promise<void>;
+}

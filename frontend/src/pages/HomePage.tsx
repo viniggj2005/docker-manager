@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { myInfo } from '../components/login/Auth';
 import { useAuth } from '../contexts/AuthContext';
-import SshTerminal from '../components/terminal/Terminal';
-import ToggleThemeButton from '../components/buttons/ToggleThemeButton';
-import ContainersListView from '../components/containers/ContainersList';
-import ListContainersImages from '../components/containersImages/ListContainerImages';
+import SshTerminal from '../features/terminal/Terminal';
+import { myInfo } from '../features/login/services/Auth';
+import ContainersListView from '../features/containers/ContainersList';
+import ToggleThemeButton from '../features/shared/buttons/ToggleThemeButton';
+import ListContainersImages from '../features/containersImages/ListContainerImages';
 
 const HomePage: React.FC = () => {
   const { token, logout } = useAuth();

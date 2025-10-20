@@ -1,5 +1,5 @@
 import { EventsOn } from '../../wailsjs/runtime/runtime';
-import { loginApi, logoutApi } from '../components/login/Auth';
+import { loginApi, logoutApi } from '../features/login/services/Auth';
 import { AuthContextType, LoginResponse, UserDTO } from '../interfaces/AuthInterfaces';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
