@@ -13,7 +13,7 @@ import {
   FormatBytes,
   EpochToDateStr,
   ParseNameAndTag,
-} from '../../../../functions/TreatmentFunction';
+} from '../../../shared/functions/TreatmentFunction';
 
 const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
   const id = img.Id ?? '';

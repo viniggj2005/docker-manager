@@ -9,7 +9,7 @@ import { RiFileList2Line } from 'react-icons/ri';
 import { CiPlay1, CiPause1 } from 'react-icons/ci';
 import ContainersMenuModal from '../modals/MenuModal';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
-import { FmtAgo } from '../../../../functions/TreatmentFunction';
+import { FmtAgo } from '../../../shared/functions/TreatmentFunction';
 import EditContainerNameModal from '../modals/EditContainerNameModal';
 import { ContainerCardProps } from '../../../../interfaces/ContainerInterfaces';
 

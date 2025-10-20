@@ -2,7 +2,7 @@ import { CPUChart } from '../charts/CpuChart';
 import { MemoryChart } from '../charts/MemoryChart';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 import { EventsOn } from '../../../../../wailsjs/runtime/runtime';
-import { BytesToMB } from '../../../../functions/TreatmentFunction';
+import { BytesToMB } from '../../../shared/functions/TreatmentFunction';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ContainerStatsProps, StatsPayload } from '../../../../interfaces/ContainerInterfaces';
 import { StartContainerStats, StopContainerStats } from '../../../../../wailsjs/go/docker/Docker';

@@ -3,7 +3,7 @@ import Toolbar from './components/toolbar/Toolbar';
 import ImageCard from './components/cards/ImageCard';
 import { useImages } from './services/RequestsImages';
 import ImagesTable from './components/tables/ImagesTable';
-import { ParseNameAndTag } from '../../functions/TreatmentFunction';
+import { ParseNameAndTag } from '../shared/functions/TreatmentFunction';
 import { ViewMode } from '../../interfaces/ContainerImagesInterfaces';
 
 const ListContainersImages: React.FC = () => {

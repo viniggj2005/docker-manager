@@ -5,7 +5,7 @@ import { useTheme } from '../../../../hooks/use-theme';
 import ContainerStatsModal from './ContainerStatsModal';
 import React, { useEffect, useRef, useState } from 'react';
 import InspectModal from '../../../shared/modals/InspectModal';
-import { FmtName } from '../../../../functions/TreatmentFunction';
+import { FmtName } from '../../../shared/functions/TreatmentFunction';
 import { confirmToast } from '../../../shared/toasts/ConfirmToast';
 import { ContainerProps } from '../../../../interfaces/ContainerInterfaces';
 import { MdContentPasteSearch, MdOutlineQueryStats, MdRestartAlt } from 'react-icons/md';

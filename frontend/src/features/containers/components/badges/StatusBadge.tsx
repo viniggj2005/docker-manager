@@ -1,5 +1,5 @@
 import React from 'react';
-import { classState } from '../../../../functions/TreatmentFunction';
+import { classState } from '../../../shared/functions/TreatmentFunction';
 
 type Props = { state: string; title?: string };
 

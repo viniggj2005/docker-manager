@@ -1,7 +1,7 @@
 import iziToast from 'izitoast';
 import { FiRefreshCw } from 'react-icons/fi';
 import React, { useEffect, useRef, useState } from 'react';
-import { FmtName } from '../../functions/TreatmentFunction';
+import { FmtName } from '../shared/functions/TreatmentFunction';
 import ContainerCard from './components/cards/ContainerCard';
 import { ContainerItem } from '../../interfaces/ContainerInterfaces';
 import {

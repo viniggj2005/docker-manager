@@ -1,6 +1,4 @@
-interface IconProps {
-  className?: string;
-}
+import { IconProps } from '../interfaces/IconsInterfaces';
 
 export const DockerImageIcon: React.FC<IconProps> = ({ className }) => (
   <svg

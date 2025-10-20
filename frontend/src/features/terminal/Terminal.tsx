@@ -13,7 +13,7 @@ export default function SshTerminal() {
     KeyPath: import.meta.env.VITE_SSH_KEYPATH,
     Passphrase: '',
     KnownHostsPath: '',
-    InsecureIgnoreHostKey: true,
+    InsecureIgnoreHostKey: true, //true
     Cols: 0,
     Rows: 0,
     Timeout: 0,
