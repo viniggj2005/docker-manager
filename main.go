@@ -31,6 +31,7 @@ func main() {
 	docker := docker.NewDocker()
 	term := &terminal.Terminal{}
 	sm := auth.NewManager(8 * time.Hour)
+	sshHandler := handlers.NewSshHandler(db.DB, sm)
 	authHandler := handlers.NewAuthHandler(db.DB, sm)
 	userHandler := handlers.NewUserHandler(db.DB, sm)
 
@@ -46,6 +47,7 @@ func main() {
 			app.startup(ctx)
 			term.Startup(ctx)
 			docker.Startup(ctx)
+			sshHandler.Startup(ctx)
 			authHandler.Startup(ctx)
 			userHandler.Startup(ctx)
 
@@ -54,6 +56,7 @@ func main() {
 			app,
 			term,
 			docker,
+			sshHandler,
 			authHandler,
 			userHandler,
 		},

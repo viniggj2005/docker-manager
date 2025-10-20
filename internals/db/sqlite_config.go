@@ -27,7 +27,7 @@ func InitDb() {
 	if err != nil {
 		panic(err)
 	}
-	if err := DB.AutoMigrate(&models.User{}, &models.DockerCredentials{}); err != nil {
+	if err := DB.AutoMigrate(&models.User{}, &models.DockerCredentials{}, &models.SshConnection{}); err != nil {
 		log.Fatal(err)
 	}
 }

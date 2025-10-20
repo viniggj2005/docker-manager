@@ -17,3 +17,12 @@ export interface TerminalHeaderProps {
   onToggleMax: () => void;
   onToggleDock: () => void;
 }
+
+export interface CreateSshConnectionInterface {
+  host: string;
+  key?: string;
+  port?: number;
+  userId: number;
+  systemUser: string;
+  knownHosts?: string;
+}

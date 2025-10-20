@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LoadImage } from '../../wailsjs/go/main/App';
+import { LoadImage } from '../../../wailsjs/go/main/App';
 
 const ImagemView = () => {
   const [src, setSrc] = useState('');

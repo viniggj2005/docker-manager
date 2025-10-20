@@ -1,6 +1,7 @@
 import App from './App';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
+import TerminalFormPage from './pages/TerminalFormPage';
 import ProtectedRoute from './ProtectedRoute';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
@@ -16,6 +17,10 @@ export const router = createBrowserRouter(
         {
           element: <ProtectedRoute />,
           children: [{ path: 'home', element: <HomePage /> }],
+        },
+        {
+          element: <ProtectedRoute />,
+          children: [{ path: 'createConnectionForm', element: <TerminalFormPage /> }],
         },
 
         { path: 'login', element: <LoginPage /> },

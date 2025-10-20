@@ -130,6 +130,28 @@ export namespace container {
 
 export namespace dtos {
 	
+	export class CreateSshConnectionInput {
+	    host: string;
+	    systemUser: string;
+	    port?: number;
+	    key?: string;
+	    knownHosts?: string;
+	    userId: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new CreateSshConnectionInput(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.host = source["host"];
+	        this.systemUser = source["systemUser"];
+	        this.port = source["port"];
+	        this.key = source["key"];
+	        this.knownHosts = source["knownHosts"];
+	        this.userId = source["userId"];
+	    }
+	}
 	export class CreateUserInput {
 	    nome: string;
 	    email: string;

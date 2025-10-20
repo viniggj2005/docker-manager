@@ -81,38 +81,3 @@ func (d *Docker) ContainerRestart(containerId string) error {
 	}
 	return nil
 }
-
-// func (a *App) StreamLogs(containerID string) error {
-// 	reader, err := a.cli.ContainerLogs(
-// 		context.Background(),
-// 		containerID,
-// 		container.LogsOptions{
-// 			ShowStdout: true,
-// 			ShowStderr: true,
-// 			Follow:     true,
-// 			Timestamps: false,
-// 		},
-// 	)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	defer reader.Close()
-
-// 	scanner := bufio.NewScanner(reader)
-// 	for scanner.Scan() {
-// 		line := scanner.Text()
-// 		runtime.EventsEmit(a.Ctx, "container-log", line)
-// 	}
-// 	return scanner.Err()
-// }
-//#####################################################
-// no frontend
-// import { EventsOn } from "../wailsjs/runtime";
-
-// useEffect(() => {
-//   EventsOn("container-log", (msg: string) => {
-//     console.log(msg);
-//     // ou atualizar um state:
-//     setLogs(prev => prev + "\n" + msg);
-//   });
-// }, []);

@@ -8,4 +8,5 @@ type User struct {
 	Email    string `json:"email" gorm:"uniqueIndex;not null"`
 	Password string `json:"-" gorm:"uniqueIndex;not null"`
 	Docker   []DockerCredentials
+	Ssh      []SshConnection
 }

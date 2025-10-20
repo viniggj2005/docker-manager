@@ -1,12 +1,12 @@
 import iziToast from 'izitoast';
 import React, { useState } from 'react';
-import { DockerImageIcon } from '../../../Icons';
 import { FaTrashCan, FaTag } from 'react-icons/fa6';
-import InspectModal from '../../../shared/components/modals/InspectModal';
-import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
+import { DockerImageIcon } from '../../../shared/Icons';
 import { MdContentCopy, MdContentPasteSearch } from 'react-icons/md';
 import { copyToClipboard } from '../../../shared/functions/clipboard';
+import InspectModal from '../../../shared/components/modals/InspectModal';
 import { ImageProps } from '../../../../interfaces/ContainerImagesInterfaces';
+import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { InspectImage, RemoveImage } from '../../../../../wailsjs/go/docker/Docker';
 import {
   FmtAgo,

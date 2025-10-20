@@ -5,6 +5,7 @@ import { myInfo } from '../features/login/services/Auth';
 import ContainersListView from '../features/containers/ContainersList';
 import ListContainersImages from '../features/containersImages/ListContainerImages';
 import ToggleThemeButton from '../features/shared/components/buttons/ToggleThemeButton';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
   const { token, logout } = useAuth();
@@ -19,7 +20,7 @@ const HomePage: React.FC = () => {
       }
     })();
   }, [token, logout]);
-
+  const navigate = useNavigate();
   return (
     <div className=" bg-[var(--system-white)] dark:bg-[var(--dark-primary)] w-screen h-screen justify-center flex">
       <div className="bg-[var(--system-white)] dark:bg-[var(--dark-primary)] w-screen h-screen justify-center flex">
@@ -27,6 +28,8 @@ const HomePage: React.FC = () => {
           <ContainersListView />
           <ListContainersImages />
           <SshTerminal />
+
+          <button onClick={() => navigate('/createConnectionForm')}>Criar nova conexão SSH</button>
         </div>
       </div>
       <div className="absolute bottom-4 left-3">
