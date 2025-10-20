@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaTrashCan } from 'react-icons/fa6';
-import { confirmToast } from '../../../shared/toasts/ConfirmToast';
+import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { PruneImages } from '../../../../../wailsjs/go/docker/Docker';
 import { FiSearch, FiRefreshCw, FiGrid, FiList } from 'react-icons/fi';
 import { ViewMode } from '../../../../interfaces/ContainerImagesInterfaces';

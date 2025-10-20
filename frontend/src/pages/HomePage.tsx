@@ -3,8 +3,8 @@ import { useAuth } from '../contexts/AuthContext';
 import SshTerminal from '../features/terminal/Terminal';
 import { myInfo } from '../features/login/services/Auth';
 import ContainersListView from '../features/containers/ContainersList';
-import ToggleThemeButton from '../features/shared/buttons/ToggleThemeButton';
 import ListContainersImages from '../features/containersImages/ListContainerImages';
+import ToggleThemeButton from '../features/shared/components/buttons/ToggleThemeButton';
 
 const HomePage: React.FC = () => {
   const { token, logout } = useAuth();

@@ -1,6 +1,6 @@
 import React from 'react';
 import LoginForm from '../features/login/LoginForm';
-import ToggleThemeButton from '../features/shared/buttons/ToggleThemeButton';
+import ToggleThemeButton from '../features/shared/components/buttons/ToggleThemeButton';
 
 const LoginPage: React.FC = () => {
   return (

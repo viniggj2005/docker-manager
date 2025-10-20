@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ImagesList } from '../../../../wailsjs/go/docker/Docker';
 import { DockerImageInfo } from '../../../interfaces/ContainerImagesInterfaces';
 
-export const useImages = (pollMs = 2000) => {
+export const ContainerImagesService = (pollMs = 2000) => {
   const timerRef = useRef<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<DockerImageInfo[]>([]);

@@ -1,15 +1,9 @@
-import iziToast from 'izitoast';
 import { FiRefreshCw } from 'react-icons/fi';
 import React, { useEffect, useRef, useState } from 'react';
-import { FmtName } from '../shared/functions/TreatmentFunction';
 import ContainerCard from './components/cards/ContainerCard';
+import { FmtName } from '../shared/functions/TreatmentFunction';
 import { ContainerItem } from '../../interfaces/ContainerInterfaces';
-import {
-  ContainersList,
-  ContainerPause,
-  ContainerRename,
-  ContainerUnPause,
-} from '../../../wailsjs/go/docker/Docker';
+import { getContainers, renameContainer, toggleContainerState } from './services/ContainersService';
 
 const ContainersListView: React.FC = () => {
   const timerRef = useRef<number | null>(null);
@@ -19,32 +13,19 @@ const ContainersListView: React.FC = () => {
   const [editNameModalId, setEditNameModalId] = useState<string | null>(null);
 
   const fetchData = async () => {
-    try {
-      const resp = await ContainersList();
-      setItems(resp || []);
-    } catch (e: any) {
-      iziToast.error({ title: 'Erro', message: e, position: 'bottomRight' });
-    }
+    const containers = await getContainers();
+    setItems(containers);
   };
 
   const handleRename = async (name: string, id: string) => {
-    try {
-      await ContainerRename(id, name);
-      await fetchData();
-      setEditNameModalId(null);
-    } catch (e: any) {
-      iziToast.error({ title: 'Erro', message: e, position: 'bottomRight' });
-    }
+    await renameContainer(id, name);
+    await fetchData();
+    setEditNameModalId(null);
   };
 
   const changeContainerStage = async (id: string, state: string) => {
-    try {
-      if (state === 'paused') await ContainerUnPause(id);
-      else if (state === 'running') await ContainerPause(id);
-      await fetchData();
-    } catch (e: any) {
-      iziToast.error({ title: 'Erro', message: e, position: 'bottomRight' });
-    }
+    await toggleContainerState(id, state);
+    await fetchData();
   };
 
   useEffect(() => {
@@ -64,9 +45,7 @@ const ContainersListView: React.FC = () => {
           </h1>
           <button
             onClick={fetchData}
-            className="inline-flex items-center hover:scale-95  gap-2 px-3 py-2
-             rounded-xl transition bg-[var(--system-white)] text-[var(--system-black)] dark:text-[var(--system-white)] border dark:border-[var(--dark-tertiary)] 
-             border-[var(--light-gray)] hover:border-[var(--light-gray)] dark:bg-[var(--dark-secondary)]"
+            className="inline-flex items-center hover:scale-95 gap-2 px-3 py-2 rounded-xl transition bg-[var(--system-white)] text-[var(--system-black)] dark:text-[var(--system-white)] border dark:border-[var(--dark-tertiary)] border-[var(--light-gray)] dark:bg-[var(--dark-secondary)]"
             title="Atualizar"
           >
             <FiRefreshCw className="h-4 w-4" />
@@ -77,7 +56,7 @@ const ContainersListView: React.FC = () => {
         {!items ? (
           <p>Buscando containeres...</p>
         ) : items.length === 0 ? (
-          <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]  bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+          <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
             Nenhum container encontrado.
           </div>
         ) : (
@@ -114,7 +93,7 @@ const ContainersListView: React.FC = () => {
           </div>
         )}
 
-        <footer className="mt-6 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)] ">
+        <footer className="mt-6 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
           Atualiza a cada 2s. Clique em “Atualizar” para forçar agora.
         </footer>
       </div>

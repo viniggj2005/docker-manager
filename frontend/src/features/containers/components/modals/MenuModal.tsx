@@ -1,12 +1,12 @@
 import iziToast from 'izitoast';
 import { FaTrashCan } from 'react-icons/fa6';
-import ArrowTip from '../../../shared/ArrowTip';
+import ArrowTip from '../../../shared/components/ArrowTip';
 import { useTheme } from '../../../../hooks/use-theme';
 import ContainerStatsModal from './ContainerStatsModal';
 import React, { useEffect, useRef, useState } from 'react';
-import InspectModal from '../../../shared/modals/InspectModal';
+import InspectModal from '../../../shared/components/modals/InspectModal';
 import { FmtName } from '../../../shared/functions/TreatmentFunction';
-import { confirmToast } from '../../../shared/toasts/ConfirmToast';
+import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { ContainerProps } from '../../../../interfaces/ContainerInterfaces';
 import { MdContentPasteSearch, MdOutlineQueryStats, MdRestartAlt } from 'react-icons/md';
 import {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ArrowTip from '../../../shared/ArrowTip';
+import ArrowTip from '../../../shared/components/ArrowTip';
 import { useTheme } from '../../../../hooks/use-theme';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 import { EditContainerNameModalProps } from '../../../../interfaces/ContainerInterfaces';

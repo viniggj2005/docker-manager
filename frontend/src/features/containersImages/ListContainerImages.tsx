@@ -1,15 +1,15 @@
 import React, { useMemo, useState } from 'react';
 import Toolbar from './components/toolbar/Toolbar';
 import ImageCard from './components/cards/ImageCard';
-import { useImages } from './services/RequestsImages';
 import ImagesTable from './components/tables/ImagesTable';
-import { ParseNameAndTag } from '../shared/functions/TreatmentFunction';
 import { ViewMode } from '../../interfaces/ContainerImagesInterfaces';
+import { ParseNameAndTag } from '../shared/functions/TreatmentFunction';
+import { ContainerImagesService } from './services/ContainerImagesService';
 
 const ListContainersImages: React.FC = () => {
   const [query, setQuery] = useState('');
   const [view, setView] = useState<ViewMode>('grid');
-  const { images, loading, fetchImages } = useImages();
+  const { images, loading, fetchImages } = ContainerImagesService();
 
   const filteredSorted = useMemo(() => {
     const q = query.trim().toLowerCase();

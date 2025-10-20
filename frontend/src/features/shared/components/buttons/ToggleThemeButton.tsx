@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme } from '../../../hooks/use-theme';
+import { useTheme } from '../../../../hooks/use-theme';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
 const ToggleThemeButton: React.FC = () => {
