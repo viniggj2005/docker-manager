@@ -4,7 +4,6 @@ import ContainerCard from './cards/ContainerCard';
 import React, { useEffect, useRef, useState } from 'react';
 import { FmtName } from '../../functions/TreatmentFunction';
 import { ContainerItem } from '../../interfaces/ContainerInterfaces';
-import ContainersListSkeleton from './skeletons/ContainersListSkeleton';
 import {
   ContainersList,
   ContainerPause,
@@ -76,7 +75,7 @@ const ContainersListView: React.FC = () => {
         </header>
 
         {!items ? (
-          <ContainersListSkeleton />
+          <p>Buscando containeres...</p>
         ) : items.length === 0 ? (
           <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]  bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
             Nenhum container encontrado.

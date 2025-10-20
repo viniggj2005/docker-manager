@@ -17,7 +17,7 @@ const PasswordField: React.FC<PasswordFieldProps> = (props) => {
       />
       <button
         type="button"
-        className="absolute right-[10px] top-[32px] bg-transparent hover:scale-95 border-none cursor-pointer"
+        className="absolute right-[10px] top-[32px] bg-transparent text-[var(--dark-primary)] hover:scale-95 border-none cursor-pointer"
         onClick={() => setShow((s) => !s)}
         aria-label="alternar visibilidade da senha"
       >

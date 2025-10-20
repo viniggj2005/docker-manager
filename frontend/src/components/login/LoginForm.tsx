@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import TextField from './fileds/TextField';
-import PasswordField from './fileds/PasswordField';
+import TextField from './fields/TextField';
+import PasswordField from './fields/PasswordField';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 

@@ -14,21 +14,23 @@ const HomePage: React.FC = () => {
     (async () => {
       try {
         const me = await myInfo(token);
-        console.log('me', me);
       } catch (e) {
         await logout();
       }
     })();
   }, [token, logout]);
+
   return (
     <div className=" bg-[var(--system-white)] dark:bg-[var(--dark-primary)] w-screen h-screen justify-center flex">
       <div className="bg-[var(--system-white)] dark:bg-[var(--dark-primary)] w-screen h-screen justify-center flex">
         <div className="w-fit h-fit bg-transparent">
           <ContainersListView />
           <ListContainersImages />
-          <ToggleThemeButton />
           <SshTerminal />
         </div>
+      </div>
+      <div className="absolute bottom-4 left-3">
+        <ToggleThemeButton />
       </div>
     </div>
   );

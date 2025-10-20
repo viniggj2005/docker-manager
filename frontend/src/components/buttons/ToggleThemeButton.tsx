@@ -1,5 +1,6 @@
 import { useTheme } from '../../hooks/use-theme';
 import React, { useState, useEffect } from 'react';
+import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
 const ToggleThemeButton: React.FC = () => {
   const theme = useTheme();
@@ -20,14 +21,14 @@ const ToggleThemeButton: React.FC = () => {
         ${theme.theme === 'dark' ? 'bg-[var(--dark-gray)] border-[var(--medium-gray)]' : 'bg-[var(--system-white)]'}`}
     >
       <div
-        className={`absolute top-1/2 left-1 right-1 w-10 h-10 rounded-full  transition-transform duration-500
-          -translate-y-1/2 ${theme.theme === 'dark' ? 'translate-x-1' : 'translate-x-12'}`}
+        className={`absolute top-1/2 left-1 right-1 w-10 h-10 rounded-full py-1  transition-transform duration-500
+          -translate-y-1/2 ${theme.theme === 'dark' ? 'translate-x-1' : 'translate-x-14'}`}
       >
-        <img
-          className="w-full h-full"
-          src={`/icons/${delayedTheme === 'dark' ? 'moon' : 'sun'}.svg`}
-          alt="Theme Toggle"
-        />
+        {delayedTheme === 'dark' ? (
+          <MdDarkMode className="h-8 w-8 text-[var(--system-white)]" />
+        ) : (
+          <MdLightMode className="h-8 w-8 text-var(--dark-primary)]" />
+        )}
       </div>
     </div>
   );
