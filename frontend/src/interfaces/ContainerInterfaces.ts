@@ -49,11 +49,11 @@ export interface StatsPayload {
   osType: string;
   txBytes: number;
   rxBytes: number;
-  memUsage: number;
-  memLimit: number;
-  cpuPercent: number;
-  memPercent: number;
+  memoryUsage: number;
+  memoryLimit: number;
   containerId: string;
+  cpuPercentage: number;
+  memoryPercentage: number;
 }
 
 export interface LogsProps {
@@ -76,4 +76,19 @@ export interface ContainerCardProps {
   onDeleted: () => Promise<void>;
   onRename: (name: string, id: string) => Promise<void>;
   onTogglePause: (id: string, state: string) => Promise<void>;
+}
+
+interface Point {
+  time: number;
+  value: number;
+}
+
+export interface CpuChartsProps {
+  points: Point[];
+}
+
+export interface MemoryChartsProps {
+  limitMB?: number;
+  percentPoints: Point[];
+  usageMBPoints: Point[];
 }

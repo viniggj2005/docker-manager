@@ -5,4 +5,8 @@ import {context} from '../models';
 
 export function CreateSshConnection(arg1:dtos.CreateSshConnectionInput):Promise<void>;
 
+export function FindAllConnectionByUser(arg1:string,arg2:number):Promise<Array<dtos.SshDto>>;
+
+export function GetById(arg1:string,arg2:number):Promise<dtos.SshDto>;
+
 export function Startup(arg1:context.Context):Promise<void>;

@@ -1,13 +1,13 @@
 import iziToast from 'izitoast';
 import { FaTrashCan } from 'react-icons/fa6';
-import ArrowTip from '../../../shared/components/ArrowTip';
 import { useTheme } from '../../../../hooks/use-theme';
 import ContainerStatsModal from './ContainerStatsModal';
+import ArrowTip from '../../../shared/components/ArrowTip';
 import React, { useEffect, useRef, useState } from 'react';
-import InspectModal from '../../../shared/components/modals/InspectModal';
 import { FmtName } from '../../../shared/functions/TreatmentFunction';
-import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
+import InspectModal from '../../../shared/components/modals/InspectModal';
 import { ContainerProps } from '../../../../interfaces/ContainerInterfaces';
+import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { MdContentPasteSearch, MdOutlineQueryStats, MdRestartAlt } from 'react-icons/md';
 import {
   ContainerRemove,
@@ -26,36 +26,39 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
-  const [inspectData, setInspectData] = useState<string | null>(null);
+  const [inspectContent, setInspectContent] = useState<string | null>(null);
 
   const handleInspect = async () => {
     try {
-      const data = await ContainerInspect(id);
-      setInspectData(data);
-      setInspectData(typeof data === 'string' ? data : JSON.stringify(data, null, 2));
+      const inspectContent = await ContainerInspect(id);
+      setInspectContent(inspectContent);
+      setInspectContent(
+        typeof inspectContent === 'string'
+          ? inspectContent
+          : JSON.stringify(inspectContent, null, 2)
+      );
       iziToast.success({
         title: 'Sucesso!',
         message: 'Os dados da imagem foram Retornados!',
         position: 'bottomRight',
       });
-      console.log('INSPECTDATA', inspectData);
       setIsInspectOpen(true);
-    } catch (e: any) {
-      iziToast.error({ title: 'Erro', message: String(e), position: 'bottomRight' });
+    } catch (error: any) {
+      iziToast.error({ title: 'Erro', message: String(error), position: 'bottomRight' });
     }
   };
   const handleRestart = async () => {
     try {
       await ContainerRestart(id);
-    } catch (e: any) {
-      iziToast.error({ title: 'Erro', message: String(e), position: 'bottomRight' });
+    } catch (error: any) {
+      iziToast.error({ title: 'Erro', message: String(error), position: 'bottomRight' });
     }
   };
 
   useEffect(() => {
     if (!isOpen) return;
-    const onDocClick = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+    const onDocClick = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
         setMenuModal(false);
       }
     };
@@ -128,7 +131,7 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
         <InspectModal
           title="Inspect do container"
           name={`${FmtName([name])}`}
-          data={inspectData}
+          data={inspectContent}
           onClose={() => setIsInspectOpen(false)}
         />
       )}

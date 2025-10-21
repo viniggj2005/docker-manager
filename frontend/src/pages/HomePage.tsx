@@ -1,25 +1,10 @@
-import React, { useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import SshTerminal from '../features/terminal/Terminal';
-import { myInfo } from '../features/login/services/Auth';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import ContainersListView from '../features/containers/ContainersList';
 import ListContainersImages from '../features/containersImages/ListContainerImages';
 import ToggleThemeButton from '../features/shared/components/buttons/ToggleThemeButton';
-import { useNavigate } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
-  const { token, logout } = useAuth();
-
-  useEffect(() => {
-    if (!token) return;
-    (async () => {
-      try {
-        const me = await myInfo(token);
-      } catch (e) {
-        await logout();
-      }
-    })();
-  }, [token, logout]);
   const navigate = useNavigate();
   return (
     <div className=" bg-[var(--system-white)] dark:bg-[var(--dark-primary)] w-screen h-screen justify-center flex">
@@ -27,7 +12,6 @@ const HomePage: React.FC = () => {
         <div className="w-fit h-fit bg-transparent">
           <ContainersListView />
           <ListContainersImages />
-          <SshTerminal />
 
           <button onClick={() => navigate('/createConnectionForm')}>Criar nova conexão SSH</button>
         </div>

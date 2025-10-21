@@ -23,6 +23,9 @@ yarn-error.log*
 .vscode/
 .idea/
 .DS_Store
+secure.db
+secure.db-shm
+secure.db-wal
 
 # OS files
 Thumbs.db

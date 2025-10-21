@@ -1,61 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import iziToast from 'izitoast';
+import React, { useState } from 'react';
 import { FileUploader } from 'react-drag-drop-files';
 import { useAuth } from '../../../../contexts/AuthContext';
-import { decodeJwt } from '../../../shared/functions/DecodeJwt';
 import { TerminalServices } from '../../services/TerminalServices';
 import { CreateSshConnectionInterface } from '../../../../interfaces/TerminalInterfaces';
 
-const fileTypes = ['PEM', 'TXT'];
-
-interface Props {
-  onSuccess?: () => void;
-}
+const labelBase = 'text-xs font-medium text-[var(--grey-text)]';
 
 const inputBase =
   'w-full rounded-lg border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] ' +
   'bg-[var(--system-white)] dark:bg-[var(--dark-secondary)] px-3 py-2 outline-none ' +
   'focus:ring-2 focus:ring-emerald-500 dark:text-[var(--system-white)]';
 
-const labelBase = 'text-xs font-medium text-[var(--grey-text)]';
-
-const CreateSshConnectionForm: React.FC<Props> = ({ onSuccess }) => {
-  const { token, user } = useAuth();
+const CreateSshConnectionForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
+  const fileTypes = ['PEM', 'TXT'];
+  const { user } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
+  const [fileName, setFileName] = useState<string>('');
   const [formData, setFormData] = useState<CreateSshConnectionInterface>({
     key: '',
     port: 22,
     host: '',
-    userId: 0,
     systemUser: '',
     knownHosts: '',
+    userId: user ? user.id : 1,
   });
-  const [fileName, setFileName] = useState<string>('');
-  const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (!token && !user?.id) return;
-    const payload = token ? decodeJwt<any>(token) : null;
-    const claim =
-      payload?.userId ??
-      payload?.user_id ??
-      payload?.uid ??
-      payload?.id ??
-      payload?.sub ??
-      user?.id;
-
-    const numericId =
-      typeof claim === 'string' ? Number(claim) : typeof claim === 'number' ? claim : NaN;
-
-    if (Number.isFinite(numericId) && numericId > 0) {
-      setFormData((prev) => ({ ...prev, userId: numericId as number }));
-    }
-  }, [token, user]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
     if (name === 'port') {
-      setFormData((prev) => ({ ...prev, [name]: Number(value) || 0 }));
+      setFormData((previous) => ({ ...previous, [name]: Number(value) || 0 }));
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      setFormData((previous) => ({ ...previous, [name]: value }));
     }
   };
 
@@ -70,22 +46,21 @@ const CreateSshConnectionForm: React.FC<Props> = ({ onSuccess }) => {
       reader.readAsDataURL(selectedFile);
     });
 
-    setFormData((prev) => ({ ...prev, key: base64 }));
+    setFormData((previous) => ({ ...previous, key: base64 }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.userId) {
-      alert('Token inválido. userId não encontrado.');
-      return;
-    }
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setSubmitting(true);
     try {
       await TerminalServices.createSshConnection(formData);
       onSuccess?.();
-    } catch (err) {
-      console.error(err);
-      alert('Erro ao criar conexão.');
+    } catch (error) {
+      iziToast.error({
+        title: 'Erro',
+        message: `Erro ao criar conexão: ${String(error)}`,
+        position: 'bottomRight',
+      });
     } finally {
       setSubmitting(false);
     }
@@ -172,7 +147,7 @@ const CreateSshConnectionForm: React.FC<Props> = ({ onSuccess }) => {
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm text-white hover:opacity-90 disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm text-[var(--system-white)] hover:opacity-90 disabled:opacity-60"
         >
           {submitting ? 'Criando…' : 'Criar conexão'}
         </button>

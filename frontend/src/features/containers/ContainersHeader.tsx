@@ -1,9 +1,7 @@
 import React from 'react';
 import { FiRefreshCw } from 'react-icons/fi';
 
-type Props = { onRefresh: () => void };
-
-const ContainersHeader: React.FC<Props> = ({ onRefresh }) => (
+const ContainersHeader: React.FC<{ onRefresh: () => void }> = ({ onRefresh }) => (
   <header className="mb-4 flex items-center justify-between">
     <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
       Containers

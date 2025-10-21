@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ImagesList } from '../../../../wailsjs/go/docker/Docker';
 import { DockerImageInfo } from '../../../interfaces/ContainerImagesInterfaces';
 
-export const ContainerImagesService = (pollMs = 2000) => {
+export const ContainerImagesService = (pollMiliseconds = 2000) => {
   const timerRef = useRef<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<DockerImageInfo[]>([]);
@@ -11,10 +11,14 @@ export const ContainerImagesService = (pollMs = 2000) => {
   const fetchImages = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await ImagesList();
-      setImages((res as DockerImageInfo[]) ?? []);
-    } catch (e: any) {
-      iziToast.error({ title: 'Erro', message: String(e?.message ?? e), position: 'bottomRight' });
+      const imagesList = await ImagesList();
+      setImages((imagesList as DockerImageInfo[]) ?? []);
+    } catch (error: any) {
+      iziToast.error({
+        title: 'Erro',
+        message: String(error?.message ?? error),
+        position: 'bottomRight',
+      });
     } finally {
       setLoading(false);
     }
@@ -22,11 +26,11 @@ export const ContainerImagesService = (pollMs = 2000) => {
 
   useEffect(() => {
     fetchImages();
-    timerRef.current = window.setInterval(fetchImages, pollMs);
+    timerRef.current = window.setInterval(fetchImages, pollMiliseconds);
     return () => {
       if (timerRef.current) window.clearInterval(timerRef.current);
     };
-  }, [fetchImages, pollMs]);
+  }, [fetchImages, pollMiliseconds]);
 
   return { images, loading, fetchImages, setImages };
 };

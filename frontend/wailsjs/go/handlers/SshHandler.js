@@ -6,6 +6,14 @@ export function CreateSshConnection(arg1) {
   return window['go']['handlers']['SshHandler']['CreateSshConnection'](arg1);
 }
 
+export function FindAllConnectionByUser(arg1, arg2) {
+  return window['go']['handlers']['SshHandler']['FindAllConnectionByUser'](arg1, arg2);
+}
+
+export function GetById(arg1, arg2) {
+  return window['go']['handlers']['SshHandler']['GetById'](arg1, arg2);
+}
+
 export function Startup(arg1) {
   return window['go']['handlers']['SshHandler']['Startup'](arg1);
 }

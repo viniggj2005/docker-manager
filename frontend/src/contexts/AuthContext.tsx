@@ -18,16 +18,16 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     setLoading(true);
     setError(null);
     try {
-      const res: LoginResponse = await loginApi(email, password);
-      setToken(res.token);
-      setUser(res.user);
-      tokenRef.current = res.token;
-    } catch (e: any) {
-      setError(e?.message ?? 'Falha no login');
+      const loginResponse: LoginResponse = await loginApi(email, password);
+      setToken(loginResponse.token);
+      setUser(loginResponse.user);
+      tokenRef.current = loginResponse.token;
+    } catch (error: any) {
+      setError(error?.message ?? 'Falha no login');
       setToken(null);
       setUser(null);
       tokenRef.current = null;
-      throw e;
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -74,7 +74,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
 };
 
 export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth deve ser usado dentro de AuthProvider');
-  return ctx;
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth deve ser usado dentro de AuthProvider');
+  return context;
 }

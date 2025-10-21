@@ -79,7 +79,7 @@ func (h *UserHandler) Update(token string, id uint, in dtos.UpdateUserInput) (*d
 	return dtos.ToDTO(&u), nil
 }
 
-func (h *UserHandler) Me(token string) (*dtos.UserDTO, error) {
+func (h *UserHandler) MyInfo(token string) (*dtos.UserDTO, error) {
 	s, err := h.Sess.Validate(token)
 	if err != nil {
 		return nil, err

@@ -7,38 +7,40 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ContainerStatsProps, StatsPayload } from '../../../../interfaces/ContainerInterfaces';
 import { StartContainerStats, StopContainerStats } from '../../../../../wailsjs/go/docker/Docker';
 
-const MAX_POINTS = 10;
+const maxPoints = 10;
 
 const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose }) => {
-  const memLimitMBRef = useRef<number | null>(null);
+  const memoryLimitMBRef = useRef<number | null>(null);
   const [stats, setStats] = useState<StatsPayload | null>(null);
-  const [cpuSeries, setCpuSeries] = useState<{ t: number; v: number }[]>([]);
-  const [memPctSeries, setMemPctSeries] = useState<{ t: number; v: number }[]>([]);
-  const [memUsageMBSeries, setMemUsageMBSeries] = useState<{ t: number; v: number }[]>([]);
+  const [cpuSeries, setCpuSeries] = useState<{ time: number; value: number }[]>([]);
+  const [memoryPercentageSeries, setMemPctSeries] = useState<{ time: number; value: number }[]>([]);
+  const [memoryUsageMBSeries, setMemUsageMBSeries] = useState<{ time: number; value: number }[]>(
+    []
+  );
 
   useEffect(() => {
-    const offStats = EventsOn('container:stats', (p: StatsPayload) => {
-      if (p.containerId !== id) return;
-      setStats(p);
+    const offStats = EventsOn('container:stats', (stats: StatsPayload) => {
+      if (stats.containerId !== id) return;
+      setStats(stats);
 
-      const t = new Date(p.time).getTime();
-      setCpuSeries((s) => {
-        const next = [...s, { t, v: Number(p.cpuPercent) }];
-        return next.length > MAX_POINTS ? next.slice(-MAX_POINTS) : next;
+      const time = new Date(stats.time).getTime();
+      setCpuSeries((serie) => {
+        const next = [...serie, { time, value: Number(stats.cpuPercentage) }];
+        return next.length > maxPoints ? next.slice(-maxPoints) : next;
       });
-      setMemPctSeries((s) => {
-        const next = [...s, { t, v: Number(p.memPercent) }];
-        return next.length > MAX_POINTS ? next.slice(-MAX_POINTS) : next;
+      setMemPctSeries((serie) => {
+        const next = [...serie, { time, value: Number(stats.memoryPercentage) }];
+        return next.length > maxPoints ? next.slice(-maxPoints) : next;
       });
-      setMemUsageMBSeries((s) => {
-        const next = [...s, { t, v: BytesToMB(p.memUsage) }];
-        return next.length > MAX_POINTS ? next.slice(-MAX_POINTS) : next;
+      setMemUsageMBSeries((serie) => {
+        const next = [...serie, { time, value: BytesToMB(stats.memoryUsage) }];
+        return next.length > maxPoints ? next.slice(-maxPoints) : next;
       });
-      if (!memLimitMBRef.current) memLimitMBRef.current = BytesToMB(p.memLimit);
+      if (!memoryLimitMBRef.current) memoryLimitMBRef.current = BytesToMB(stats.memoryLimit);
     });
 
-    const offErr = EventsOn('container:stats:error', (e: any) => {
-      if (e?.containerId === id) console.error('stats error:', e.error);
+    const offErr = EventsOn('container:stats:error', (event: any) => {
+      if (event?.containerId === id) console.error('stats error:', event.error);
     });
 
     StartContainerStats(id);
@@ -54,10 +56,10 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
     if (!stats) return null;
     const mb = (n: number) => (n / (1024 * 1024)).toFixed(1);
     return {
-      cpu: stats.cpuPercent.toFixed(1),
-      memUsage: mb(stats.memUsage),
-      memLimit: mb(stats.memLimit),
-      memPct: stats.memPercent.toFixed(1),
+      cpu: stats.cpuPercentage.toFixed(1),
+      memoryUsage: mb(stats.memoryUsage),
+      memoryLimit: mb(stats.memoryLimit),
+      memoryPercentage: stats.memoryPercentage.toFixed(1),
       rx: mb(stats.rxBytes),
       tx: mb(stats.txBytes),
       pids: stats.pids,
@@ -106,7 +108,7 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
                 <div className="rounded-lg border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] p-3">
                   <div className="font-medium">Memória</div>
                   <div className="text-2xl">
-                    {header.memUsage} / {header.memLimit} MB ({header.memPct}%)
+                    {header.memoryUsage} / {header.memoryLimit} MB ({header.memoryPercentage}%)
                   </div>
                 </div>
                 <div className="rounded-lg border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] p-3">
@@ -135,9 +137,9 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
                 Memória em tempo real
               </div>
               <MemoryChart
-                percentPoints={memPctSeries}
-                usageMBPoints={memUsageMBSeries}
-                limitMB={memLimitMBRef.current ?? undefined}
+                percentPoints={memoryPercentageSeries}
+                usageMBPoints={memoryUsageMBSeries}
+                limitMB={memoryLimitMBRef.current ?? undefined}
               />
             </div>
           </div>

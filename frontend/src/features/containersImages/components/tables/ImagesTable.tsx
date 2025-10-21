@@ -2,11 +2,11 @@ import iziToast from 'izitoast';
 import { FiBox } from 'react-icons/fi';
 import { FaTrashCan } from 'react-icons/fa6';
 import React, { useState, useCallback } from 'react';
-import InspectModal from '../../../shared/components/modals/InspectModal';
-import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { MdContentCopy, MdContentPasteSearch } from 'react-icons/md';
 import { copyToClipboard } from '../../../shared/functions/clipboard';
+import InspectModal from '../../../shared/components/modals/InspectModal';
 import { ImageProps } from '../../../../interfaces/ContainerImagesInterfaces';
+import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { InspectImage, RemoveImage } from '../../../../../wailsjs/go/docker/Docker';
 import {
   FmtAgo,
@@ -15,26 +15,28 @@ import {
   ParseNameAndTag,
 } from '../../../shared/functions/TreatmentFunction';
 
-const ImagesTable: React.FC<ImageProps> = ({ img, onDeleted }) => {
-  const id = img.Id ?? '';
-  const { name, tag } = ParseNameAndTag(img.RepoTags);
+const ImagesTable: React.FC<ImageProps> = ({ image, onDeleted }) => {
+  const id = image.Id ?? '';
+  const { name, tag } = ParseNameAndTag(image.RepoTags);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
-  const [inspectData, setInspectData] = useState<string | null>(null);
+  const [inspectContent, setInspectContent] = useState<string | null>(null);
 
   const handleInspect = useCallback(async () => {
     try {
-      const data = await InspectImage(id);
-      const formatted = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
-      setInspectData(formatted);
+      const inspectContent = await InspectImage(id);
+      const formatted =
+        typeof inspectContent === 'string'
+          ? inspectContent
+          : JSON.stringify(inspectContent, null, 2);
+      setInspectContent(formatted);
       setIsInspectOpen(true);
       iziToast.success({
         title: 'Sucesso!',
         message: 'Os dados da imagem foram retornados!',
         position: 'bottomRight',
       });
-      console.log('INSPECT DATA:', formatted);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
       iziToast.error({ title: 'Erro', message, position: 'bottomRight' });
     }
   }, [id]);
@@ -69,7 +71,7 @@ const ImagesTable: React.FC<ImageProps> = ({ img, onDeleted }) => {
             <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--system-white)] dark:bg-[var(--dark-primary)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]">
               {tag}
             </span>
-            {!img.RepoTags?.length && (
+            {!image.RepoTags?.length && (
               <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--system-white)] dark:bg-[var(--dark-primary)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] text-[var(--system-black)] dark:text-[var(--system-white)]">
                 dangling
               </span>
@@ -77,18 +79,18 @@ const ImagesTable: React.FC<ImageProps> = ({ img, onDeleted }) => {
           </div>
 
           <div className="col-span-2 text-[var(--system-black)] dark:text-[var(--system-white)]">
-            {FormatBytes(img.Size)}
+            {FormatBytes(image.Size)}
           </div>
 
           <div
             className="col-span-2 text-[var(--system-black)] dark:text-[var(--system-white)]"
-            title={EpochToDateStr(img.Created)}
+            title={EpochToDateStr(image.Created)}
           >
-            {FmtAgo(img.Created)} atrás
+            {FmtAgo(image.Created)} atrás
           </div>
 
           <div className="col-span-1 text-[var(--system-black)] dark:text-[var(--system-white)]">
-            {img.Containers === -1 ? 'Info. não encontrada!' : img.Containers}
+            {image.Containers === -1 ? 'Info. não encontrada!' : image.Containers}
           </div>
 
           <div className="col-span-2 flex items-center gap-2 justify-end">
@@ -122,7 +124,7 @@ const ImagesTable: React.FC<ImageProps> = ({ img, onDeleted }) => {
         <InspectModal
           title="Inspect da imagem"
           name={`${name}:${tag}`}
-          data={inspectData}
+          data={inspectContent}
           onClose={() => setIsInspectOpen(false)}
         />
       )}

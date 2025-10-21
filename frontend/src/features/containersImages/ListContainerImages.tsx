@@ -12,30 +12,30 @@ const ListContainersImages: React.FC = () => {
   const { images, loading, fetchImages } = ContainerImagesService();
 
   const filteredSorted = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    let arr = images.slice();
+    const lowerCaseQuery = query.trim().toLowerCase();
+    let imagesArray = images.slice();
 
-    if (q) {
-      arr = arr.filter((img) => {
-        const { name, tag } = ParseNameAndTag(img.RepoTags);
-        const labels = img.Labels ? JSON.stringify(img.Labels).toLowerCase() : '';
-        const id = (img.Id ?? '').toLowerCase();
+    if (lowerCaseQuery) {
+      imagesArray = imagesArray.filter((image) => {
+        const { name, tag } = ParseNameAndTag(image.RepoTags);
+        const labels = image.Labels ? JSON.stringify(image.Labels).toLowerCase() : '';
+        const id = (image.Id ?? '').toLowerCase();
         return (
-          name.toLowerCase().includes(q) ||
-          tag.toLowerCase().includes(q) ||
-          id.includes(q) ||
-          labels.includes(q)
+          name.toLowerCase().includes(lowerCaseQuery) ||
+          tag.toLowerCase().includes(lowerCaseQuery) ||
+          id.includes(lowerCaseQuery) ||
+          labels.includes(lowerCaseQuery)
         );
       });
     }
 
-    arr.sort((a, b) => {
-      const na = ParseNameAndTag(a.RepoTags).name.toLowerCase();
-      const nb = ParseNameAndTag(b.RepoTags).name.toLowerCase();
-      return na.localeCompare(nb);
+    imagesArray.sort((a, b) => {
+      const nameA = ParseNameAndTag(a.RepoTags).name.toLowerCase();
+      const nameB = ParseNameAndTag(b.RepoTags).name.toLowerCase();
+      return nameA.localeCompare(nameB);
     });
 
-    return arr;
+    return imagesArray;
   }, [images, query]);
 
   const handleDeleted = () => {
@@ -56,20 +56,20 @@ const ListContainersImages: React.FC = () => {
 
       {view === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {filteredSorted.map((img) => (
+          {filteredSorted.map((image) => (
             <ImageCard
-              key={img.Id ?? Math.random().toString(36)}
-              img={img}
+              key={image.Id ?? Math.random().toString(36)}
+              image={image}
               onDeleted={handleDeleted}
             />
           ))}
         </div>
       ) : (
         <div className="flex flex-col gap-2">
-          {filteredSorted.map((img) => (
+          {filteredSorted.map((image) => (
             <ImagesTable
-              key={img.Id ?? Math.random().toString(36)}
-              img={img}
+              key={image.Id ?? Math.random().toString(36)}
+              image={image}
               onDeleted={handleDeleted}
             />
           ))}

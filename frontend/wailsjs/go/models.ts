@@ -168,6 +168,30 @@ export namespace dtos {
 	        this.password = source["password"];
 	    }
 	}
+	export class SshDto {
+	    id: number;
+	    host: string;
+	    systemUser: string;
+	    port?: number;
+	    key?: string;
+	    knownHosts?: string;
+	    userId: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new SshDto(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.host = source["host"];
+	        this.systemUser = source["systemUser"];
+	        this.port = source["port"];
+	        this.key = source["key"];
+	        this.knownHosts = source["knownHosts"];
+	        this.userId = source["userId"];
+	    }
+	}
 	export class UpdateUserInput {
 	    nome?: string;
 	    email?: string;

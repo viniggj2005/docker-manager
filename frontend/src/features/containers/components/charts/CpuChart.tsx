@@ -11,22 +11,17 @@ import {
   CategoryScale,
   Chart as ChartJS,
 } from 'chart.js';
+import { CpuChartsProps } from '../../../../interfaces/ContainerInterfaces';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, TimeScale);
 
-type Point = { t: number; v: number };
-
-type Props = {
-  points: Point[];
-};
-
-function CPUChartBase({ points }: Props) {
+function CPUChartBase({ points }: CpuChartsProps) {
   const data = {
-    labels: points.map((p) => p.t),
+    labels: points.map((point) => point.time),
     datasets: [
       {
         label: 'CPU (%)',
-        data: points.map((p) => p.v),
+        data: points.map((point) => point.value),
         borderWidth: 2,
         pointRadius: 3,
         borderColor: '#f79a05',
@@ -44,7 +39,7 @@ function CPUChartBase({ points }: Props) {
     interaction: { mode: 'index', intersect: false },
     plugins: {
       legend: { display: false },
-      tooltip: { callbacks: { label: (ctx: any) => `CPU: ${ctx.parsed.y.toFixed(1)}%` } },
+      tooltip: { callbacks: { label: (context: any) => `CPU: ${context.parsed.y.toFixed(1)}%` } },
     },
     scales: {
       x: {
@@ -61,7 +56,7 @@ function CPUChartBase({ points }: Props) {
       y: {
         beginAtZero: true,
         suggestedMax: 100,
-        ticks: { callback: (v: any) => `${v}%` },
+        ticks: { callback: (value: any) => `${value}%` },
         grid: { color: 'rgba(255,255,255,0.07)' },
       },
     },

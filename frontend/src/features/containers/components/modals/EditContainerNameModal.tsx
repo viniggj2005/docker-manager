@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import ArrowTip from '../../../shared/components/ArrowTip';
 import { useTheme } from '../../../../hooks/use-theme';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
+import ArrowTip from '../../../shared/components/ArrowTip';
 import { EditContainerNameModalProps } from '../../../../interfaces/ContainerInterfaces';
 
 const EditContainerNameModal: React.FC<EditContainerNameModalProps> = ({
@@ -41,7 +41,7 @@ const EditContainerNameModal: React.FC<EditContainerNameModalProps> = ({
          dark:text-[var(--system-white)] bg-transparent rounded-lg px-2 py-1 text-sm
         focus:outline-none focus:ring focus:ring-blue-200"
         value={newName}
-        onChange={(e) => setNewName(e.target.value)}
+        onChange={(event) => setNewName(event.target.value)}
       />
 
       <button

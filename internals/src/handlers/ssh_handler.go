@@ -59,3 +59,33 @@ func (s *SshHandler) CreateSshConnection(body dtos.CreateSshConnectionInput) err
 
 	return s.DB.Create(&conn).Error
 }
+
+func (s *SshHandler) FindAllConnectionByUser(token string, userId int) ([]dtos.SshDto, error) {
+	if err := auth.MustAuth(s.Sess, token); err != nil {
+		return nil, err
+	}
+
+	var conns []models.SshConnection
+	if err := s.DB.WithContext(s.ctx).
+		Where("user_id = ?", userId).
+		Find(&conns).Error; err != nil {
+		return nil, err
+	}
+
+	return dtos.ToSshDTOList(conns), nil
+}
+
+func (s *SshHandler) GetById(token string, id int) (dtos.SshDto, error) {
+	if err := auth.MustAuth(s.Sess, token); err != nil {
+		return dtos.SshDto{}, err
+	}
+
+	var conn models.SshConnection
+	if err := s.DB.WithContext(s.ctx).
+		Where("id = ?", id).
+		First(&conn).Error; err != nil {
+		return dtos.SshDto{}, err
+	}
+
+	return *dtos.ToSshDTO(&conn), nil
+}

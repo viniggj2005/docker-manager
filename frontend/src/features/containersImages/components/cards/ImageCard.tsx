@@ -15,11 +15,11 @@ import {
   ParseNameAndTag,
 } from '../../../shared/functions/TreatmentFunction';
 
-const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
-  const id = img.Id ?? '';
-  const { name, tag } = ParseNameAndTag(img.RepoTags);
+const ImageCard: React.FC<ImageProps> = ({ image, onDeleted }) => {
+  const id = image.Id ?? '';
+  const { name, tag } = ParseNameAndTag(image.RepoTags);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
-  const [inspectData, setInspectData] = useState<string | null>(null);
+  const [inspectContent, setInspectContent] = useState<string | null>(null);
 
   const handleDelete = () => {
     confirmToast({
@@ -35,18 +35,21 @@ const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
 
   const handleInspect = async () => {
     try {
-      const data = await InspectImage(id);
-      setInspectData(data);
-      setInspectData(typeof data === 'string' ? data : JSON.stringify(data, null, 2));
+      const inspectContent = await InspectImage(id);
+      setInspectContent(inspectContent);
+      setInspectContent(
+        typeof inspectContent === 'string'
+          ? inspectContent
+          : JSON.stringify(inspectContent, null, 2)
+      );
       iziToast.success({
         title: 'Sucesso!',
         message: 'Os dados da imagem foram Retornados!',
         position: 'bottomRight',
       });
-      console.log('INSPECTDATA', inspectData);
       setIsInspectOpen(true);
-    } catch (e: any) {
-      iziToast.error({ title: 'Erro', message: String(e), position: 'bottomRight' });
+    } catch (error: any) {
+      iziToast.error({ title: 'Erro', message: String(error), position: 'bottomRight' });
     }
   };
 
@@ -65,7 +68,7 @@ const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
                 <FaTag />
                 {tag}
               </span>
-              {!img.RepoTags?.length && (
+              {!image.RepoTags?.length && (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--system-white)] dark:bg-[var(--dark-primary)] border border-[var(--light-gray)] dark:text-[var(--system-white)] text-[var(--system-black)] dark:border-[var(--dark-tertiary)]">
                   dangling
                 </span>
@@ -73,11 +76,13 @@ const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
             </div>
 
             <div className="mt-1 text-sm flex flex-wrap gap-x-4 gap-y-1">
-              <span title="Tamanho">{FormatBytes(img.Size)}</span>
+              <span title="Tamanho">{FormatBytes(image.Size)}</span>
               <span title="Criado">
-                {EpochToDateStr(img.Created)} <span>({FmtAgo(img.Created)} atrás)</span>
+                {EpochToDateStr(image.Created)} <span>({FmtAgo(image.Created)} atrás)</span>
               </span>
-              <span title="Containers que usam">{img.Containers === -1 ? '' : img.Containers}</span>
+              <span title="Containers que usam">
+                {image.Containers === -1 ? '' : image.Containers}
+              </span>
             </div>
           </div>
         </div>
@@ -122,7 +127,7 @@ const ImageCard: React.FC<ImageProps> = ({ img, onDeleted }) => {
         <InspectModal
           title="Inspect da imagem"
           name={`${name}:${tag}`}
-          data={inspectData}
+          data={inspectContent}
           onClose={() => setIsInspectOpen(false)}
         />
       )}

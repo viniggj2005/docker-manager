@@ -13,6 +13,16 @@ export interface DockerImageInfo {
 export type ViewMode = 'grid' | 'table';
 
 export interface ImageProps {
-  img: DockerImageInfo;
+  image: DockerImageInfo;
   onDeleted?: () => void;
+}
+
+export interface ToolbarProps {
+  query: string;
+  view: ViewMode;
+  loading: boolean;
+  onRefresh: () => void;
+  onDeleted?: () => void;
+  setQuery: (v: string) => void;
+  setView: (v: ViewMode) => void;
 }

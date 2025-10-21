@@ -9,20 +9,20 @@ import { ContainerItem } from '../../../interfaces/ContainerInterfaces';
 
 export const getContainers = async (): Promise<ContainerItem[]> => {
   try {
-    const resp = await ContainersList();
-    return resp || [];
-  } catch (e: any) {
-    iziToast.error({ title: 'Erro', message: e, position: 'bottomRight' });
-    throw e;
+    const response = await ContainersList();
+    return response || [];
+  } catch (error: any) {
+    iziToast.error({ title: 'Erro', message: error, position: 'bottomRight' });
+    throw error;
   }
 };
 
 export const renameContainer = async (id: string, name: string): Promise<void> => {
   try {
     await ContainerRename(id, name);
-  } catch (e: any) {
-    iziToast.error({ title: 'Erro', message: e, position: 'bottomRight' });
-    throw e;
+  } catch (error: any) {
+    iziToast.error({ title: 'Erro', message: error, position: 'bottomRight' });
+    throw error;
   }
 };
 
@@ -30,8 +30,8 @@ export const toggleContainerState = async (id: string, state: string): Promise<v
   try {
     if (state === 'paused') await ContainerUnPause(id);
     else if (state === 'running') await ContainerPause(id);
-  } catch (e: any) {
-    iziToast.error({ title: 'Erro', message: e, position: 'bottomRight' });
-    throw e;
+  } catch (error: any) {
+    iziToast.error({ title: 'Erro', message: error, position: 'bottomRight' });
+    throw error;
   }
 };

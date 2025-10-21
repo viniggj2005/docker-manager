@@ -1,19 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 import CreateSshConnectionForm from '../forms/CreateSshConnectionForm';
+import { ModalProps } from '../../../../interfaces/TerminalInterfaces';
 
-interface Props {
-  open: boolean;
-  onClose: () => void;
-}
-
-const SshConnectionModal: React.FC<Props> = ({ open, onClose }) => {
+const SshConnectionModal: React.FC<ModalProps> = ({ open, onClose }) => {
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
@@ -31,7 +27,7 @@ const SshConnectionModal: React.FC<Props> = ({ open, onClose }) => {
     >
       <div
         ref={dialogRef}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(event) => event.stopPropagation()}
         className="relative w-full max-w-2xl bg-[var(--system-white)]
           rounded-2xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]
           dark:bg-[var(--dark-primary)] shadow-2xl dark:text-[var(--system-white)]"

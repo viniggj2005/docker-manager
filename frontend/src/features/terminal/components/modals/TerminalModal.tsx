@@ -7,7 +7,12 @@ import { EventsOn } from '../../../../../wailsjs/runtime/runtime';
 import { TerminalProps } from '../../../../interfaces/TerminalInterfaces';
 import { ConnectWith, Send, Resize, Disconnect } from '../../../../../wailsjs/go/terminal/Terminal';
 
-const TerminalModal: React.FC<TerminalProps> = ({ open, onClose, cfg, title = 'Terminal SSH' }) => {
+const TerminalModal: React.FC<TerminalProps> = ({
+  open,
+  onClose,
+  configure,
+  title = 'Terminal SSH',
+}) => {
   const startYRef = useRef(0);
   const startHRef = useRef(420);
   const resizingRef = useRef(false);
@@ -17,14 +22,14 @@ const TerminalModal: React.FC<TerminalProps> = ({ open, onClose, cfg, title = 'T
   const [dockHeight, setDockHeight] = useState(420);
 
   const fitRef = useRef<FitAddon | null>(null);
-  const termRef = useRef<Terminal | null>(null);
-  const roRef = useRef<ResizeObserver | null>(null);
+  const terminalRef = useRef<Terminal | null>(null);
   const hostRef = useRef<HTMLDivElement | null>(null);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
   useEffect(() => {
     if (!open) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
@@ -37,7 +42,7 @@ const TerminalModal: React.FC<TerminalProps> = ({ open, onClose, cfg, title = 'T
 
   useEffect(() => {
     if (!open) return;
-    const term = new Terminal({
+    const terminal = new Terminal({
       fontSize: 18,
       lineHeight: 1,
       convertEol: true,
@@ -52,75 +57,75 @@ const TerminalModal: React.FC<TerminalProps> = ({ open, onClose, cfg, title = 'T
       },
     });
     const fit = new FitAddon();
-    term.loadAddon(fit);
-    term.open(hostRef.current!);
     fit.fit();
-    term.focus();
+    terminal.focus();
+    terminal.loadAddon(fit);
+    terminal.open(hostRef.current!);
 
-    termRef.current = term;
     fitRef.current = fit;
+    terminalRef.current = terminal;
 
-    const sub = term.onData((d) => Send(d));
-    const offData = EventsOn('ssh:data', (chunk: string) => term.write(chunk));
+    const subscription = terminal.onData((d) => Send(d));
+    const offData = EventsOn('ssh:data', (chunk: string) => terminal.write(chunk));
     const offExit = EventsOn('ssh:exit', (msg: string) =>
-      term.write(`\r\n[conexão encerrada] ${msg || ''}\r\n`)
+      terminal.write(`\r\n[conexão encerrada] ${msg || ''}\r\n`)
     );
 
-    ConnectWith({ ...(cfg as any), Cols: term.cols, Rows: term.rows }).catch((e: any) =>
-      term.write(`\r\n[erro] ${String(e)}\r\n`)
+    ConnectWith({ ...(configure as any), Cols: terminal.cols, Rows: terminal.rows }).catch(
+      (e: any) => terminal.write(`\r\n[erro] ${String(e)}\r\n`)
     );
 
-    const ro = new ResizeObserver(() => {
+    const resizeObserver = new ResizeObserver(() => {
       fit.fit();
-      Resize(term.cols, term.rows);
+      Resize(terminal.cols, terminal.rows);
     });
-    ro.observe(hostRef.current!);
-    roRef.current = ro;
+    resizeObserver.observe(hostRef.current!);
+    resizeObserverRef.current = resizeObserver;
 
-    const onWinResize = () => {
+    const onWindowResize = () => {
       fit.fit();
-      Resize(term.cols, term.rows);
+      Resize(terminal.cols, terminal.rows);
     };
-    window.addEventListener('resize', onWinResize);
+    window.addEventListener('resize', onWindowResize);
 
     return () => {
       Disconnect();
-      sub.dispose();
-      term.dispose();
-      ro.disconnect();
+      terminal.dispose();
       offData && offData();
       offExit && offExit();
-      roRef.current = null;
       fitRef.current = null;
-      termRef.current = null;
-      window.removeEventListener('resize', onWinResize);
+      subscription.dispose();
+      terminalRef.current = null;
+      resizeObserver.disconnect();
+      resizeObserverRef.current = null;
+      window.removeEventListener('resize', onWindowResize);
     };
-  }, [open, cfg]);
+  }, [open, configure]);
 
   useEffect(() => {
     if (!open) return;
     queueMicrotask(() => {
-      if (fitRef.current && termRef.current) {
+      if (fitRef.current && terminalRef.current) {
         fitRef.current.fit();
-        Resize(termRef.current.cols, termRef.current.rows);
+        Resize(terminalRef.current.cols, terminalRef.current.rows);
       }
     });
   }, [maximized, docked, dockHeight, open]);
 
   if (!open) return null;
 
-  const closeOnBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!docked && e.target === e.currentTarget) onClose();
+  const closeOnBackdrop = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!docked && event.target === event.currentTarget) onClose();
   };
 
-  const onDockGripDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const onDockGripDown = (event: React.MouseEvent<HTMLDivElement>) => {
     resizingRef.current = true;
-    startYRef.current = e.clientY;
+    startYRef.current = event.clientY;
     startHRef.current = dockHeight;
 
-    const onMove = (ev: MouseEvent) => {
+    const onMove = (event: MouseEvent) => {
       if (!resizingRef.current) return;
-      const delta = startYRef.current - ev.clientY;
+      const delta = startYRef.current - event.clientY;
       const next = Math.max(240, Math.min(window.innerHeight - 80, startHRef.current + delta));
       setDockHeight(next);
     };
@@ -165,9 +170,9 @@ const TerminalModal: React.FC<TerminalProps> = ({ open, onClose, cfg, title = 'T
       role="dialog"
     >
       <div
-        className={containerClasses + ' pointer-events-auto'}
         style={containerStyle}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(event) => event.stopPropagation()}
+        className={containerClasses + ' pointer-events-auto'}
       >
         {docked && !maximized && (
           <div
@@ -182,8 +187,8 @@ const TerminalModal: React.FC<TerminalProps> = ({ open, onClose, cfg, title = 'T
           docked={docked}
           onClose={onClose}
           maximized={maximized}
-          onToggleMax={() => setMaximized((v) => !v)}
-          onToggleDock={() => setDocked((v) => !v)}
+          onToggleDock={() => setDocked((value) => !value)}
+          onToggleMax={() => setMaximized((value) => !value)}
         />
 
         <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg pl-2 pt-1 bg-[var(--terminal-background)]">

@@ -8,24 +8,23 @@ import { ContainerLogs } from '../../../../../wailsjs/go/docker/Docker';
 
 const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
   const firstScrollDone = useRef(false);
-  const [logs, setLogs] = useState<string>('');
   const [filter, setFilter] = useState<string>('');
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [containerLogs, setContainerLogs] = useState<string>('');
 
   useEffect(() => {
     (async () => {
       try {
-        const resp = await ContainerLogs(id);
+        const containerLogs = await ContainerLogs(id);
         iziToast.success({
           message: 'Logs buscados com sucesso!',
           position: 'bottomRight',
         });
-        console.log(resp);
-        setLogs(resp ?? '');
-      } catch (e: any) {
+        setContainerLogs(containerLogs ?? '');
+      } catch (error: any) {
         iziToast.error({
           title: 'Erro',
-          message: e?.message ?? String(e),
+          message: error?.message ?? String(error),
           position: 'bottomRight',
         });
       }
@@ -35,29 +34,29 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
   useEffect(() => {
     const el = scrollRef.current;
     if (!el || firstScrollDone.current) return;
-    if (logs) {
+    if (containerLogs) {
       el.scrollTop = el.scrollHeight;
       firstScrollDone.current = true;
     }
-  }, [logs]);
+  }, [containerLogs]);
 
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLogsModal(false);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setLogsModal(false);
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [setLogsModal]);
 
   const display = filter
-    ? logs
+    ? containerLogs
         .split(/<br\s*\/?>/i)
         .filter((line) => line.toLowerCase().includes(filter.toLowerCase()))
         .join('<br>')
-    : logs;
+    : containerLogs;
 
-  const closeOnBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) setLogsModal(false);
+  const closeOnBackdrop = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) setLogsModal(false);
   };
 
   return (
@@ -80,7 +79,7 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
               <FiSearch className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-xs opacity-70" />
               <input
                 value={filter}
-                onChange={(e) => setFilter(e.target.value)}
+                onChange={(event) => setFilter(event.target.value)}
                 placeholder="Filtrar"
                 className="pl-7 pr-3 py-1.5 text-sm dark:bg-[var(--dark-secondary)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/60"
               />

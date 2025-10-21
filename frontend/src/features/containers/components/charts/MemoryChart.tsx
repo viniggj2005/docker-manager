@@ -11,24 +11,17 @@ import {
   CategoryScale,
   Chart as ChartJS,
 } from 'chart.js';
+import { MemoryChartsProps } from '../../../../interfaces/ContainerInterfaces';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, TimeScale);
 
-type Point = { t: number; v: number };
-
-type Props = {
-  percentPoints: Point[];
-  usageMBPoints: Point[];
-  limitMB?: number;
-};
-
-function MemoryChartBase({ percentPoints, usageMBPoints }: Props) {
+function MemoryChartBase({ percentPoints, usageMBPoints }: MemoryChartsProps) {
   const data = {
-    labels: percentPoints.map((p) => p.t),
+    labels: percentPoints.map((point) => point.time),
     datasets: [
       {
         label: 'Memória (%)',
-        data: percentPoints.map((p) => p.v),
+        data: percentPoints.map((point) => point.value),
         borderWidth: 2,
         borderColor: '#ff4d4d',
         backgroundColor: '#ff4d4d',
@@ -39,7 +32,7 @@ function MemoryChartBase({ percentPoints, usageMBPoints }: Props) {
       },
       {
         label: 'Uso (MB)',
-        data: usageMBPoints.map((p) => p.v),
+        data: usageMBPoints.map((point) => point.value),
         borderWidth: 2,
         borderColor: '#4dff4d',
         backgroundColor: '#4dff4d',
@@ -60,10 +53,10 @@ function MemoryChartBase({ percentPoints, usageMBPoints }: Props) {
       legend: { display: true },
       tooltip: {
         callbacks: {
-          label: (ctx: any) =>
-            ctx.dataset.yAxisID === 'y1'
-              ? `Uso: ${ctx.parsed.y.toFixed(1)} MB`
-              : `Mem: ${ctx.parsed.y.toFixed(1)}%`,
+          label: (context: any) =>
+            context.dataset.yAxisID === 'y1'
+              ? `Uso: ${context.parsed.y.toFixed(1)} MB`
+              : `Mem: ${context.parsed.y.toFixed(1)}%`,
         },
       },
     },
@@ -82,14 +75,14 @@ function MemoryChartBase({ percentPoints, usageMBPoints }: Props) {
       y: {
         beginAtZero: true,
         suggestedMax: 100,
-        ticks: { callback: (v: any) => `${v}%` },
+        ticks: { callback: (value: any) => `${value}%` },
         grid: { color: 'rgba(255,255,255,0.07)' },
       },
       y1: {
         position: 'right',
         beginAtZero: true,
         grid: { drawOnChartArea: false },
-        ticks: { callback: (v: any) => `${v} MB` },
+        ticks: { callback: (value: any) => `${value} MB` },
       },
     },
   };

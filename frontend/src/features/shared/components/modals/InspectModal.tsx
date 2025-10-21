@@ -1,21 +1,20 @@
 import React, { useEffect, useRef } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
-
-type InspectProps = { name?: string; data?: string | null; title?: string; onClose: () => void };
+import { InspectProps } from '../../../../interfaces/SharedInterfaces';
 
 const InspectModal: React.FC<InspectProps> = ({ name, data, title, onClose }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [onClose]);
 
-  const closeOnBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) onClose();
+  const closeOnBackdrop = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) onClose();
   };
 
   const highlightQuotedStrings = (text: string) => {
@@ -25,8 +24,8 @@ const InspectModal: React.FC<InspectProps> = ({ name, data, title, onClose }) =>
     let match;
     let key = 0;
     while ((match = regex.exec(text)) !== null) {
-      const idx = match.index;
-      if (lastIndex < idx) parts.push(text.slice(lastIndex, idx));
+      const index = match.index;
+      if (lastIndex < index) parts.push(text.slice(lastIndex, index));
       parts.push(
         <span key={key++} className="text-[var(--orange-json)]">
           {match[0]}

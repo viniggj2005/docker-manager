@@ -11,11 +11,11 @@ const LoginForm: React.FC = () => {
   const { login, loading, error } = useAuth();
   const [password, setPassword] = useState('');
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function onSubmit(event: React.FormEvent) {
+    event.preventDefault();
     await login(email.trim(), password);
-    const to = (location.state as any)?.from?.pathname || '/home';
-    navigate(to, { replace: true });
+    const goTo = (location.state as any)?.from?.pathname || '/home';
+    navigate(goTo, { replace: true });
   }
 
   return (
@@ -28,7 +28,7 @@ const LoginForm: React.FC = () => {
         type="email"
         value={email}
         placeholder="seu@email.com"
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(event) => setEmail(event.target.value)}
       />
 
       <PasswordField
@@ -36,7 +36,7 @@ const LoginForm: React.FC = () => {
         name="password"
         value={password}
         placeholder="••••••••"
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(event) => setPassword(event.target.value)}
       />
 
       {error ? <div className="text-sm text-[var(--exit-red)]">{error}</div> : null}

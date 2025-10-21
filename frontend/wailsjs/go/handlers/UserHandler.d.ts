@@ -7,7 +7,7 @@ export function Create(arg1:dtos.CreateUserInput):Promise<dtos.UserDTO>;
 
 export function GetByID(arg1:string,arg2:number):Promise<dtos.UserDTO>;
 
-export function Me(arg1:string):Promise<dtos.UserDTO>;
+export function MyInfo(arg1:string):Promise<dtos.UserDTO>;
 
 export function Startup(arg1:context.Context):Promise<void>;
 

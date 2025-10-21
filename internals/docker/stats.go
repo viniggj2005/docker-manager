@@ -11,16 +11,16 @@ import (
 )
 
 type StatsPayload struct {
-	ContainerID string  `json:"containerId"`
-	OSType      string  `json:"osType"`
-	CPUPercent  float64 `json:"cpuPercent"`
-	MemPercent  float64 `json:"memPercent"`
-	MemUsage    uint64  `json:"memUsage"`
-	MemLimit    uint64  `json:"memLimit"`
-	RxBytes     uint64  `json:"rxBytes"`
-	TxBytes     uint64  `json:"txBytes"`
-	Pids        uint64  `json:"pids"`
-	Time        int64   `json:"time"`
+	ContainerID      string  `json:"containerId"`
+	OSType           string  `json:"osType"`
+	CPUPercentage    float64 `json:"cpuPercentage"`
+	MemoryPercentage float64 `json:"memoryPercentage"`
+	MemoryUsage      uint64  `json:"memoryUsage"`
+	MemoryLimit      uint64  `json:"memoryLimit"`
+	RxBytes          uint64  `json:"rxBytes"`
+	TxBytes          uint64  `json:"txBytes"`
+	Pids             uint64  `json:"pids"`
+	Time             int64   `json:"time"`
 }
 
 func (d *Docker) StartContainerStats(containerID string) {
@@ -66,16 +66,16 @@ func (d *Docker) StreamStats(ctx context.Context, containerID string) {
 			}
 
 			payload := StatsPayload{
-				ContainerID: containerID,
-				OSType:      "",
-				CPUPercent:  cpuPercent(&v),
-				MemPercent:  memPercent(&v),
-				MemUsage:    memUsage(&v),
-				MemLimit:    v.MemoryStats.Limit,
-				RxBytes:     sumRx(&v),
-				TxBytes:     sumTx(&v),
-				Pids:        v.PidsStats.Current,
-				Time:        time.Now().UnixMilli(),
+				ContainerID:      containerID,
+				OSType:           "",
+				CPUPercentage:    cpuPercent(&v),
+				MemoryPercentage: memPercent(&v),
+				MemoryUsage:      memUsage(&v),
+				MemoryLimit:      v.MemoryStats.Limit,
+				RxBytes:          sumRx(&v),
+				TxBytes:          sumTx(&v),
+				Pids:             v.PidsStats.Current,
+				Time:             time.Now().UnixMilli(),
 			}
 			runtime.EventsEmit(d.ctx, "container:stats", payload)
 		}

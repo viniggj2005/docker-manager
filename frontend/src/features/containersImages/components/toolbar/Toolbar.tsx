@@ -1,21 +1,11 @@
 import React from 'react';
 import { FaTrashCan } from 'react-icons/fa6';
-import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { PruneImages } from '../../../../../wailsjs/go/docker/Docker';
 import { FiSearch, FiRefreshCw, FiGrid, FiList } from 'react-icons/fi';
-import { ViewMode } from '../../../../interfaces/ContainerImagesInterfaces';
+import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
+import { ToolbarProps } from '../../../../interfaces/ContainerImagesInterfaces';
 
-interface Props {
-  query: string;
-  view: ViewMode;
-  loading: boolean;
-  onRefresh: () => void;
-  onDeleted?: () => void;
-  setQuery: (v: string) => void;
-  setView: (v: ViewMode) => void;
-}
-
-const Toolbar: React.FC<Props> = ({
+const Toolbar: React.FC<ToolbarProps> = ({
   view,
   query,
   loading,
@@ -42,7 +32,7 @@ const Toolbar: React.FC<Props> = ({
           className="w-full pl-9 pr-3 py-2 rounded-xl outline-none transition bg-[var(--system-white)] dark:bg-[var(--dark-primary)] dark:bg-[var(--dark-primary)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]   text-[var(--system-black)] placeholder-[var(--light-gray)]"
           placeholder="Buscar por nome, tag, id ou label"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(event) => setQuery(event.target.value)}
         />
       </div>
 

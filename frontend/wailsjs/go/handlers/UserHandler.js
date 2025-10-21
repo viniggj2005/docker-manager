@@ -10,8 +10,8 @@ export function GetByID(arg1, arg2) {
   return window['go']['handlers']['UserHandler']['GetByID'](arg1, arg2);
 }
 
-export function Me(arg1) {
-  return window['go']['handlers']['UserHandler']['Me'](arg1);
+export function MyInfo(arg1) {
+  return window['go']['handlers']['UserHandler']['MyInfo'](arg1);
 }
 
 export function Startup(arg1) {

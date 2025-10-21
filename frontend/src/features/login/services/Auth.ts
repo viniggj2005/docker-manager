@@ -1,7 +1,7 @@
-import { Me } from '../../../../wailsjs/go/handlers/UserHandler';
+import { MyInfo } from '../../../../wailsjs/go/handlers/UserHandler';
 import { Login, Logout } from '../../../../wailsjs/go/handlers/AuthHandler';
 
-export const myInfo = (token: string) => Me(token);
+export const myInfo = (token: string) => MyInfo(token);
 
 export async function logoutApi(token: string) {
   return Logout(token);
