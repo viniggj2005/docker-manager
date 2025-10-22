@@ -3,7 +3,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { IoMdAddCircleOutline } from 'react-icons/io';
 import GoBackButton from '../features/shared/components/buttons/GoBackButton';
 import SshConnectionList from '../features/terminal/components/list/SshConnectionList';
-import ToggleThemeButton from '../features/shared/components/buttons/ToggleThemeButton';
 import SshConnectionModal from '../features/terminal/components/modals/CreateSshConnectionModal';
 
 const TerminalFormPage: React.FC = () => {
@@ -13,55 +12,47 @@ const TerminalFormPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--system-white)] dark:bg-[var(--dark-primary)] p-6">
-        <div className="mx-auto max-w-6xl animate-pulse text-[var(--grey-text)]">Carregando…</div>
+      <div className="flex flex-1 flex-col gap-6">
+        <div className="mx-auto max-w-4xl animate-pulse text-[var(--grey-text)]">Carregando…</div>
       </div>
     );
   }
   if (!isAuthenticated || !token) {
     return (
-      <div className="min-h-screen bg-[var(--system-white)] dark:bg-[var(--dark-primary)] p-6">
-        <div className="mx-auto max-w-2xl rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] p-6 dark:bg-[var(--dark-secondary)]">
-          <div className="text-sm dark:text-[var(--system-white)]">
-            Sessão inválida. Faça login.
-          </div>
+      <div className="flex flex-1 flex-col">
+        <div className="mx-auto max-w-2xl rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-6 text-sm text-[var(--medium-gray)] shadow-sm dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)]">
+          Sessão inválida. Faça login.
         </div>
       </div>
     );
   }
   return (
-    <div className="min-h-screen bg-[var(--system-white)] dark:bg-[var(--dark-primary)]">
-      <header className="border-b border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] px-6 py-4">
-        <div className="mx-auto flex max-w-6xl items-center gap-3">
-          <GoBackButton onGoBack={() => setOpen(false)} />
-          <h1 className="ml-1 text-lg font-semibold dark:text-[var(--system-white)]">
-            Conexões SSH
-          </h1>
-          <span className="text-xs text-[var(--grey-text)]">Gerencie acessos remotos</span>
-
-          <button
-            onClick={() => setOpen(true)}
-            className="ml-auto inline-flex items-center gap-2 rounded-lg border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] px-3 py-2 text-sm hover:scale-[0.98] dark:text-[var(--system-white)]"
-          >
-            <IoMdAddCircleOutline className="h-5 w-5" />
-            Nova conexão
-          </button>
+    <div className="flex flex-1 flex-col gap-6">
+      <div className="flex flex-wrap items-center gap-3">
+        <GoBackButton onGoBack={() => setOpen(false)} />
+        <div>
+          <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">Conexões SSH</h1>
+          <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">Gerencie acessos remotos e ative novos terminais.</p>
         </div>
-      </header>
+      </div>
 
-      <main className="mx-auto max-w-6xl px-6 py-8">
+      <button
+        onClick={() => setOpen(true)}
+        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-4 py-3 text-sm font-semibold text-[var(--docker-blue)] shadow-sm transition hover:scale-[0.99] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)] sm:w-fit"
+      >
+        <IoMdAddCircleOutline className="h-5 w-5" />
+        Nova conexão
+      </button>
+
+      <div className="rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-6 shadow-sm dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]">
         <SshConnectionList key={reloadFlag} token={token} />
-      </main>
+      </div>
 
       <SshConnectionModal
         onCreated={() => setReloadFlag((previous) => previous + 1)}
         open={open}
         onClose={() => setOpen(false)}
       />
-
-      <div className="absolute bottom-4 left-3">
-        <ToggleThemeButton />
-      </div>
     </div>
   );
 };
