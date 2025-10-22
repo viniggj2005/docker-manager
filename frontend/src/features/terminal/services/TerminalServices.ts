@@ -31,6 +31,7 @@ export const TerminalServices = {
     const payload = {
       key: body.key,
       host: body.host,
+      alias: body.alias,
       userId: body.userId,
       systemUser: body.systemUser,
       knownHosts: body.knownHosts,
@@ -44,6 +45,7 @@ export const TerminalServices = {
     const payload = {
       key: body.key,
       host: body.host,
+      alias: body.alias,
       userId: body.userId,
       systemUser: body.systemUser,
       knownHosts: body.knownHosts,

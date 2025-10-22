@@ -84,6 +84,16 @@ const EditSshConnectionForm: React.FC<EditSshConnectionFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="grid gap-4">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="md:col-span-2 grid gap-1.5">
+          <label className={labelBase}>Alias</label>
+          <input
+            className={inputBase}
+            type="text"
+            name="alias"
+            value={formData.alias}
+            onChange={handleChange}
+          />
+        </div>
         <div className="grid gap-1.5">
           <label className={labelBase}>Host</label>
           <input
@@ -117,17 +127,6 @@ const EditSshConnectionForm: React.FC<EditSshConnectionFormProps> = ({
             max={65535}
             name="port"
             value={formData.port}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="md:col-span-2 grid gap-1.5">
-          <label className={labelBase}>Known Hosts</label>
-          <input
-            className={inputBase}
-            type="text"
-            name="knownHosts"
-            value={formData.knownHosts}
             onChange={handleChange}
           />
         </div>

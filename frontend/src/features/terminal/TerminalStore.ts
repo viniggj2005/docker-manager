@@ -17,6 +17,11 @@ export const useTerminalStore = create<TerminalStateProps>((set) => ({
         ? { config: { ...storeState.config, Password: password }, askPassword: false, open: true }
         : {}
     ),
-  close: () => set({ open: false }),
+  close: () =>
+    set({
+      open: false,
+      askPassword: false,
+      config: null,
+    }),
   setError: (event) => set({ error: event }),
 }));

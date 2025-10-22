@@ -15,7 +15,7 @@ const PasswordModal: React.FC<PasswordModalProps> = ({ open, onClose, onSubmit }
 
   return (
     <div
-      onClick={onClose}
+      onClick={() => onClose()}
       className="fixed inset-0 z-50 flex items-center justify-center 
                  bg-[var(--light-overlay)] dark:bg-[var(--dark-overlay)] backdrop-blur-sm"
       aria-modal
@@ -65,7 +65,7 @@ const PasswordModal: React.FC<PasswordModalProps> = ({ open, onClose, onSubmit }
           <div className="flex justify-end gap-3 mt-2">
             <button
               type="button"
-              onClick={onClose}
+              onClick={() => onClose()}
               className="rounded-lg border border-[var(--light-gray)] 
                          dark:border-[var(--dark-tertiary)] px-4 py-1.5 text-sm 
                          hover:bg-[var(--light-gray)] dark:hover:bg-[var(--dark-secondary)] 
