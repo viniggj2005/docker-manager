@@ -55,72 +55,69 @@ const ImageCard: React.FC<ImageProps> = ({ image, onDeleted }) => {
   };
 
   return (
-    <div className="rounded-2xl p-4 transition bg-[var(--system-white)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] flex justify-between">
-      <div className="flex flex-col flex-1">
-        <div className="flex items-start gap-3">
-          <div className="p-2 rounded-xl bg-[var(--system-white)] dark:bg-[var(--dark-primary)] dark:border-[var(--dark-tertiary)]  border border-[var(--light-gray)]">
+    <div className="flex flex-col gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-4 transition dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]">
+      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-start">
+          <div className="flex items-center justify-center rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] p-2 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]">
             <DockerImageIcon className="text-[var(--docker-blue)]" />
           </div>
 
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-semibold truncate">{name}</span>
-              <span className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1 bg-[var(--system-white)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="truncate font-semibold">{name}</span>
+              <span className="flex items-center gap-1 rounded-full border border-[var(--light-gray)] bg-[var(--system-white)] px-2 py-0.5 text-xs dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]">
                 <FaTag />
                 {tag}
               </span>
               {!image.RepoTags?.length && (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--system-white)] dark:bg-[var(--dark-primary)] border border-[var(--light-gray)] dark:text-[var(--system-white)] text-[var(--system-black)] dark:border-[var(--dark-tertiary)]">
+                <span className="rounded-full border border-[var(--light-gray)] bg-[var(--system-white)] px-2 py-0.5 text-xs text-[var(--system-black)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]">
                   dangling
                 </span>
               )}
             </div>
 
-            <div className="mt-1 text-sm flex flex-wrap gap-x-4 gap-y-1">
+            <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm">
               <span title="Tamanho">{FormatBytes(image.Size)}</span>
               <span title="Criado">
                 {EpochToDateStr(image.Created)} <span>({FmtAgo(image.Created)} atrás)</span>
               </span>
-              <span title="Containers que usam">
-                {image.Containers === -1 ? '' : image.Containers}
-              </span>
+              <span title="Containers que usam">{image.Containers === -1 ? '' : image.Containers}</span>
             </div>
           </div>
         </div>
-        <div className="mt-3 flex items-center gap-3">
+
+        <div className="flex flex-col gap-2 sm:w-48 md:w-auto md:flex-row md:items-start md:justify-end">
           <button
             onClick={() => copyToClipboard(id.replace('sha256:', ''), 'ID da imagem copiado')}
-            className="inline-flex hover:scale-95 items-center gap-2 px-3 py-1.5 rounded-xl dark:text-[var(--system-white)] bg-[var(--system-white)] dark:bg-[var(--dark-secondary)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm transition hover:scale-95 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)] md:w-auto"
           >
             <MdContentCopy /> Copiar ID
           </button>
 
           <button
             onClick={() => copyToClipboard(`${name}:${tag}`, 'Nome:tag copiado')}
-            className="inline-flex items-center hover:scale-95 gap-2 px-3 py-1.5 rounded-xl dark:text-[var(--system-white)] bg-[var(--system-white)] dark:bg-[var(--dark-secondary)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm transition hover:scale-95 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)] md:w-auto"
           >
             <MdContentCopy /> Copiar nome:tag
           </button>
         </div>
       </div>
 
-      <div className="flex flex-col justify-between items-end ml-4">
+      <div className="flex items-center justify-end gap-4">
         <button
           onClick={handleDelete}
           title="Excluir"
-          className="cursor-pointer hover:scale-95 text-[var(--exit-red)]"
+          className="flex items-center justify-center text-[var(--exit-red)] transition hover:scale-95"
         >
-          <FaTrashCan className="w-5 h-5" />
+          <FaTrashCan className="h-5 w-5" />
         </button>
 
         <button
-          onClick={() => {
-            handleInspect();
-          }}
+          onClick={handleInspect}
           title="Inspecionar Imagem"
-          className="cursor-pointer hover:scale-95 text-[var(--system-black)] dark:text-[var(--system-white)]"
+          className="flex items-center justify-center text-[var(--system-black)] transition hover:scale-95 dark:text-[var(--system-white)]"
         >
-          <MdContentPasteSearch className="w-6 h-6" />
+          <MdContentPasteSearch className="h-6 w-6" />
         </button>
       </div>
 
