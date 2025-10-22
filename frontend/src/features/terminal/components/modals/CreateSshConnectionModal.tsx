@@ -4,7 +4,7 @@ import { IoMdCloseCircleOutline } from 'react-icons/io';
 import CreateSshConnectionForm from '../forms/CreateSshConnectionForm';
 import { ModalProps } from '../../../../interfaces/TerminalInterfaces';
 
-const SshConnectionModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) => {
+const CreateSshConnectionModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) => {
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -70,4 +70,4 @@ const SshConnectionModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) 
   );
 };
 
-export default SshConnectionModal;
+export default CreateSshConnectionModal;

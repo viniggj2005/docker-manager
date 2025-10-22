@@ -3,9 +3,9 @@ import type { terminal as termNS } from '../../wailsjs/go/models';
 export type SSHConn = termNS.SSHConn;
 
 export interface TerminalProps {
-  configure: SSHConn;
   open: boolean;
   title?: string;
+  configure: SSHConn;
   onClose: () => void;
 }
 
@@ -22,10 +22,10 @@ export interface CreateSshConnectionInterface {
   host: string;
   key?: string;
   port?: number;
+  alias?: string;
   userId?: number;
   systemUser: string;
   knownHosts?: string;
-  alias?: string;
 }
 
 export interface EditSshConnectionModalProps extends ModalProps {
@@ -70,4 +70,16 @@ export interface PasswordModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (password: string) => void;
+}
+
+export interface TerminalStateProps {
+  open: boolean;
+  close: () => void;
+  askPassword: boolean;
+  error: string | null;
+  config: termNS.SSHConn | null;
+  setError: (event: string | null) => void;
+  openWith: (config: termNS.SSHConn) => void;
+  submitPassword: (password: string) => void;
+  requirePassword: (config: termNS.SSHConn) => void;
 }

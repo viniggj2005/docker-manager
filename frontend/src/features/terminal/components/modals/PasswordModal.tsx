@@ -11,7 +11,6 @@ const PasswordModal: React.FC<PasswordModalProps> = ({ open, onClose, onSubmit }
     event.preventDefault();
     onSubmit(password);
     setPassword('');
-    onClose();
   };
 
   return (

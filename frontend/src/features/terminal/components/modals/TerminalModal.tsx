@@ -57,10 +57,10 @@ const TerminalModal: React.FC<TerminalProps> = ({
       },
     });
     const fit = new FitAddon();
-    fit.fit();
-    terminal.focus();
     terminal.loadAddon(fit);
     terminal.open(hostRef.current!);
+    fit.fit();
+    terminal.focus();
 
     fitRef.current = fit;
     terminalRef.current = terminal;

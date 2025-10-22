@@ -1,18 +1,20 @@
 import { GoPencil } from 'react-icons/go';
 import { FaTrashCan } from 'react-icons/fa6';
 import { MdCastConnected } from 'react-icons/md';
+import { useTerminalStore } from '../../TerminalStore';
 import { useAuth } from '../../../../contexts/AuthContext';
 import React, { useCallback, useEffect, useState } from 'react';
-import { TerminalServices } from '../../services/TerminalServices';
+import { SshDto } from '../../../../interfaces/TerminalInterfaces';
 import EditSshConnectionModal from '../modals/EditSshConnectionModal';
+import { TerminalServices, toSshConn } from '../../services/TerminalServices';
 import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
-import { ConnectionProps, SshDto } from '../../../../interfaces/TerminalInterfaces';
 
-const SshConnectionList: React.FC<ConnectionProps> = ({ token, onConnect }) => {
+const SshConnectionList: React.FC<{ token: string }> = ({ token }) => {
   const { user } = useAuth();
   const confirmToast = useConfirmToast();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { openWith, requirePassword } = useTerminalStore();
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [connectionsList, setConnectionsList] = useState<SshDto[]>([]);
   const [editingConnection, setEditingConnection] = useState<SshDto | null>(null);
@@ -21,8 +23,8 @@ const SshConnectionList: React.FC<ConnectionProps> = ({ token, onConnect }) => {
     setLoading(true);
     setError(null);
     try {
-      const connectionsList = await TerminalServices.findAllByUser(user ? user.id : 1, token);
-      setConnectionsList(connectionsList);
+      const list = await TerminalServices.findAllByUser(user ? user.id : 1, token);
+      setConnectionsList(list);
     } catch (error: any) {
       setError(error?.message ?? 'Erro ao buscar conexões');
     } finally {
@@ -53,6 +55,17 @@ const SshConnectionList: React.FC<ConnectionProps> = ({ token, onConnect }) => {
   const handleCloseEdit = () => {
     setEditModalOpen(false);
     setEditingConnection(null);
+  };
+
+  const handleConnect = async (id: number) => {
+    try {
+      const connection = await TerminalServices.getById(token, id);
+      const ssh = toSshConn(connection);
+      const hasKey = !!(connection.key && connection.key.length);
+      hasKey ? openWith(ssh) : requirePassword(ssh);
+    } catch (e) {
+      setError('Falha ao abrir terminal');
+    }
   };
 
   useEffect(() => {
@@ -109,7 +122,7 @@ const SshConnectionList: React.FC<ConnectionProps> = ({ token, onConnect }) => {
 
               <div className="ml-auto flex items-center">
                 <button
-                  onClick={() => onConnect(connection.id)}
+                  onClick={() => handleConnect(connection.id)}
                   title="Conectar ao terminal"
                   className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:scale-[0.98] dark:text-[var(--system-white)]"
                 >

@@ -34,7 +34,7 @@ export function useConfirmToast() {
       buttons: [
         [
           '<button type="button" class="px-3 py-1 !bg-[var(--accent-green)] !border-none hover:scale-95"><span class="text-[var(--system-white)] font-bold">Sim</span></button>',
-          async () => {
+          async (instance, toast) => {
             try {
               await options.onConfirm();
               iziToast.success({
@@ -44,6 +44,8 @@ export function useConfirmToast() {
               });
             } catch (error) {
               iziToast.error({ title: 'Erro', message: String(error), position: 'bottomRight' });
+            } finally {
+              instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
             }
           },
           false,
