@@ -3,10 +3,14 @@
 import {dtos} from '../models';
 import {context} from '../models';
 
-export function CreateSshConnection(arg1:dtos.CreateSshConnectionInput):Promise<void>;
+export function CreateSshConnection(arg1:string,arg2:dtos.CreateSshConnectionInput):Promise<void>;
+
+export function DeleteConnection(arg1:string,arg2:number):Promise<void>;
 
 export function FindAllConnectionByUser(arg1:string,arg2:number):Promise<Array<dtos.SshDto>>;
 
 export function GetById(arg1:string,arg2:number):Promise<dtos.SshDto>;
 
 export function Startup(arg1:context.Context):Promise<void>;
+
+export function UpdateSshConnection(arg1:string,arg2:number,arg3:dtos.CreateSshConnectionInput):Promise<void>;

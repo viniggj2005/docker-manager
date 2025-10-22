@@ -22,17 +22,27 @@ export interface CreateSshConnectionInterface {
   host: string;
   key?: string;
   port?: number;
-  userId: number;
+  userId?: number;
   systemUser: string;
   knownHosts?: string;
+  alias?: string;
+}
+
+export interface EditSshConnectionModalProps extends ModalProps {
+  connection: SshDto | null;
+}
+export interface EditSshConnectionFormProps {
+  id: number;
+  onSuccess?: () => void;
+  connection: CreateSshConnectionInterface;
 }
 
 export interface SshDto {
   id: number;
   host: string;
   port: number;
+  alias?: string;
   systemUser: string;
-  name?: string | null;
   keyPath?: string | null;
   passphrase?: string | null;
   key?: number[] | string | null;
@@ -53,6 +63,7 @@ export interface OpenTerminalProps {
 export interface ModalProps {
   open: boolean;
   onClose: () => void;
+  onCreated: () => void;
 }
 
 export interface PasswordModalProps {

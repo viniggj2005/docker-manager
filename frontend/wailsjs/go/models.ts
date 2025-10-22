@@ -133,6 +133,7 @@ export namespace dtos {
 	export class CreateSshConnectionInput {
 	    host: string;
 	    systemUser: string;
+	    alias?: string;
 	    port?: number;
 	    key?: string;
 	    knownHosts?: string;
@@ -146,6 +147,7 @@ export namespace dtos {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.host = source["host"];
 	        this.systemUser = source["systemUser"];
+	        this.alias = source["alias"];
 	        this.port = source["port"];
 	        this.key = source["key"];
 	        this.knownHosts = source["knownHosts"];
@@ -171,6 +173,7 @@ export namespace dtos {
 	export class SshDto {
 	    id: number;
 	    host: string;
+	    alias?: string;
 	    systemUser: string;
 	    port?: number;
 	    key?: string;
@@ -185,6 +188,7 @@ export namespace dtos {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.id = source["id"];
 	        this.host = source["host"];
+	        this.alias = source["alias"];
 	        this.systemUser = source["systemUser"];
 	        this.port = source["port"];
 	        this.key = source["key"];

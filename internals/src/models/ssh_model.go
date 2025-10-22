@@ -6,6 +6,7 @@ import (
 
 type SshConnection struct {
 	gorm.Model
+	Alias          string `json:"alias"`
 	Host           string `json:"host" gorm:"not null"`
 	SystemUser     string `json:"systemUser" gorm:"column:system_user"`
 	Port           int64  `json:"port" gorm:"default:22"`

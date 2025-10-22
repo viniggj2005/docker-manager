@@ -1,9 +1,18 @@
-import React, { useEffect, useRef } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
-import CreateSshConnectionForm from '../forms/CreateSshConnectionForm';
-import { ModalProps } from '../../../../interfaces/TerminalInterfaces';
+import React, { useEffect, useRef, useMemo } from 'react';
+import { toBase64 } from '../../functions/TreatmentFunctions';
+import EditSshConnectionForm from '../forms/EditSshConnectionForm';
+import {
+  CreateSshConnectionInterface,
+  EditSshConnectionModalProps,
+} from '../../../../interfaces/TerminalInterfaces';
 
-const SshConnectionModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) => {
+const EditSshConnectionModal: React.FC<EditSshConnectionModalProps> = ({
+  open,
+  onClose,
+  onCreated,
+  connection,
+}) => {
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -15,7 +24,20 @@ const SshConnectionModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) 
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
-  if (!open) return null;
+  const normalized: CreateSshConnectionInterface | null = useMemo(() => {
+    if (!connection) return null;
+    return {
+      userId: undefined,
+      host: connection.host,
+      key: toBase64(connection.key),
+      systemUser: connection.systemUser,
+      port: connection.port ?? undefined,
+      alias: connection.alias ?? undefined,
+      knownHosts: connection.knownHostsData ?? undefined,
+    };
+  }, [connection]);
+
+  if (!open || !normalized) return null;
 
   return (
     <div
@@ -23,7 +45,7 @@ const SshConnectionModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) 
       className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--light-overlay)] dark:bg-[var(--dark-overlay)] backdrop-blur-sm"
       aria-modal
       role="dialog"
-      aria-labelledby="ssh-modal-title"
+      aria-labelledby="edit-ssh-modal-title"
     >
       <div
         ref={dialogRef}
@@ -34,11 +56,11 @@ const SshConnectionModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) 
       >
         <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] px-5 py-3 dark:bg-[var(--dark-primary)]">
           <div className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-            <h2 id="ssh-modal-title" className="text-sm font-medium">
-              Nova conexão SSH
+            <span className="inline-block h-2 w-2 rounded-full bg-blue-500" />
+            <h2 id="edit-ssh-modal-title" className="text-sm font-medium">
+              Editar conexão SSH
             </h2>
-            <span className="text-xs text-[var(--grey-text)]">preencha os dados</span>
+            <span className="text-xs text-[var(--grey-text)]">modifique os dados necessários</span>
           </div>
           <button
             onClick={onClose}
@@ -51,7 +73,9 @@ const SshConnectionModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) 
         </div>
 
         <div className="max-h-[80vh] overflow-auto p-5">
-          <CreateSshConnectionForm
+          <EditSshConnectionForm
+            connection={normalized}
+            id={connection!.id}
             onSuccess={() => {
               onClose();
               onCreated?.();
@@ -63,4 +87,4 @@ const SshConnectionModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) 
   );
 };
 
-export default SshConnectionModal;
+export default EditSshConnectionModal;

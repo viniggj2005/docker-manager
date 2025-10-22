@@ -1,6 +1,8 @@
 import {
   GetById,
+  DeleteConnection,
   CreateSshConnection,
+  UpdateSshConnection,
   FindAllConnectionByUser,
 } from '../../../../wailsjs/go/handlers/SshHandler';
 import { normalizeKey } from '../functions/TreatmentFunctions';
@@ -9,31 +11,45 @@ import type { CreateSshConnectionInterface, SshDto } from '../../../interfaces/T
 
 export function toSshConn(dto: SshDto): termNS.SSHConn {
   return {
-    Host: dto.host,
-    Port: dto.port ?? 22,
-    User: dto.systemUser,
-    Password: '',
-    Key: Array.from(normalizeKey(dto.key)),
-    KeyPath: dto.keyPath ?? '',
-    Passphrase: dto.passphrase ?? '',
-    KnownHostsPath: '',
-    InsecureIgnoreHostKey: true,
     Cols: 0,
     Rows: 0,
     Timeout: 0,
+    Password: '',
+    Host: dto.host,
+    KnownHostsPath: '',
+    Port: dto.port ?? 22,
+    User: dto.systemUser,
+    KeyPath: dto.keyPath ?? '',
+    InsecureIgnoreHostKey: true,
+    Passphrase: dto.passphrase ?? '',
+    Key: Array.from(normalizeKey(dto.key)),
   };
 }
 export const TerminalServices = {
-  async createSshConnection(body: CreateSshConnectionInterface) {
+  async updateSshConnection(token: string, id: number, body: CreateSshConnectionInterface) {
+    if (body.userId == null) throw new Error('userId é obrigatório');
     const payload = {
-      host: body.host,
-      systemUser: body.systemUser,
-      port: body.port,
       key: body.key,
-      knownHosts: body.knownHosts,
+      host: body.host,
       userId: body.userId,
+      systemUser: body.systemUser,
+      knownHosts: body.knownHosts,
+      port: body.port ?? undefined,
     };
-    return await CreateSshConnection(payload);
+    return UpdateSshConnection(token, id, payload);
+  },
+
+  async createSshConnection(token: string, body: CreateSshConnectionInterface) {
+    if (body.userId == null) throw new Error('userId é obrigatório');
+    const payload = {
+      key: body.key,
+      host: body.host,
+      userId: body.userId,
+      systemUser: body.systemUser,
+      knownHosts: body.knownHosts,
+      port: body.port ?? undefined,
+    };
+    return CreateSshConnection(token, payload);
   },
 
   async findAllByUser(userId: number, token: string): Promise<SshDto[]> {
@@ -45,5 +61,9 @@ export const TerminalServices = {
   async getById(token: string, id: number): Promise<SshDto> {
     const connectionObject = await GetById(token, Number(id));
     return connectionObject as SshDto;
+  },
+
+  async deleteConnection(token: string, id: number): Promise<void> {
+    return await DeleteConnection(token, Number(id));
   },
 };

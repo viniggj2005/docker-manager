@@ -8,6 +8,7 @@ import SshConnectionModal from '../features/terminal/components/modals/SshConnec
 
 const TerminalFormPage: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const [reloadFlag, setReloadFlag] = useState(0);
   const { token, isAuthenticated, loading } = useAuth();
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
@@ -72,11 +73,15 @@ const TerminalFormPage: React.FC = () => {
             <SshTerminal id={selectedId} onClose={() => setSelectedId(null)} />
           </div>
         ) : (
-          <SshConnectionList token={token} onConnect={(id) => setSelectedId(id)} />
+          <SshConnectionList key={reloadFlag} token={token} onConnect={(id) => setSelectedId(id)} />
         )}
       </main>
 
-      <SshConnectionModal open={open} onClose={() => setOpen(false)} />
+      <SshConnectionModal
+        onCreated={() => setReloadFlag((prev) => prev + 1)}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
 
       <div className="absolute bottom-4 left-3">
         <ToggleThemeButton />

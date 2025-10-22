@@ -5,6 +5,7 @@ import "docker-manager-go/internals/src/models"
 type CreateSshConnectionInput struct {
 	Host           string  `json:"host" binding:"required"`
 	SystemUser     string  `json:"systemUser" binding:"required"`
+	Alias          *string `json:"alias,omitempty"`
 	Port           *int64  `json:"port,omitempty"`
 	Key            *string `json:"key,omitempty"`
 	KnownHostsData *string `json:"knownHosts,omitempty"`
@@ -13,6 +14,7 @@ type CreateSshConnectionInput struct {
 type SshDto struct {
 	ID             uint    `json:"id"`
 	Host           string  `json:"host"`
+	Alias          *string `json:"alias,omitempty"`
 	SystemUser     string  `json:"systemUser"`
 	Port           *int64  `json:"port,omitempty"`
 	Key            *string `json:"key,omitempty"`
@@ -24,6 +26,7 @@ func ToSshDTO(s *models.SshConnection) *SshDto {
 	return &SshDto{
 		ID:             s.ID,
 		Host:           s.Host,
+		Alias:          &s.Alias,
 		SystemUser:     s.SystemUser,
 		Port:           int64Ptr(s.Port),
 		Key:            strPtr(s.Key),

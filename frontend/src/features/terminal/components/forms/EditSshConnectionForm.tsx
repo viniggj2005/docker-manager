@@ -1,9 +1,13 @@
 import iziToast from 'izitoast';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileUploader } from 'react-drag-drop-files';
 import { useAuth } from '../../../../contexts/AuthContext';
+import { toBase64 } from '../../functions/TreatmentFunctions';
 import { TerminalServices } from '../../services/TerminalServices';
-import { CreateSshConnectionInterface } from '../../../../interfaces/TerminalInterfaces';
+import {
+  EditSshConnectionFormProps,
+  CreateSshConnectionInterface,
+} from '../../../../interfaces/TerminalInterfaces';
 
 const labelBase = 'text-xs font-medium text-[var(--grey-text)]';
 
@@ -12,19 +16,20 @@ const inputBase =
   'bg-[var(--system-white)] dark:bg-[var(--dark-secondary)] px-3 py-2 outline-none ' +
   'focus:ring-2 focus:ring-emerald-500 dark:text-[var(--system-white)]';
 
-const CreateSshConnectionForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
+const EditSshConnectionForm: React.FC<EditSshConnectionFormProps> = ({
+  id,
+  onSuccess,
+  connection,
+}) => {
+  const { user, token } = useAuth();
   const fileTypes = ['PEM', 'TXT'];
-  const { token, user } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [fileName, setFileName] = useState<string>('');
-  const [formData, setFormData] = useState<CreateSshConnectionInterface>({
-    key: '',
-    port: 22,
-    host: '',
-    systemUser: '',
-    knownHosts: '',
-    userId: user ? user.id : 1,
-  });
+  const [formData, setFormData] = useState<CreateSshConnectionInterface>(connection);
+
+  useEffect(() => {
+    setFormData(connection);
+  }, [connection]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -53,12 +58,22 @@ const CreateSshConnectionForm: React.FC<{ onSuccess?: () => void }> = ({ onSucce
     event.preventDefault();
     setSubmitting(true);
     try {
-      await TerminalServices.createSshConnection(token ? token : '', formData);
+      const payload = {
+        ...formData,
+        userId: user?.id,
+        key: toBase64(formData.key),
+      };
+      await TerminalServices.updateSshConnection(token ?? '', id, payload);
+      iziToast.success({
+        title: 'Sucesso!',
+        message: 'Conexão atualizada com sucesso',
+        position: 'bottomRight',
+      });
       onSuccess?.();
-    } catch (error) {
+    } catch (error: any) {
       iziToast.error({
         title: 'Erro',
-        message: `Erro ao criar conexão: ${String(error)}`,
+        message: `Erro ao atualizar conexão: ${String(error)}`,
         position: 'bottomRight',
       });
     } finally {
@@ -78,7 +93,6 @@ const CreateSshConnectionForm: React.FC<{ onSuccess?: () => void }> = ({ onSucce
             value={formData.host}
             onChange={handleChange}
             required
-            placeholder="ex: 192.168.0.10 ou domínio"
           />
         </div>
 
@@ -91,7 +105,6 @@ const CreateSshConnectionForm: React.FC<{ onSuccess?: () => void }> = ({ onSucce
             value={formData.systemUser}
             onChange={handleChange}
             required
-            placeholder="ex: ubuntu, ec2-user, root"
           />
         </div>
 
@@ -107,17 +120,15 @@ const CreateSshConnectionForm: React.FC<{ onSuccess?: () => void }> = ({ onSucce
             onChange={handleChange}
           />
         </div>
+
         <div className="md:col-span-2 grid gap-1.5">
-          <label className={labelBase}>
-            Known Hosts <span className="opacity-60">(opcional)</span>
-          </label>
+          <label className={labelBase}>Known Hosts</label>
           <input
             className={inputBase}
             type="text"
             name="knownHosts"
             value={formData.knownHosts}
             onChange={handleChange}
-            placeholder="conteúdo do known_hosts ou hash"
           />
         </div>
 
@@ -127,7 +138,9 @@ const CreateSshConnectionForm: React.FC<{ onSuccess?: () => void }> = ({ onSucce
             <FileUploader handleChange={handleFileChange} name="key" types={fileTypes}>
               <div className="flex cursor-pointer items-center justify-between">
                 <span className="text-sm">
-                  {fileName ? `Selecionado: ${fileName}` : 'Arraste e solte ou clique para enviar'}
+                  {fileName
+                    ? `Selecionado: ${fileName}`
+                    : 'Arraste e solte ou clique para substituir a chave'}
                 </span>
                 <span className="rounded-md border px-2 py-1 text-xs">Procurar</span>
               </div>
@@ -147,13 +160,13 @@ const CreateSshConnectionForm: React.FC<{ onSuccess?: () => void }> = ({ onSucce
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm text-[var(--system-white)] hover:opacity-90 disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm text-[var(--system-white)] hover:opacity-90 disabled:opacity-60"
         >
-          {submitting ? 'Criando…' : 'Criar conexão'}
+          {submitting ? 'Salvando…' : 'Salvar alterações'}
         </button>
       </div>
     </form>
   );
 };
 
-export default CreateSshConnectionForm;
+export default EditSshConnectionForm;

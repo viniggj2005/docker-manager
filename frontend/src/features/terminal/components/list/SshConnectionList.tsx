@@ -1,19 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { TerminalServices } from '../../services/TerminalServices';
-import { ConnectionProps, SshDto } from '../../../../interfaces/TerminalInterfaces';
+import { GoPencil } from 'react-icons/go';
+import { FaTrashCan } from 'react-icons/fa6';
+import { MdCastConnected } from 'react-icons/md';
 import { useAuth } from '../../../../contexts/AuthContext';
+import React, { useCallback, useEffect, useState } from 'react';
+import { TerminalServices } from '../../services/TerminalServices';
+import EditSshConnectionModal from '../modals/EditSshConnectionModal';
+import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
+import { ConnectionProps, SshDto } from '../../../../interfaces/TerminalInterfaces';
 
 const SshConnectionList: React.FC<ConnectionProps> = ({ token, onConnect }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [connectionsList, setConnectionsList] = useState<SshDto[]>([]);
+  const [editingConnection, setEditingConnection] = useState<SshDto | null>(null);
 
   const loadConnections = async () => {
     setLoading(true);
     setError(null);
     try {
-      const connectionsList = await TerminalServices.findAllByUser(user ? user?.id : 1, token);
+      const connectionsList = await TerminalServices.findAllByUser(user ? user.id : 1, token);
       setConnectionsList(connectionsList);
     } catch (error: any) {
       setError(error?.message ?? 'Erro ao buscar conexões');
@@ -22,21 +29,33 @@ const SshConnectionList: React.FC<ConnectionProps> = ({ token, onConnect }) => {
     }
   };
 
+  const handleRemove = useCallback(
+    (id: number, alias: string) => {
+      confirmToast({
+        id: String(id),
+        title: `Conexão ${alias} deletada!`,
+        message: `Deseja deletar a conexão: ${alias}?`,
+        onConfirm: async () => {
+          await TerminalServices.deleteConnection(token, id);
+          await loadConnections();
+        },
+      });
+    },
+    [token]
+  );
+
+  const handleEdit = (connection: SshDto) => {
+    setEditingConnection(connection);
+    setEditModalOpen(true);
+  };
+
+  const handleCloseEdit = () => {
+    setEditModalOpen(false);
+    setEditingConnection(null);
+  };
+
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const connectionsList = await TerminalServices.findAllByUser(user ? user.id : 1, token);
-        if (!cancelled) setConnectionsList(connectionsList);
-      } catch (error: any) {
-        if (!cancelled) setError(error?.message ?? 'Erro ao buscar conexões');
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
+    loadConnections();
   }, [token]);
 
   if (loading) {
@@ -73,31 +92,64 @@ const SshConnectionList: React.FC<ConnectionProps> = ({ token, onConnect }) => {
   }
 
   return (
-    <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] p-2 dark:bg-[var(--dark-secondary)]">
-      <ul className="divide-y divide-[var(--light-gray)] dark:divide-[var(--dark-tertiary)]">
-        {connectionsList.map((connection) => (
-          <li key={connection.id} className="flex items-center gap-4 p-4">
-            <div className="min-w-0">
-              <div className="truncate font-medium dark:text-[var(--system-white)]">
-                {connection.name || `${connection.systemUser}@${connection.host}`}
+    <>
+      <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] p-2 dark:bg-[var(--dark-secondary)]">
+        <ul className="divide-y divide-[var(--light-gray)] dark:divide-[var(--dark-tertiary)]">
+          {connectionsList.map((connection) => (
+            <li key={connection.id} className="flex items-center gap-4 p-4">
+              <div className="min-w-0">
+                <div className="truncate font-medium dark:text-[var(--system-white)]">
+                  {connection.alias || `${connection.systemUser}@${connection.host}`}
+                </div>
+                <div className="text-xs text-[var(--grey-text)]">
+                  {connection.systemUser}@{connection.host}:{connection.port}
+                </div>
               </div>
-              <div className="text-xs text-[var(--grey-text)]">
-                {connection.systemUser}@{connection.host}:{connection.port}
+
+              <div className="ml-auto flex items-center">
+                <button
+                  onClick={() => onConnect(connection.id)}
+                  title="Conectar ao terminal"
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:scale-[0.98] dark:text-[var(--system-white)]"
+                >
+                  <MdCastConnected className="h-6 w-6" />
+                </button>
+
+                <button
+                  onClick={() => handleEdit(connection)}
+                  title="Editar conexão"
+                  className="px-2 py-1 hover:scale-90 rounded-lg"
+                >
+                  <GoPencil className="text-[var(--docker-blue)] w-6 h-6" />
+                </button>
+
+                <button
+                  onClick={() =>
+                    handleRemove(
+                      connection.id,
+                      connection.alias || `${connection.systemUser}@${connection.host}`
+                    )
+                  }
+                  title="Excluir Conexão"
+                  className="px-2 py-1 hover:scale-90 rounded-lg"
+                >
+                  <FaTrashCan className="text-[var(--exit-red)] h-6 w-6" />
+                </button>
               </div>
-            </div>
-            <div className="ml-auto">
-              <button
-                onClick={() => onConnect(connection.id)}
-                className="inline-flex items-center gap-2 rounded-lg border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] px-3 py-2 text-sm hover:scale-[0.98] dark:text-[var(--system-white)]"
-                aria-label={`Conectar em ${connection.name || `${connection.systemUser}@${connection.host}`}`}
-              >
-                Conectar
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {editingConnection && (
+        <EditSshConnectionModal
+          open={editModalOpen}
+          onClose={handleCloseEdit}
+          onCreated={loadConnections}
+          connection={editingConnection}
+        />
+      )}
+    </>
   );
 };
 
