@@ -1,3 +1,4 @@
+import iziToast from 'izitoast';
 import React, { useEffect, useRef } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 import CreateSshConnectionForm from '../forms/CreateSshConnectionForm';
@@ -53,6 +54,12 @@ const SshConnectionModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) 
         <div className="max-h-[80vh] overflow-auto p-5">
           <CreateSshConnectionForm
             onSuccess={() => {
+              iziToast.success({
+                title: 'Criado com sucesso',
+                message: 'A conexão SSH foi criada.',
+                position: 'bottomRight',
+                timeout: 3000,
+              });
               onClose();
               onCreated?.();
             }}

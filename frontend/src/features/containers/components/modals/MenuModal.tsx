@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FmtName } from '../../../shared/functions/TreatmentFunction';
 import InspectModal from '../../../shared/components/modals/InspectModal';
 import { ContainerProps } from '../../../../interfaces/ContainerInterfaces';
-import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
+import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { MdContentPasteSearch, MdOutlineQueryStats, MdRestartAlt } from 'react-icons/md';
 import {
   ContainerRemove,
@@ -23,6 +23,7 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   setMenuModal,
 }) => {
   const theme = useTheme();
+  const confirmToast = useConfirmToast();
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
@@ -68,7 +69,7 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
 
   const handleDelete = () => {
     confirmToast({
-      id: id,
+      id,
       title: `Imagem ${name} deletada!`,
       message: `Deseja deletar a imagem: ${name} ?`,
       onConfirm: async () => {

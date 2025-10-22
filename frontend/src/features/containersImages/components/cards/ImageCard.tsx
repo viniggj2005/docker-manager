@@ -6,7 +6,7 @@ import { MdContentCopy, MdContentPasteSearch } from 'react-icons/md';
 import { copyToClipboard } from '../../../shared/functions/clipboard';
 import InspectModal from '../../../shared/components/modals/InspectModal';
 import { ImageProps } from '../../../../interfaces/ContainerImagesInterfaces';
-import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
+import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { InspectImage, RemoveImage } from '../../../../../wailsjs/go/docker/Docker';
 import {
   FmtAgo,
@@ -17,6 +17,7 @@ import {
 
 const ImageCard: React.FC<ImageProps> = ({ image, onDeleted }) => {
   const id = image.Id ?? '';
+  const confirmToast = useConfirmToast();
   const { name, tag } = ParseNameAndTag(image.RepoTags);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
   const [inspectContent, setInspectContent] = useState<string | null>(null);

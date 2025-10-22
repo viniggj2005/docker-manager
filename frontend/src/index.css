@@ -1,25 +1,24 @@
 @import 'tailwindcss/base';
-@import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import 'tailwindcss/components';
 
 :root {
   --exit-red: #e7000b;
   --dark-gray: #202020;
-  --medium-gray: #6c6c6c;
   --light-gray: #d9d9d9;
-  --system-black: #000000;
-  --system-white: rgb(255 255 255);
-  --docker-blue: #1d63ed;
-  --accent-green: #16a34a;
+  --medium-gray: #6c6c6c;
   --orange-json: #e07a0d;
+  --docker-blue: #1d63ed;
+  --system-black: #000000;
+  --accent-green: #16a34a;
+  --system-white: rgb(255 255 255);
+  --light-overlay: rgb(255 255 255/ 0.6);
   --light-red: rgba(251 113 133 / var(--tw-text-opacity, 1));
 
-  --light-overlay: rgb(255 255 255/ 0.6);
-
+  --terminal-background: #5e2750;
+  --grey-text: rgb(161 161 170/ 1);
   --dark-overlay: rgb(0 0 0 / 0.6);
   --dark-primary: rgb(24, 24, 27);
   --dark-secondary: rgb(39, 39, 42);
   --dark-tertiary: rgb(255 255 255 / 0.1);
-  --grey-text: rgb(161 161 170/ 1);
-  --terminal-background: #5e2750;
 }

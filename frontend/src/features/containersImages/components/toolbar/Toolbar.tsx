@@ -2,8 +2,8 @@ import React from 'react';
 import { FaTrashCan } from 'react-icons/fa6';
 import { PruneImages } from '../../../../../wailsjs/go/docker/Docker';
 import { FiSearch, FiRefreshCw, FiGrid, FiList } from 'react-icons/fi';
-import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { ToolbarProps } from '../../../../interfaces/ContainerImagesInterfaces';
+import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
 
 const Toolbar: React.FC<ToolbarProps> = ({
   view,
@@ -14,6 +14,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onRefresh,
   onDeleted,
 }) => {
+  const confirmToast = useConfirmToast();
   const handleDelete = () => {
     confirmToast({
       title: `Imagens sem uso deletadas!`,

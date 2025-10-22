@@ -5,11 +5,12 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import React, { useCallback, useEffect, useState } from 'react';
 import { TerminalServices } from '../../services/TerminalServices';
 import EditSshConnectionModal from '../modals/EditSshConnectionModal';
-import { confirmToast } from '../../../shared/components/toasts/ConfirmToast';
+import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { ConnectionProps, SshDto } from '../../../../interfaces/TerminalInterfaces';
 
 const SshConnectionList: React.FC<ConnectionProps> = ({ token, onConnect }) => {
   const { user } = useAuth();
+  const confirmToast = useConfirmToast();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
