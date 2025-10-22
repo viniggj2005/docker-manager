@@ -43,7 +43,7 @@ const ListContainersImages: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-4 text-[var(--system-black)] dark:text-[var(--system-white)]">
+    <div className="w-full max-w-7xl mx-auto px-4 py-4 text-[var(--system-black)] dark:text-[var(--system-white)] sm:px-6 lg:px-8">
       <Toolbar
         view={view}
         query={query}
@@ -55,7 +55,7 @@ const ListContainersImages: React.FC = () => {
       />
 
       {view === 'grid' ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {filteredSorted.map((image) => (
             <ImageCard
               key={image.Id ?? Math.random().toString(36)}
