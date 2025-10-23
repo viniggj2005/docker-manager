@@ -11,6 +11,7 @@ type CreateSshConnectionInput struct {
 	KnownHostsData *string `json:"knownHosts,omitempty"`
 	UserID         uint    `json:"userId" binding:"required"`
 }
+
 type SshDto struct {
 	ID             uint    `json:"id"`
 	Host           string  `json:"host"`
@@ -22,15 +23,28 @@ type SshDto struct {
 	UserID         uint    `json:"userId"`
 }
 
+// Converte um model para DTO
 func ToSshDTO(s *models.SshConnection) *SshDto {
+	host := s.Host.Plaintext
+
+	var keyPtr *string
+	if s.Key.Plaintext != "" {
+		keyPtr = &s.Key.Plaintext
+	}
+
+	var knownPtr *string
+	if s.KnownHostsData.Plaintext != "" {
+		knownPtr = &s.KnownHostsData.Plaintext
+	}
+
 	return &SshDto{
 		ID:             s.ID,
-		Host:           s.Host,
+		Host:           host,
 		Alias:          &s.Alias,
 		SystemUser:     s.SystemUser,
-		Port:           int64Ptr(s.Port),
-		Key:            strPtr(s.Key),
-		KnownHostsData: strPtr(s.KnownHostsData),
+		Port:           &s.Port,
+		Key:            keyPtr,
+		KnownHostsData: knownPtr,
 		UserID:         s.UserID,
 	}
 }
@@ -41,12 +55,6 @@ func ToSshDTOList(conns []models.SshConnection) []SshDto {
 		list = append(list, *ToSshDTO(&c))
 	}
 	return list
-}
-func strPtr(s string) *string {
-	if s == "" {
-		return nil
-	}
-	return &s
 }
 
 func int64Ptr(v int64) *int64 {

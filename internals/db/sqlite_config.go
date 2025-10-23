@@ -4,10 +4,8 @@ import (
 	"docker-manager-go/internals/src/models"
 	"fmt"
 	"log"
-	"os"
-	"strings"
 
-	sqlcipher "github.com/whatisusername/gorm-sqlcipher"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -17,17 +15,19 @@ var (
 )
 
 func InitDb() {
-	key := os.Getenv("DB_KEY")
-	if key == "" {
-		log.Fatal("DB_KEY não definida")
-	}
-	escaped := strings.ReplaceAll(key, "'", "''")
-	dsn := fmt.Sprintf("file:secure.db?_journal_mode=WAL&_pragma=key('%s')&_pragma=cipher_page_size=4096&_pragma=foreign_keys(ON)", escaped)
-	DB, err = gorm.Open(sqlcipher.Open(dsn), &gorm.Config{})
+	dbPath := "secure.db"
+	dsn := fmt.Sprintf("file:%s?_journal_mode=WAL&_foreign_keys=on", dbPath)
+
+	DB, err = gorm.Open(sqlite.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic(err)
+		log.Fatalf("erro ao abrir banco SQLite: %v", err)
 	}
-	if err := DB.AutoMigrate(&models.User{}, &models.DockerCredentials{}, &models.SshConnection{}); err != nil {
-		log.Fatal(err)
+
+	if err := DB.AutoMigrate(
+		&models.User{},
+		&models.DockerCredentials{},
+		&models.SshConnection{},
+	); err != nil {
+		log.Fatalf("erro ao migrar modelos: %v", err)
 	}
 }

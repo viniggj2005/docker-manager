@@ -1,17 +1,19 @@
 package models
 
 import (
+	"docker-manager-go/internals/types"
+
 	"gorm.io/gorm"
 )
 
 type SshConnection struct {
 	gorm.Model
-	Alias          string `json:"alias"`
-	Host           string `json:"host" gorm:"not null"`
-	SystemUser     string `json:"systemUser" gorm:"column:system_user"`
-	Port           int64  `json:"port" gorm:"default:22"`
-	Key            string `json:"key"`
-	KnownHostsData string `json:"known_hosts" gorm:"type:text"`
+	Alias          string                `json:"alias"`
+	Host           types.EncryptedString `gorm:"type:blob;not null;column:host"`
+	SystemUser     string                `json:"systemUser" gorm:"column:system_user"`
+	Port           int64                 `json:"port" gorm:"default:22"`
+	Key            types.EncryptedString `gorm:"type:blob;column:key"`
+	KnownHostsData types.EncryptedString `gorm:"type:blob;column:known_hosts_data"`
 	UserID         uint
 	User           User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }

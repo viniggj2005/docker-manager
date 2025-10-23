@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 
 	"golang.org/x/crypto/bcrypt"
@@ -10,6 +12,7 @@ import (
 	"docker-manager-go/internals/src/auth"
 	"docker-manager-go/internals/src/dtos"
 	"docker-manager-go/internals/src/models"
+	"docker-manager-go/internals/types"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -43,9 +46,16 @@ func (h *AuthHandler) Login(in LoginInput) (*LoginResponse, error) {
 	if err := h.DB.WithContext(h.ctx).Where("email = ?", in.Email).First(&u).Error; err != nil {
 		return nil, errors.New("credenciais inválidas")
 	}
+
 	if bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(in.Password)) != nil {
 		return nil, errors.New("credenciais inválidas")
 	}
+
+	key := deriveSessionKey(in.Password, u.Email)
+	if err := types.SetSessionKey(key); err != nil {
+		return nil, err
+	}
+
 	token, _, err := h.Sess.Create(u.ID)
 	if err != nil {
 		return nil, err
@@ -53,6 +63,7 @@ func (h *AuthHandler) Login(in LoginInput) (*LoginResponse, error) {
 
 	runtime.EventsEmit(h.ctx, "auth:changed", true)
 	uDTO := dtos.ToDTO(&u)
+
 	return &LoginResponse{
 		Token: token,
 		User:  *uDTO,
@@ -61,6 +72,10 @@ func (h *AuthHandler) Login(in LoginInput) (*LoginResponse, error) {
 
 func (h *AuthHandler) Logout(token string) {
 	h.Sess.Destroy(token)
-
 	runtime.EventsEmit(h.ctx, "auth:changed", false)
+}
+
+func deriveSessionKey(password, email string) string {
+	hash := sha256.Sum256([]byte(password + ":" + email))
+	return hex.EncodeToString(hash[:])
 }
