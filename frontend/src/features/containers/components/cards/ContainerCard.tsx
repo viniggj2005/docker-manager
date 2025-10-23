@@ -30,25 +30,21 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
   onTogglePause,
 }) => {
   return (
-    <div className="group rounded-2xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-5 shadow-sm transition hover:shadow-md">
-      <div className="flex items-start justify-between gap-3">
-        <div>
+    <div className="group flex flex-col gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-5 shadow-sm transition hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]">
+      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div className="min-w-0">
           <div className="relative w-fit">
-            <div className="inline-block text-xl font-medium text-[var(--system-black)] hover:scale-95 dark:text-[var(--system-white)] peer">
+            <div className="inline-block max-w-full truncate text-xl font-medium text-[var(--system-black)] transition hover:scale-[0.99] dark:text-[var(--system-white)] peer">
               {name}
             </div>
 
             {!isEditing && (
               <button
                 onClick={onOpenEdit}
-                className="absolute -top-1 -right-6 bg-[var(--system-white)] dark:bg-[var(--dark-primary)]
-                 border border-[var(--medium-gray)] dark:border-[var(--dark-tertiary)]
-                          rounded-full p-1 shadow-md hover:bg-[var(--light-gray)]
-                          opacity-0 peer-hover:opacity-100 hover:opacity-100 
-                          transition-opacity duration-150 pointer-events-auto"
+                className="absolute -top-1 -right-6 rounded-full border border-[var(--medium-gray)] bg-[var(--system-white)] p-1 shadow-md opacity-0 transition hover:bg-[var(--light-gray)] hover:opacity-100 peer-hover:opacity-100 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]"
                 title="Editar nome"
               >
-                <GoPencil className="text-[var(--system-black)] dark:text-[var(--system-white)] w-4 h-4" />
+                <GoPencil className="h-4 w-4 text-[var(--system-black)] dark:text-[var(--system-white)]" />
               </button>
             )}
 
@@ -64,48 +60,57 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
             {isSeeing && <LogsModal id={container.Id} setLogsModal={onCloseLogs} />}
           </div>
 
-          <div className="mt-0.5 text-lg text-[var(--medium-gray)] ">{container.Image}</div>
+          <div className="mt-1 truncate text-lg text-[var(--medium-gray)]">{container.Image}</div>
         </div>
 
-        <StatusBadge state={container.State} title={container.Status || container.State} />
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <div className="flex-shrink-0">
+            <StatusBadge state={container.State} title={container.Status || container.State} />
+          </div>
 
-        <button
-          onClick={onOpenLogs}
-          title="Logs"
-          className="rounded-2xl bg-[var(--system-white)] dark:bg-[var(--dark-primary)] px-3 py-1.5 text-md text-[var(--exit-red)] hover:scale-95"
-        >
-          <RiFileList2Line className="h-6 w-6" />
-        </button>
-
-        <button
-          title={`${container.State === 'paused' ? 'Despausar container' : 'Pausar Container'}`}
-          onClick={() => onTogglePause(container.Id, container.State)}
-          className="rounded-2xl  bg-[var(--system-white)] dark:bg-[var(--dark-primary)] px-3 py-1.5 text-sm dark:text-[var(--system-white)] text-[var(--system-black)] hover:scale-95"
-        >
-          {container.State === 'paused' ? (
-            <CiPlay1 className="w-6 h-6" />
-          ) : (
-            <CiPause1 className="w-6 h-6" />
-          )}
-        </button>
-
-        <div className="relative">
           <button
-            title="menu"
-            onClick={() => (isOpened ? onCloseMenu() : onOpenMenu())}
-            className="rounded-2xl  bg-[var(--system-white)] dark:bg-[var(--dark-primary)] px-3 py-1.5 text-sm dark:text-[var(--system-white)] text-[var(--system-black)] hover:scale-95"
+            onClick={onOpenLogs}
+            title="Logs"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm font-medium text-[var(--exit-red)] transition hover:scale-95 sm:w-auto dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]"
           >
-            <HiOutlineDotsVertical className="w-6 h-6" />
+            <RiFileList2Line className="h-5 w-5" />
+            <span className="sm:hidden">Logs</span>
           </button>
-          {isOpened && (
-            <ContainersMenuModal
-              isOpen={!!isOpened}
-              id={container.Id}
-              name={container.Names?.[0] ?? name}
-              setMenuModal={onCloseMenu}
-              onDeleted={onDeleted}
-            />
-          )}
+
+          <button
+            title={`${container.State === 'paused' ? 'Despausar container' : 'Pausar Container'}`}
+            onClick={() => onTogglePause(container.Id, container.State)}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm font-medium text-[var(--system-black)] transition hover:scale-95 sm:w-auto dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]"
+          >
+            {container.State === 'paused' ? (
+              <CiPlay1 className="h-5 w-5" />
+            ) : (
+              <CiPause1 className="h-5 w-5" />
+            )}
+            <span className="sm:hidden">
+              {container.State === 'paused' ? 'Iniciar' : 'Pausar'}
+            </span>
+          </button>
+
+          <div className="relative w-full sm:w-auto">
+            <button
+              title="menu"
+              onClick={() => (isOpened ? onCloseMenu() : onOpenMenu())}
+              className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm font-medium text-[var(--system-black)] transition hover:scale-95 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]"
+            >
+              <HiOutlineDotsVertical className="h-5 w-5" />
+              <span className="sm:hidden">Ações</span>
+            </button>
+            {isOpened && (
+              <ContainersMenuModal
+                isOpen={!!isOpened}
+                id={container.Id}
+                name={container.Names?.[0] ?? name}
+                setMenuModal={onCloseMenu}
+                onDeleted={onDeleted}
+              />
+            )}
+          </div>
         </div>
       </div>
 

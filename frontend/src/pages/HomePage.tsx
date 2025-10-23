@@ -1,8 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { HiOutlinePlus } from 'react-icons/hi';
-import ContainersListView from '../features/containers/ContainersList';
-import ListContainersImages from '../features/containersImages/ListContainerImages';
+import { HiOutlinePhotograph, HiOutlinePlus, HiOutlineViewGrid } from 'react-icons/hi';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -13,17 +11,51 @@ const HomePage: React.FC = () => {
           Bem-vindo ao painel Docker Manager
         </h1>
         <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-          Acompanhe o status dos seus containers e imagens favoritas em um só lugar.
+          Acompanhe o status dos seus containers e imagens em um só lugar.
         </p>
       </header>
 
-      <div className="grid gap-6 xl:grid-cols-[2fr_1fr]">
-        <section className="rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-6 shadow-sm dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]">
-          <ContainersListView />
-        </section>
-        <section className="rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-6 shadow-sm dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]">
-          <ListContainersImages />
-        </section>
+      <div className="grid gap-6 md:grid-cols-2">
+        <article className="flex flex-col gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-6 shadow-sm transition hover:border-[var(--docker-blue)] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--light-overlay)] text-[var(--docker-blue)] dark:bg-[var(--dark-tertiary)]">
+            <HiOutlineViewGrid className="h-6 w-6" />
+          </span>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+              Gerencie containers
+            </h2>
+            <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+              Acesse o painel completo para iniciar, pausar ou renomear containers a qualquer
+              momento.
+            </p>
+          </div>
+          <button
+            onClick={() => navigate('/containers')}
+            className="mt-auto inline-flex items-center justify-center gap-2 self-start rounded-xl bg-[var(--docker-blue)] px-5 py-3 text-sm font-semibold text-[var(--system-white)] shadow transition hover:scale-[0.99] hover:shadow-md"
+          >
+            Acessar containers
+          </button>
+        </article>
+
+        <article className="flex flex-col gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-6 shadow-sm transition hover:border-[var(--docker-blue)] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--light-overlay)] text-[var(--docker-blue)] dark:bg-[var(--dark-tertiary)]">
+            <HiOutlinePhotograph className="h-6 w-6" />
+          </span>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+              Gerencie imagens
+            </h2>
+            <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+              Filtre e exclua imagens rapidamente para manter seu ambiente organizado.
+            </p>
+          </div>
+          <button
+            onClick={() => navigate('/images')}
+            className="mt-auto inline-flex items-center justify-center gap-2 self-start rounded-xl bg-[var(--docker-blue)] px-5 py-3 text-sm font-semibold text-[var(--system-white)] shadow transition hover:scale-[0.99] hover:shadow-md"
+          >
+            Acessar imagens
+          </button>
+        </article>
       </div>
 
       <div className="flex flex-col gap-3 rounded-2xl border border-dashed border-[var(--docker-blue)] bg-[var(--light-overlay)] p-6 dark:border-[var(--docker-blue)] dark:bg-[var(--dark-tertiary)] sm:flex-row sm:items-center sm:justify-between">

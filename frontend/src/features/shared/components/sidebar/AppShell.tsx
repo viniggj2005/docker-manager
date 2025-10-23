@@ -1,11 +1,8 @@
+import Sidebar from './Sidebar';
 import React, { useState } from 'react';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
-import Sidebar from './Sidebar';
 import ToggleThemeButton from '../buttons/ToggleThemeButton';
-
-interface AppShellProps {
-  children: React.ReactNode;
-}
+import { AppShellProps } from '../../../../interfaces/SharedInterfaces';
 
 const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -22,7 +19,9 @@ const AppShell: React.FC<AppShellProps> = ({ children }) => {
         onToggleCollapse={() => setIsSidebarCollapsed((prev) => !prev)}
       />
 
-      <div className={`flex min-h-screen flex-1 flex-col transition-[padding] duration-200 ${desktopPadding}`}>
+      <div
+        className={`flex min-h-screen flex-1 flex-col transition-[padding] duration-200 ${desktopPadding}`}
+      >
         <header className="flex items-center justify-between border-b border-[var(--light-gray)] bg-[var(--system-white)] px-4 py-3 shadow-sm dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] lg:hidden">
           <button
             onClick={() => setIsSidebarOpen(true)}
@@ -34,12 +33,10 @@ const AppShell: React.FC<AppShellProps> = ({ children }) => {
           <span className="text-sm font-semibold uppercase tracking-wide text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
             Docker Manager
           </span>
-          <ToggleThemeButton />
+          <div></div>
         </header>
 
-        <main className="flex flex-1 flex-col px-4 py-6 sm:px-6 lg:px-8 xl:px-10">
-          {children}
-        </main>
+        <main className="flex flex-1 flex-col px-4 py-6 sm:px-6 lg:px-8 xl:px-10">{children}</main>
       </div>
     </div>
   );

@@ -16,15 +16,15 @@ import {
 } from '../../../shared/functions/TreatmentFunction';
 
 const ImageCard: React.FC<ImageProps> = ({ image, onDeleted }) => {
-  const id = image.Id ?? '';
+  const id = image?.Id ?? '';
   const confirmToast = useConfirmToast();
-  const { name, tag } = ParseNameAndTag(image.RepoTags);
+  const { name, tag } = ParseNameAndTag(image?.RepoTags);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
   const [inspectContent, setInspectContent] = useState<string | null>(null);
 
   const handleDelete = () => {
     confirmToast({
-      id: id,
+      id,
       title: `Imagem ${name}:${tag} deletada!`,
       message: `Deseja deletar a imagem: ${name}:${tag} ?`,
       onConfirm: async () => {
@@ -36,16 +36,12 @@ const ImageCard: React.FC<ImageProps> = ({ image, onDeleted }) => {
 
   const handleInspect = async () => {
     try {
-      const inspectContent = await InspectImage(id);
-      setInspectContent(inspectContent);
-      setInspectContent(
-        typeof inspectContent === 'string'
-          ? inspectContent
-          : JSON.stringify(inspectContent, null, 2)
-      );
+      const result = await InspectImage(id);
+      const payload = typeof result === 'string' ? result : JSON.stringify(result, null, 2);
+      setInspectContent(payload);
       iziToast.success({
         title: 'Sucesso!',
-        message: 'Os dados da imagem foram Retornados!',
+        message: 'Os dados da imagem foram retornados!',
         position: 'bottomRight',
       });
       setIsInspectOpen(true);
@@ -55,71 +51,106 @@ const ImageCard: React.FC<ImageProps> = ({ image, onDeleted }) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-4 transition dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]">
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-start">
-          <div className="flex items-center justify-center rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] p-2 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]">
-            <DockerImageIcon className="text-[var(--docker-blue)]" />
+    <div
+      className="group min-w-[350px] mx-auto max-w-[840px] sm:max-w-[1040px] md:max-w-[1240px] lg:max-w-[1480px]
+                 flex flex-col gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-5 shadow-sm transition hover:shadow-md
+                 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]"
+    >
+      {/* Header */}
+      <div className="grid grid-cols-[1fr_auto] items-start gap-x-4 gap-y-2">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className="p-2 rounded-xl border border-[var(--light-gray)] shrink-0 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]">
+            <DockerImageIcon className="w-6 h-6 text-[var(--docker-blue)]" />
           </div>
 
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="truncate font-semibold">{name}</span>
-              <span className="flex items-center gap-1 rounded-full border border-[var(--light-gray)] bg-[var(--system-white)] px-2 py-0.5 text-xs dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]">
-                <FaTag />
-                {tag}
+            <div className="min-w-0 flex items-start gap-2">
+              <span
+                title={name}
+                className="flex-1 min-w-0 pe-2 text-lg font-medium leading-tight whitespace-normal break-words text-[var(--system-black)] dark:text-[var(--system-white)]"
+              >
+                {name}
               </span>
-              {!image.RepoTags?.length && (
-                <span className="rounded-full border border-[var(--light-gray)] bg-[var(--system-white)] px-2 py-0.5 text-xs text-[var(--system-black)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]">
+
+              <span className="shrink-0 mr-1 text-xs px-2 py-0.5 rounded-full flex items-center gap-1 border border-[var(--light-gray)] bg-[var(--system-white)] text-[var(--system-black)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]">
+                <FaTag /> {tag}
+              </span>
+
+              {!image?.RepoTags?.length && (
+                <span className="shrink-0 text-xs px-2 py-0.5 rounded-full border border-[var(--light-gray)] text-[var(--system-black)] dark:border-[var(--dark-tertiary)] dark:text-[var(--system-white)]">
                   dangling
                 </span>
               )}
             </div>
 
-            <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm">
-              <span title="Tamanho">{FormatBytes(image.Size)}</span>
-              <span title="Criado">
-                {EpochToDateStr(image.Created)} <span>({FmtAgo(image.Created)} atrás)</span>
-              </span>
-              <span title="Containers que usam">{image.Containers === -1 ? '' : image.Containers}</span>
+            <div className="mt-1 text-sm font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">
+              {FormatBytes(image?.Size || 0)}
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 sm:w-48 md:w-auto md:flex-row md:items-start md:justify-end">
+        <div className="flex items-center gap-2 shrink-0">
           <button
-            onClick={() => copyToClipboard(id.replace('sha256:', ''), 'ID da imagem copiado')}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm transition hover:scale-95 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)] md:w-auto"
+            onClick={handleDelete}
+            title="Excluir"
+            className="hover:scale-95 text-[var(--exit-red)]"
           >
-            <MdContentCopy /> Copiar ID
+            <FaTrashCan className="w-5 h-5" />
           </button>
-
           <button
-            onClick={() => copyToClipboard(`${name}:${tag}`, 'Nome:tag copiado')}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm transition hover:scale-95 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)] md:w-auto"
+            onClick={handleInspect}
+            title="Inspecionar Imagem"
+            className="hover:scale-95 text-[var(--system-black)] dark:text-[var(--system-white)]"
           >
-            <MdContentCopy /> Copiar nome:tag
+            <MdContentPasteSearch className="w-6 h-6" />
           </button>
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-4">
-        <button
-          onClick={handleDelete}
-          title="Excluir"
-          className="flex items-center justify-center text-[var(--exit-red)] transition hover:scale-95"
-        >
-          <FaTrashCan className="h-5 w-5" />
-        </button>
+      {/* Datas */}
+      <div className="mt-1 grid grid-cols-2 gap-2 w-full">
+        <div className="rounded-xl border border-[var(--light-gray)] px-3 py-1.5 text-center dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]">
+          <div className="text-[11px] text-[var(--medium-gray)] leading-none dark:text-[var(--system-white)]">
+            Criado em
+          </div>
+          <div className="text-sm font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">
+            {EpochToDateStr(image?.Created)}
+          </div>
+        </div>
+        <div className="rounded-xl border border-[var(--light-gray)] px-3 py-1.5 text-center dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]">
+          <div className="text-[11px] text-[var(--medium-gray)] leading-none dark:text-[var(--system-white)]">
+            Há quanto tempo
+          </div>
+          <div className="text-sm font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">
+            {FmtAgo(image?.Created)}
+          </div>
+        </div>
+      </div>
 
+      {/* Ações: copiar — CENTRALIZADO */}
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-2 w-full">
         <button
-          onClick={handleInspect}
-          title="Inspecionar Imagem"
-          className="flex items-center justify-center text-[var(--system-black)] transition hover:scale-95 dark:text-[var(--system-white)]"
+          onClick={() => copyToClipboard(id.replace('sha256:', ''), 'ID da imagem copiado')}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border border-[var(--light-gray)] text-xs bg-[var(--system-white)] text-[var(--system-black)] transition hover:scale-95 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]"
         >
-          <MdContentPasteSearch className="h-6 w-6" />
+          <MdContentCopy className="w-4 h-4" /> Copiar ID
+        </button>
+        <button
+          onClick={() => copyToClipboard(`${name}:${tag}`, 'Nome:tag copiado')}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border border-[var(--light-gray)] text-xs bg-[var(--system-white)] text-[var(--system-black)] transition hover:scale-95 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]"
+        >
+          <MdContentCopy className="w-4 h-4" /> Copiar nome:tag
         </button>
       </div>
+
+      {image?.Containers !== -1 && (
+        <div className="mt-2 text-xs text-[var(--medium-gray)] dark:text-[var(--system-white)]">
+          Containers:{' '}
+          <span className="font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">
+            {image?.Containers}
+          </span>
+        </div>
+      )}
 
       {isInspectOpen && (
         <InspectModal
