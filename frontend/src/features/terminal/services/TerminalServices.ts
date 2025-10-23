@@ -51,6 +51,7 @@ export const TerminalServices = {
       knownHosts: body.knownHosts,
       port: body.port ?? undefined,
     };
+    console.log(payload);
     return CreateSshConnection(token, payload);
   },
 

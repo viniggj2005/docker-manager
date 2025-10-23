@@ -1,6 +1,7 @@
 import App from './App';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
+import CreateAccountPage from './pages/CreateAccountPage';
 import TerminalFormPage from './pages/TerminalFormPage';
 import ContainersPage from './pages/ContainersPage';
 import ImagesPage from './pages/ImagesPage';
@@ -27,6 +28,7 @@ export const router = createBrowserRouter(
         },
 
         { path: 'login', element: <LoginPage /> },
+        { path: 'create-account', element: <CreateAccountPage /> },
       ],
     },
     // { path: '*', element: <NotFoundPage /> },

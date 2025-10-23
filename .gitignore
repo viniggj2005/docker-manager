@@ -26,8 +26,12 @@ yarn-error.log*
 secure.db
 secure.db-shm
 secure.db-wal
+secure_main.db
+secure_main.db-shm
+secure_main.db-wal
 
 # OS files
 Thumbs.db
 
 frontend/.env
+data/**

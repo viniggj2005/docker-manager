@@ -19,12 +19,9 @@ const LoginForm: React.FC = () => {
   }
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="grid w-full gap-4"
-    >
+    <form onSubmit={onSubmit} className="grid w-full gap-4">
       <div>
-        <h2 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">Faça login</h2>
+        <h2 className="text-2xl font-semibold text-[var(--system-black)]">Faça login</h2>
         <p className="mt-1 text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
           Utilize suas credenciais para acessar o painel.
         </p>
