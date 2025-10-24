@@ -4,7 +4,7 @@ import {
   ContainerPause,
   ContainerRename,
   ContainerUnPause,
-} from '../../../../wailsjs/go/docker/Docker';
+} from '../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
 import { ContainerItem } from '../../../interfaces/ContainerInterfaces';
 
 export const getContainers = async (): Promise<ContainerItem[]> => {

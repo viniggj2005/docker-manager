@@ -7,7 +7,10 @@ import { copyToClipboard } from '../../../shared/functions/clipboard';
 import InspectModal from '../../../shared/components/modals/InspectModal';
 import { ImageProps } from '../../../../interfaces/ContainerImagesInterfaces';
 import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
-import { InspectImage, RemoveImage } from '../../../../../wailsjs/go/docker/Docker';
+import {
+  InspectImage,
+  RemoveImage,
+} from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
 import {
   FmtAgo,
   FormatBytes,

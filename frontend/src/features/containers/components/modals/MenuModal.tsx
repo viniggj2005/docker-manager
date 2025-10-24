@@ -13,7 +13,7 @@ import {
   ContainerRemove,
   ContainerInspect,
   ContainerRestart,
-} from '../../../../../wailsjs/go/docker/Docker';
+} from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
 
 const ContainersMenuModal: React.FC<ContainerProps> = ({
   id,

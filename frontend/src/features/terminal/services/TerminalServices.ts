@@ -4,12 +4,15 @@ import {
   CreateSshConnection,
   UpdateSshConnection,
   FindAllConnectionByUser,
-} from '../../../../wailsjs/go/handlers/SshHandler';
+} from '../../../../wailsjs/go/handlers/SshHandlerStruct';
 import { normalizeKey } from '../functions/TreatmentFunctions';
-import type { terminal as termNS } from '../../../../wailsjs/go/models';
-import type { CreateSshConnectionInterface, SshDto } from '../../../interfaces/TerminalInterfaces';
+import type {
+  CreateSshConnectionInterface,
+  SSHConnectionDto,
+  SshDto,
+} from '../../../interfaces/TerminalInterfaces';
 
-export function toSshConn(dto: SshDto): termNS.SSHConn {
+export function toSshConn(dto: SshDto): SSHConnectionDto {
   return {
     Cols: 0,
     Rows: 0,

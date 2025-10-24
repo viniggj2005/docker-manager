@@ -5,7 +5,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import TerminalModalHeader from '../headers/TerminalModalHeader';
 import { EventsOn } from '../../../../../wailsjs/runtime/runtime';
 import { TerminalProps } from '../../../../interfaces/TerminalInterfaces';
-import { ConnectWith, Send, Resize, Disconnect } from '../../../../../wailsjs/go/terminal/Terminal';
+import {
+  ConnectWith,
+  Send,
+  Resize,
+  Disconnect,
+} from '../../../../../wailsjs/go/handlers/TerminalHandlerStruct';
 
 const TerminalModal: React.FC<TerminalProps> = ({
   open,

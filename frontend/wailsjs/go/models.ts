@@ -130,7 +130,7 @@ export namespace container {
 
 export namespace dtos {
 	
-	export class CreateSshConnectionInput {
+	export class CreateSshConnectionInputDto {
 	    host: string;
 	    systemUser: string;
 	    alias?: string;
@@ -140,7 +140,7 @@ export namespace dtos {
 	    userId: number;
 	
 	    static createFrom(source: any = {}) {
-	        return new CreateSshConnectionInput(source);
+	        return new CreateSshConnectionInputDto(source);
 	    }
 	
 	    constructor(source: any = {}) {
@@ -154,13 +154,13 @@ export namespace dtos {
 	        this.userId = source["userId"];
 	    }
 	}
-	export class CreateUserInput {
+	export class CreateUserInputDto {
 	    nome: string;
 	    email: string;
 	    password: string;
 	
 	    static createFrom(source: any = {}) {
-	        return new CreateUserInput(source);
+	        return new CreateUserInputDto(source);
 	    }
 	
 	    constructor(source: any = {}) {
@@ -168,6 +168,102 @@ export namespace dtos {
 	        this.nome = source["nome"];
 	        this.email = source["email"];
 	        this.password = source["password"];
+	    }
+	}
+	export class LoginInputDto {
+	    email: string;
+	    password: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new LoginInputDto(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.email = source["email"];
+	        this.password = source["password"];
+	    }
+	}
+	export class UserDTO {
+	    id: number;
+	    nome: string;
+	    email: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new UserDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.nome = source["nome"];
+	        this.email = source["email"];
+	    }
+	}
+	export class LoginResponseDto {
+	    token: string;
+	    user: UserDTO;
+	
+	    static createFrom(source: any = {}) {
+	        return new LoginResponseDto(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.token = source["token"];
+	        this.user = this.convertValues(source["user"], UserDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class SSHConnectionDto {
+	    Host: string;
+	    Port: number;
+	    User: string;
+	    Password: string;
+	    Key: number[];
+	    KeyPath: string;
+	    Passphrase: string;
+	    KnownHostsPath: string;
+	    InsecureIgnoreHostKey: boolean;
+	    Cols: number;
+	    Rows: number;
+	    Timeout: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new SSHConnectionDto(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Host = source["Host"];
+	        this.Port = source["Port"];
+	        this.User = source["User"];
+	        this.Password = source["Password"];
+	        this.Key = source["Key"];
+	        this.KeyPath = source["KeyPath"];
+	        this.Passphrase = source["Passphrase"];
+	        this.KnownHostsPath = source["KnownHostsPath"];
+	        this.InsecureIgnoreHostKey = source["InsecureIgnoreHostKey"];
+	        this.Cols = source["Cols"];
+	        this.Rows = source["Rows"];
+	        this.Timeout = source["Timeout"];
 	    }
 	}
 	export class SshDto {
@@ -196,13 +292,13 @@ export namespace dtos {
 	        this.userId = source["userId"];
 	    }
 	}
-	export class UpdateUserInput {
+	export class UpdateUserInputDto {
 	    nome?: string;
 	    email?: string;
 	    password?: string;
 	
 	    static createFrom(source: any = {}) {
-	        return new UpdateUserInput(source);
+	        return new UpdateUserInputDto(source);
 	    }
 	
 	    constructor(source: any = {}) {
@@ -211,73 +307,6 @@ export namespace dtos {
 	        this.email = source["email"];
 	        this.password = source["password"];
 	    }
-	}
-	export class UserDTO {
-	    id: number;
-	    nome: string;
-	    email: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new UserDTO(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.id = source["id"];
-	        this.nome = source["nome"];
-	        this.email = source["email"];
-	    }
-	}
-
-}
-
-export namespace handlers {
-	
-	export class LoginInput {
-	    email: string;
-	    password: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new LoginInput(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.email = source["email"];
-	        this.password = source["password"];
-	    }
-	}
-	export class LoginResponse {
-	    token: string;
-	    user: dtos.UserDTO;
-	
-	    static createFrom(source: any = {}) {
-	        return new LoginResponse(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.token = source["token"];
-	        this.user = this.convertValues(source["user"], dtos.UserDTO);
-	    }
-	
-		convertValues(a: any, classs: any, asMap: boolean = false): any {
-		    if (!a) {
-		        return a;
-		    }
-		    if (a.slice && a.map) {
-		        return (a as any[]).map(elem => this.convertValues(elem, classs));
-		    } else if ("object" === typeof a) {
-		        if (asMap) {
-		            for (const key of Object.keys(a)) {
-		                a[key] = new classs(a[key]);
-		            }
-		            return a;
-		        }
-		        return new classs(a);
-		    }
-		    return a;
-		}
 	}
 
 }
@@ -547,45 +576,6 @@ export namespace network {
 		    }
 		    return a;
 		}
-	}
-
-}
-
-export namespace terminal {
-	
-	export class SSHConn {
-	    Host: string;
-	    Port: number;
-	    User: string;
-	    Password: string;
-	    Key: number[];
-	    KeyPath: string;
-	    Passphrase: string;
-	    KnownHostsPath: string;
-	    InsecureIgnoreHostKey: boolean;
-	    Cols: number;
-	    Rows: number;
-	    Timeout: number;
-	
-	    static createFrom(source: any = {}) {
-	        return new SSHConn(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.Host = source["Host"];
-	        this.Port = source["Port"];
-	        this.User = source["User"];
-	        this.Password = source["Password"];
-	        this.Key = source["Key"];
-	        this.KeyPath = source["KeyPath"];
-	        this.Passphrase = source["Passphrase"];
-	        this.KnownHostsPath = source["KnownHostsPath"];
-	        this.InsecureIgnoreHostKey = source["InsecureIgnoreHostKey"];
-	        this.Cols = source["Cols"];
-	        this.Rows = source["Rows"];
-	        this.Timeout = source["Timeout"];
-	    }
 	}
 
 }

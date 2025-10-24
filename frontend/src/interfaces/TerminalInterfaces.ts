@@ -1,11 +1,10 @@
-import type { terminal as termNS } from '../../wailsjs/go/models';
-
-export type SSHConn = termNS.SSHConn;
+import type { dtos } from '../../wailsjs/go/models';
+export type SSHConnectionDto = dtos.SSHConnectionDto;
 
 export interface TerminalProps {
   open: boolean;
   title?: string;
-  configure: SSHConn;
+  configure: SSHConnectionDto;
   onClose: () => void;
 }
 
@@ -77,9 +76,9 @@ export interface TerminalStateProps {
   close: () => void;
   askPassword: boolean;
   error: string | null;
-  config: termNS.SSHConn | null;
+  config: SSHConnectionDto | null;
   setError: (event: string | null) => void;
-  openWith: (config: termNS.SSHConn) => void;
+  openWith: (config: SSHConnectionDto) => void;
   submitPassword: (password: string) => void;
-  requirePassword: (config: termNS.SSHConn) => void;
+  requirePassword: (config: SSHConnectionDto) => void;
 }

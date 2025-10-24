@@ -2,11 +2,10 @@ package main
 
 import (
 	"context"
-	"docker-manager-go/internals/db"
-	"docker-manager-go/internals/docker"
-	"docker-manager-go/internals/src/auth"
-	"docker-manager-go/internals/src/handlers"
-	"docker-manager-go/internals/terminal"
+	database "docker-manager-go/src/dataBase"
+
+	"docker-manager-go/src/auth"
+	"docker-manager-go/src/handlers"
 	"embed"
 	"log"
 	"time"
@@ -21,19 +20,19 @@ import (
 var assets embed.FS
 
 func main() {
-	e := godotenv.Load()
-	if e != nil {
-		log.Fatalf("Erro ao carregar env .env file: %s", e)
+	env := godotenv.Load()
+	if env != nil {
+		log.Fatalf("Erro ao carregar env .env file: %s", env)
 	}
 
-	db.InitDb()
+	database.InitDb()
 	app := NewApp()
-	docker := docker.NewDocker()
-	term := &terminal.Terminal{}
-	sm := auth.NewManager(8 * time.Hour)
-	sshHandler := handlers.NewSshHandler(db.DB, sm)
-	authHandler := handlers.NewAuthHandler(db.DB, sm)
-	userHandler := handlers.NewUserHandler(db.DB, sm)
+	sessionManager := auth.NewManager(8 * time.Hour)
+	dockerSdk := handlers.NewDockerSdkHandler()
+	terminal := handlers.NewTerminalHandler(sessionManager)
+	sshHandler := handlers.NewSshHandler(database.DataBase, sessionManager)
+	authHandler := handlers.NewAuthHandler(database.DataBase, sessionManager)
+	userHandler := handlers.NewUserHandler(database.DataBase, sessionManager)
 
 	err := wails.Run(&options.App{
 		Title:  "Docker Manager",
@@ -45,8 +44,8 @@ func main() {
 		BackgroundColour: &options.RGBA{R: 0, G: 0, B: 0, A: 1},
 		OnStartup: func(ctx context.Context) {
 			app.startup(ctx)
-			term.Startup(ctx)
-			docker.Startup(ctx)
+			terminal.Startup(ctx)
+			dockerSdk.Startup(ctx)
 			sshHandler.Startup(ctx)
 			authHandler.Startup(ctx)
 			userHandler.Startup(ctx)
@@ -54,8 +53,8 @@ func main() {
 		},
 		Bind: []interface{}{
 			app,
-			term,
-			docker,
+			terminal,
+			dockerSdk,
 			sshHandler,
 			authHandler,
 			userHandler,

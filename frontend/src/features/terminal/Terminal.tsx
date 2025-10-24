@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import TerminalModal from './components/modals/TerminalModal';
 import PasswordModal from './components/modals/PasswordModal';
-import type { terminal as termNS } from '../../../wailsjs/go/models';
-import { OpenTerminalProps } from '../../interfaces/TerminalInterfaces';
 import { TerminalServices, toSshConn } from './services/TerminalServices';
+import { OpenTerminalProps, SSHConnectionDto } from '../../interfaces/TerminalInterfaces';
 
 export default function SshTerminal({ id, onClose, autoOpen = true }: OpenTerminalProps) {
   const { token } = useAuth();
@@ -12,7 +11,7 @@ export default function SshTerminal({ id, onClose, autoOpen = true }: OpenTermin
   const [loading, setLoading] = useState(true);
   const [askPassword, setAskPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [configure, setConfigure] = useState<termNS.SSHConn | null>(null);
+  const [configure, setConfigure] = useState<SSHConnectionDto | null>(null);
 
   useEffect(() => {
     let cancelled = false;

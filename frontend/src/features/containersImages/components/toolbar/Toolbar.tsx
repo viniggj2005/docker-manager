@@ -1,9 +1,9 @@
 import React from 'react';
 import { FaTrashCan } from 'react-icons/fa6';
-import { PruneImages } from '../../../../../wailsjs/go/docker/Docker';
 import { FiSearch, FiRefreshCw, FiGrid, FiList } from 'react-icons/fi';
 import { ToolbarProps } from '../../../../interfaces/ContainerImagesInterfaces';
 import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
+import { PruneImages } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
 
 const Toolbar: React.FC<ToolbarProps> = ({
   view,

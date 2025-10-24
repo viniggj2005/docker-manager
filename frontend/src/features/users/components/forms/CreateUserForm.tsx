@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createUserApi } from '../../services/UserService';
 import TextField from '../../../login/components/fields/TextField';
+import { CreateUserPayload } from '../../../../interfaces/UsersInterface';
 import PasswordField from '../../../login/components/fields/PasswordField';
-import { createUserApi, type CreateUserPayload } from '../../services/CreateUser';
 
 const CreateUserForm: React.FC = () => {
   const navigate = useNavigate();

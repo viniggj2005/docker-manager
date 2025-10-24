@@ -5,7 +5,10 @@ import { EventsOn } from '../../../../../wailsjs/runtime/runtime';
 import { BytesToMB } from '../../../shared/functions/TreatmentFunction';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ContainerStatsProps, StatsPayload } from '../../../../interfaces/ContainerInterfaces';
-import { StartContainerStats, StopContainerStats } from '../../../../../wailsjs/go/docker/Docker';
+import {
+  StartContainerStats,
+  StopContainerStats,
+} from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
 
 const maxPoints = 10;
 
