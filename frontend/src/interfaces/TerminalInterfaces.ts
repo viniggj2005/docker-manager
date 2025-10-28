@@ -78,7 +78,7 @@ export interface TerminalStateProps {
   error: string | null;
   config: SSHConnectionDto | null;
   setError: (event: string | null) => void;
-  openWith: (config: SSHConnectionDto) => void;
   submitPassword: (password: string) => void;
+  openWith: (config: SSHConnectionDto) => void;
   requirePassword: (config: SSHConnectionDto) => void;
 }

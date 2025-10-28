@@ -1,4 +1,10 @@
-import { HiOutlineCube, HiOutlineHome, HiOutlineServer, HiOutlinePhotograph } from 'react-icons/hi';
+import {
+  HiOutlineCube,
+  HiOutlineHome,
+  HiOutlineServer,
+  HiOutlinePhotograph,
+  HiOutlineKey,
+} from 'react-icons/hi';
 export const navItems = [
   {
     label: 'Painel',
@@ -17,6 +23,12 @@ export const navItems = [
     description: 'Organize suas imagens',
     to: '/images',
     icon: HiOutlinePhotograph,
+  },
+  {
+    label: 'Credenciais Docker',
+    description: 'Gerencie conexões TLS do Docker',
+    to: '/docker-credentials',
+    icon: HiOutlineKey,
   },
   {
     label: 'Conexões SSH',

@@ -17,6 +17,7 @@ import {
   EpochToDateStr,
   ParseNameAndTag,
 } from '../../../shared/functions/TreatmentFunction';
+import { useDockerClient } from '../../../../contexts/DockerClientContext';
 
 const ImageCard: React.FC<ImageProps> = ({ image, onDeleted }) => {
   const id = image?.Id ?? '';
@@ -24,14 +25,31 @@ const ImageCard: React.FC<ImageProps> = ({ image, onDeleted }) => {
   const { name, tag } = ParseNameAndTag(image?.RepoTags);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
   const [inspectContent, setInspectContent] = useState<string | null>(null);
+  const { selectedCredentialId } = useDockerClient();
+
+  const ensureClient = () => {
+    if (selectedCredentialId == null) {
+      iziToast.error({
+        title: 'Credencial não selecionada',
+        message: 'Escolha uma credencial Docker para executar esta ação.',
+        position: 'bottomRight',
+      });
+      return null;
+    }
+    return selectedCredentialId;
+  };
 
   const handleDelete = () => {
+    const clientId = ensureClient();
+    if (clientId == null) return;
     confirmToast({
       id,
       title: `Imagem ${name}:${tag} deletada!`,
       message: `Deseja deletar a imagem: ${name}:${tag} ?`,
       onConfirm: async () => {
-        await RemoveImage(id);
+        const latestClientId = ensureClient();
+        if (latestClientId == null) return;
+        await RemoveImage(latestClientId, id);
         onDeleted?.();
       },
     });
@@ -39,7 +57,9 @@ const ImageCard: React.FC<ImageProps> = ({ image, onDeleted }) => {
 
   const handleInspect = async () => {
     try {
-      const result = await InspectImage(id);
+      const clientId = ensureClient();
+      if (clientId == null) return;
+      const result = await InspectImage(clientId, id);
       const payload = typeof result === 'string' ? result : JSON.stringify(result, null, 2);
       setInspectContent(payload);
       iziToast.success({

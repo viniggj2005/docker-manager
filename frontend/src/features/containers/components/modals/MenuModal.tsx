@@ -14,6 +14,7 @@ import {
   ContainerInspect,
   ContainerRestart,
 } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
+import { useDockerClient } from '../../../../contexts/DockerClientContext';
 
 const ContainersMenuModal: React.FC<ContainerProps> = ({
   id,
@@ -28,10 +29,25 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
   const [inspectContent, setInspectContent] = useState<string | null>(null);
+  const { selectedCredentialId } = useDockerClient();
+
+  const ensureClient = () => {
+    if (selectedCredentialId == null) {
+      iziToast.error({
+        title: 'Credencial não selecionada',
+        message: 'Escolha uma credencial Docker para executar esta ação.',
+        position: 'bottomRight',
+      });
+      return null;
+    }
+    return selectedCredentialId;
+  };
 
   const handleInspect = async () => {
     try {
-      const inspectContent = await ContainerInspect(id);
+      const clientId = ensureClient();
+      if (clientId == null) return;
+      const inspectContent = await ContainerInspect(clientId, id);
       setInspectContent(inspectContent);
       setInspectContent(
         typeof inspectContent === 'string'
@@ -50,7 +66,9 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   };
   const handleRestart = async () => {
     try {
-      await ContainerRestart(id);
+      const clientId = ensureClient();
+      if (clientId == null) return;
+      await ContainerRestart(clientId, id);
     } catch (error: any) {
       iziToast.error({ title: 'Erro', message: String(error), position: 'bottomRight' });
     }
@@ -68,12 +86,16 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   }, [isOpen, setMenuModal]);
 
   const handleDelete = () => {
+    const clientId = ensureClient();
+    if (clientId == null) return;
     confirmToast({
       id,
       title: `Imagem ${name} deletada!`,
       message: `Deseja deletar a imagem: ${name} ?`,
       onConfirm: async () => {
-        await ContainerRemove(id);
+        const clientId = ensureClient();
+        if (clientId == null) return;
+        await ContainerRemove(clientId, id);
         onDeleted?.();
         setMenuModal?.(false);
       },
@@ -121,7 +143,11 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
           <MdRestartAlt className="w-6 h-6" />
         </button>
         <button
-          onClick={() => setIsStatsOpen(!isStatsOpen)}
+          onClick={() => {
+            const clientId = ensureClient();
+            if (clientId == null) return;
+            setIsStatsOpen(!isStatsOpen);
+          }}
           title="Restart Container"
           className="w-full flex items-center dark:text-[var(--system-white)] justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
         >

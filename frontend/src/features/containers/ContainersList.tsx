@@ -1,9 +1,10 @@
 import { FiRefreshCw } from 'react-icons/fi';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ContainerCard from './components/cards/ContainerCard';
 import { FmtName } from '../shared/functions/TreatmentFunction';
 import { ContainerItem } from '../../interfaces/ContainerInterfaces';
 import { getContainers, renameContainer, toggleContainerState } from './services/ContainersService';
+import { useDockerClient } from '../../contexts/DockerClientContext';
 
 const ContainersListView: React.FC = () => {
   const timerRef = useRef<number | null>(null);
@@ -11,30 +12,48 @@ const ContainersListView: React.FC = () => {
   const [LogsModalId, setLogsModalId] = useState<string | null>(null);
   const [MenuModalId, setMenuModalId] = useState<string | null>(null);
   const [editNameModalId, setEditNameModalId] = useState<string | null>(null);
+  const { selectedCredentialId, loading: credentialsLoading, connecting } = useDockerClient();
 
-  const fetchContainers = async () => {
-    const containers = await getContainers();
-    setcontainers(containers);
-  };
+  const fetchContainers = useCallback(async () => {
+    if (selectedCredentialId == null) {
+      setcontainers(null);
+      return;
+    }
+    const containersList = await getContainers(selectedCredentialId);
+    setcontainers(containersList);
+  }, [selectedCredentialId]);
 
   const handleRename = async (name: string, id: string) => {
-    await renameContainer(id, name);
+    if (selectedCredentialId == null) return;
+    await renameContainer(selectedCredentialId, id, name);
     await fetchContainers();
     setEditNameModalId(null);
   };
 
   const changeContainerStage = async (id: string, state: string) => {
-    await toggleContainerState(id, state);
+    if (selectedCredentialId == null) return;
+    await toggleContainerState(selectedCredentialId, id, state);
     await fetchContainers();
   };
 
   useEffect(() => {
+    if (selectedCredentialId == null) {
+      setcontainers(null);
+      if (timerRef.current) {
+        window.clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      return;
+    }
+
     fetchContainers();
+    if (timerRef.current) window.clearInterval(timerRef.current);
     timerRef.current = window.setInterval(fetchContainers, 2000);
+
     return () => {
       if (timerRef.current) window.clearInterval(timerRef.current);
     };
-  }, []);
+  }, [fetchContainers, selectedCredentialId]);
 
   return (
     <div className="w-full h-full">
@@ -53,8 +72,18 @@ const ContainersListView: React.FC = () => {
           </button>
         </header>
 
-        {!containers ? (
-          <p>Buscando containeres...</p>
+        {credentialsLoading ? (
+          <p>Carregando credenciais…</p>
+        ) : selectedCredentialId == null ? (
+          <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+            Cadastre ou selecione uma credencial Docker para visualizar os containers.
+          </div>
+        ) : connecting ? (
+          <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+            Conectando ao daemon Docker remoto…
+          </div>
+        ) : !containers ? (
+          <p>Buscando contêineres…</p>
         ) : containers.length === 0 ? (
           <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
             Nenhum container encontrado.

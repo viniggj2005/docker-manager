@@ -3,6 +3,7 @@ import { navItems } from './SidebarItems';
 import { NavLink } from 'react-router-dom';
 import appIcon from '../../../../assets/images/appicon.png';
 import ToggleThemeButton from '../buttons/ToggleThemeButton';
+import DockerCredentialSelector from '../../../dockerCredentials/components/DockerCredentialSelector';
 import { SidebarProps } from '../../../../interfaces/SharedInterfaces';
 import { HiOutlineX, HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 
@@ -92,6 +93,32 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
             </NavLink>
           ))}
         </nav>
+
+        <div
+          className={`mt-6 ${
+            collapsed
+              ? 'lg:hidden'
+              : 'rounded-xl border border-[var(--light-gray)] bg-[var(--light-overlay)] p-4 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-tertiary)]'
+          }`}
+        >
+          <h2
+            className={`text-sm font-semibold text-[var(--system-black)] dark:text-[var(--system-white)] ${
+              collapsed ? 'lg:hidden' : ''
+            }`}
+          >
+            Credencial ativa
+          </h2>
+          <p
+            className={`mt-1 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)] ${
+              collapsed ? 'lg:hidden' : ''
+            }`}
+          >
+            Escolha qual credencial Docker usar nas demais telas.
+          </p>
+          <div className={`mt-3 ${collapsed ? 'lg:hidden' : ''}`}>
+            <DockerCredentialSelector variant="default" />
+          </div>
+        </div>
 
         <div
           className={`mt-6 rounded-xl  ${

@@ -17,6 +17,7 @@ import {
   EpochToDateStr,
   ParseNameAndTag,
 } from '../../../shared/functions/TreatmentFunction';
+import { useDockerClient } from '../../../../contexts/DockerClientContext';
 
 const ImagesTable: React.FC<ImageProps> = ({ image, onDeleted }) => {
   const id = image.Id ?? '';
@@ -24,10 +25,25 @@ const ImagesTable: React.FC<ImageProps> = ({ image, onDeleted }) => {
   const { name, tag } = ParseNameAndTag(image.RepoTags);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
   const [inspectContent, setInspectContent] = useState<string | null>(null);
+  const { selectedCredentialId } = useDockerClient();
+
+  const ensureClient = () => {
+    if (selectedCredentialId == null) {
+      iziToast.error({
+        title: 'Credencial não selecionada',
+        message: 'Escolha uma credencial Docker para executar esta ação.',
+        position: 'bottomRight',
+      });
+      return null;
+    }
+    return selectedCredentialId;
+  };
 
   const handleInspect = useCallback(async () => {
     try {
-      const inspectContent = await InspectImage(id);
+      const clientId = ensureClient();
+      if (clientId == null) return;
+      const inspectContent = await InspectImage(clientId, id);
       const formatted =
         typeof inspectContent === 'string'
           ? inspectContent
@@ -43,19 +59,23 @@ const ImagesTable: React.FC<ImageProps> = ({ image, onDeleted }) => {
       const message = error instanceof Error ? error.message : String(error);
       iziToast.error({ title: 'Erro', message, position: 'bottomRight' });
     }
-  }, [id]);
+  }, [id, selectedCredentialId]);
 
   const handleRemove = useCallback(() => {
+    const clientId = ensureClient();
+    if (clientId == null) return;
     confirmToast({
       id,
       title: `Imagem ${name}:${tag} deletada!`,
       message: `Deseja deletar a imagem: ${name}:${tag}?`,
       onConfirm: async () => {
-        await RemoveImage(id);
+        const latestClientId = ensureClient();
+        if (latestClientId == null) return;
+        await RemoveImage(latestClientId, id);
         onDeleted?.();
       },
     });
-  }, [id, name, tag, onDeleted]);
+  }, [id, name, tag, onDeleted, selectedCredentialId]);
 
   return (
     <div>

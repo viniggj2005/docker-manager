@@ -5,17 +5,28 @@ import { IoMdCloseCircleOutline } from 'react-icons/io';
 import React, { useEffect, useRef, useState } from 'react';
 import { LogsProps } from '../../../../interfaces/ContainerInterfaces';
 import { ContainerLogs } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
+import { useDockerClient } from '../../../../contexts/DockerClientContext';
 
 const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
   const firstScrollDone = useRef(false);
   const [filter, setFilter] = useState<string>('');
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [containerLogs, setContainerLogs] = useState<string>('');
+  const { selectedCredentialId } = useDockerClient();
 
   useEffect(() => {
     (async () => {
+      if (selectedCredentialId == null) {
+        iziToast.error({
+          title: 'Credencial não selecionada',
+          message: 'Escolha uma credencial Docker para visualizar os logs.',
+          position: 'bottomRight',
+        });
+        setLogsModal(false);
+        return;
+      }
       try {
-        const containerLogs = await ContainerLogs(id);
+        const containerLogs = await ContainerLogs(selectedCredentialId, id);
         iziToast.success({
           message: 'Logs buscados com sucesso!',
           position: 'bottomRight',
@@ -29,7 +40,7 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
         });
       }
     })();
-  }, [id]);
+  }, [id, selectedCredentialId]);
 
   useEffect(() => {
     const el = scrollRef.current;
