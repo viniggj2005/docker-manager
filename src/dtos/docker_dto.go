@@ -12,3 +12,12 @@ type StatsPayloadDto struct {
 	Pids             uint64  `json:"pids"`
 	Time             int64   `json:"time"`
 }
+
+type CreateDockerConnectionDto struct {
+	Alias  string `json:"alias" binding:"required"`
+	Url    string `json:"url" binding:"required"`
+	Ca     string `json:"ca" binding:"required"`
+	Cert   string `json:"cert" binding:"required"`
+	Key    string `json:"key" binding:"required"`
+	UserID uint   `json:"userId" binding:"required"`
+}

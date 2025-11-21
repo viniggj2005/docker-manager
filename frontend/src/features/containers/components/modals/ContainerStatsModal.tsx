@@ -9,6 +9,7 @@ import {
   StartContainerStats,
   StopContainerStats,
 } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
+import { useDockerClient } from '../../../../contexts/DockerClientContext';
 
 const maxPoints = 10;
 
@@ -20,6 +21,7 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
   const [memoryUsageMBSeries, setMemUsageMBSeries] = useState<{ time: number; value: number }[]>(
     []
   );
+  const { selectedCredentialId } = useDockerClient();
 
   useEffect(() => {
     const offStats = EventsOn('container:stats', (stats: StatsPayload) => {
@@ -46,14 +48,18 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
       if (event?.containerId === id) console.error('stats error:', event.error);
     });
 
-    StartContainerStats(id);
+    if (selectedCredentialId != null) {
+      StartContainerStats(selectedCredentialId, id);
+    }
 
     return () => {
-      StopContainerStats(id);
+      if (selectedCredentialId != null) {
+        StopContainerStats(selectedCredentialId, id);
+      }
       offStats();
       offErr();
     };
-  }, [id]);
+  }, [id, selectedCredentialId]);
 
   const header = useMemo(() => {
     if (!stats) return null;
@@ -69,6 +75,10 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
       t: new Date(stats.time),
     };
   }, [stats]);
+
+  if (selectedCredentialId == null) {
+    return null;
+  }
 
   return (
     <div

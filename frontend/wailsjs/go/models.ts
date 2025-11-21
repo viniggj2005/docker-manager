@@ -1,3 +1,20 @@
+export namespace client {
+	
+	export class Client {
+	
+	
+	    static createFrom(source: any = {}) {
+	        return new Client(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	
+	    }
+	}
+
+}
+
 export namespace container {
 	
 	export class MountPoint {
@@ -130,6 +147,28 @@ export namespace container {
 
 export namespace dtos {
 	
+	export class CreateDockerConnectionDto {
+	    alias: string;
+	    url: string;
+	    ca: string;
+	    cert: string;
+	    key: string;
+	    userId: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new CreateDockerConnectionDto(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.alias = source["alias"];
+	        this.url = source["url"];
+	        this.ca = source["ca"];
+	        this.cert = source["cert"];
+	        this.key = source["key"];
+	        this.userId = source["userId"];
+	    }
+	}
 	export class CreateSshConnectionInputDto {
 	    host: string;
 	    systemUser: string;
@@ -306,6 +345,23 @@ export namespace dtos {
 	        this.nome = source["nome"];
 	        this.email = source["email"];
 	        this.password = source["password"];
+	    }
+	}
+
+}
+
+export namespace handlers {
+	
+	export class DockerSdkHandlerStruct {
+	
+	
+	    static createFrom(source: any = {}) {
+	        return new DockerSdkHandlerStruct(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	
 	    }
 	}
 
@@ -504,6 +560,167 @@ export namespace image {
 
 }
 
+export namespace models {
+	
+	export class SshConnectionModel {
+	    ID: number;
+	    // Go type: time
+	    CreatedAt: any;
+	    // Go type: time
+	    UpdatedAt: any;
+	    // Go type: gorm
+	    DeletedAt: any;
+	    alias: string;
+	    Host: types.EncryptedString;
+	    systemUser: string;
+	    port: number;
+	    Key: types.EncryptedString;
+	    KnownHostsData: types.EncryptedString;
+	    UserID: number;
+	    User: UserModel;
+	
+	    static createFrom(source: any = {}) {
+	        return new SshConnectionModel(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.ID = source["ID"];
+	        this.CreatedAt = this.convertValues(source["CreatedAt"], null);
+	        this.UpdatedAt = this.convertValues(source["UpdatedAt"], null);
+	        this.DeletedAt = this.convertValues(source["DeletedAt"], null);
+	        this.alias = source["alias"];
+	        this.Host = this.convertValues(source["Host"], types.EncryptedString);
+	        this.systemUser = source["systemUser"];
+	        this.port = source["port"];
+	        this.Key = this.convertValues(source["Key"], types.EncryptedString);
+	        this.KnownHostsData = this.convertValues(source["KnownHostsData"], types.EncryptedString);
+	        this.UserID = source["UserID"];
+	        this.User = this.convertValues(source["User"], UserModel);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class UserModel {
+	    ID: number;
+	    // Go type: time
+	    CreatedAt: any;
+	    // Go type: time
+	    UpdatedAt: any;
+	    // Go type: gorm
+	    DeletedAt: any;
+	    nome: string;
+	    email: string;
+	    Docker: DockerCredentialsModel[];
+	    Ssh: SshConnectionModel[];
+	
+	    static createFrom(source: any = {}) {
+	        return new UserModel(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.ID = source["ID"];
+	        this.CreatedAt = this.convertValues(source["CreatedAt"], null);
+	        this.UpdatedAt = this.convertValues(source["UpdatedAt"], null);
+	        this.DeletedAt = this.convertValues(source["DeletedAt"], null);
+	        this.nome = source["nome"];
+	        this.email = source["email"];
+	        this.Docker = this.convertValues(source["Docker"], DockerCredentialsModel);
+	        this.Ssh = this.convertValues(source["Ssh"], SshConnectionModel);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class DockerCredentialsModel {
+	    ID: number;
+	    // Go type: time
+	    CreatedAt: any;
+	    // Go type: time
+	    UpdatedAt: any;
+	    // Go type: gorm
+	    DeletedAt: any;
+	    Alias: string;
+	    Url: types.EncryptedString;
+	    Ca: types.EncryptedString;
+	    Cert: types.EncryptedString;
+	    Key: types.EncryptedString;
+	    UserID: number;
+	    User: UserModel;
+	
+	    static createFrom(source: any = {}) {
+	        return new DockerCredentialsModel(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.ID = source["ID"];
+	        this.CreatedAt = this.convertValues(source["CreatedAt"], null);
+	        this.UpdatedAt = this.convertValues(source["UpdatedAt"], null);
+	        this.DeletedAt = this.convertValues(source["DeletedAt"], null);
+	        this.Alias = source["Alias"];
+	        this.Url = this.convertValues(source["Url"], types.EncryptedString);
+	        this.Ca = this.convertValues(source["Ca"], types.EncryptedString);
+	        this.Cert = this.convertValues(source["Cert"], types.EncryptedString);
+	        this.Key = this.convertValues(source["Key"], types.EncryptedString);
+	        this.UserID = source["UserID"];
+	        this.User = this.convertValues(source["User"], UserModel);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
+
+}
+
 export namespace network {
 	
 	export class EndpointIPAMConfig {
@@ -576,6 +793,25 @@ export namespace network {
 		    }
 		    return a;
 		}
+	}
+
+}
+
+export namespace types {
+	
+	export class EncryptedString {
+	    Ciphertext: number[];
+	    Plaintext: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new EncryptedString(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Ciphertext = source["Ciphertext"];
+	        this.Plaintext = source["Plaintext"];
+	    }
 	}
 
 }

@@ -8,6 +8,7 @@ import (
 
 type DockerCredentialsModel struct {
 	gorm.Model
+	Alias  string                `gorm:"column:alias"`
 	Url    types.EncryptedString `gorm:"type:blob;not null;column:url"`
 	Ca     types.EncryptedString `gorm:"type:blob;not null;column:ca"`
 	Cert   types.EncryptedString `gorm:"type:blob;not null;column:cert"`

@@ -5,11 +5,13 @@ import ImagesTable from './components/tables/ImagesTable';
 import { ViewMode } from '../../interfaces/ContainerImagesInterfaces';
 import { ParseNameAndTag } from '../shared/functions/TreatmentFunction';
 import { ContainerImagesService } from './services/ContainerImagesService';
+import { useDockerClient } from '../../contexts/DockerClientContext';
 
 const ListContainersImages: React.FC = () => {
   const [query, setQuery] = useState('');
   const [view, setView] = useState<ViewMode>('grid');
-  const { images, loading, fetchImages } = ContainerImagesService();
+  const { selectedCredentialId, loading: credentialsLoading, connecting } = useDockerClient();
+  const { images, loading, fetchImages } = ContainerImagesService(selectedCredentialId);
 
   const filteredSorted = useMemo(() => {
     const lowerCaseQuery = query.trim().toLowerCase();
@@ -52,9 +54,22 @@ const ListContainersImages: React.FC = () => {
         setQuery={setQuery}
         onRefresh={fetchImages}
         onDeleted={handleDeleted}
+        disabled={selectedCredentialId == null || connecting || credentialsLoading}
       />
 
-      {view === 'grid' ? (
+      {credentialsLoading ? (
+        <div className="mt-10 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+          Carregando credenciais…
+        </div>
+      ) : selectedCredentialId == null ? (
+        <div className="mt-10 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+          Cadastre ou selecione uma credencial Docker para visualizar as imagens.
+        </div>
+      ) : connecting ? (
+        <div className="mt-10 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+          Conectando ao daemon Docker…
+        </div>
+      ) : view === 'grid' ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {filteredSorted.map((image) => (
             <ImageCard
@@ -76,7 +91,7 @@ const ListContainersImages: React.FC = () => {
         </div>
       )}
 
-      {!loading && filteredSorted.length === 0 && (
+      {!loading && selectedCredentialId != null && filteredSorted.length === 0 && (
         <div className="mt-10 text-center text-[var(--system-black)] dark:text-[var(--system-white)]">
           Nenhuma imagem encontrada.
         </div>

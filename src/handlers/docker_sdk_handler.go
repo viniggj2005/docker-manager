@@ -8,11 +8,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"sync"
 	"time"
 
-	"github.com/docker/docker/api/types/container"
 	ctn "github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/image"
@@ -21,10 +19,13 @@ import (
 )
 
 type DockerSdkHandlerStruct struct {
-	commandLineInterface *client.Client
-	context              context.Context
-	statsCancel          map[string]context.CancelFunc
-	mutex                sync.Mutex
+	mutex         sync.Mutex
+	appContext    context.Context
+	dockerHandler *DockerHandlerStruct
+	clients       map[string]*client.Client
+	contexts      map[string]context.Context
+	clientCancels map[string]context.CancelFunc
+	statsCancel   map[string]map[string]context.CancelFunc
 }
 
 type APIError struct {
@@ -36,63 +37,171 @@ func (err *APIError) Error() string {
 	return fmt.Sprintf("code %d: %s", err.Code, err.Message)
 }
 
-func NewDockerSdkHandler() *DockerSdkHandlerStruct {
-	commandLineInterface, err := client.NewClientWithOpts(
-		client.WithHost("tcp://18.229.133.72:2376"),
-		client.WithTLSClientConfig(
-			"/home/vinicius-gabriel-graupmann-juras/Desktop/dockerapi/ca.pem",
-			"/home/vinicius-gabriel-graupmann-juras/Desktop/dockerapi/cert.pem",
-			"/home/vinicius-gabriel-graupmann-juras/Desktop/dockerapi/key-nopass.pem",
-		),
+func NewDockerSdkHandler(dockerHandler *DockerHandlerStruct) *DockerSdkHandlerStruct {
+	return &DockerSdkHandlerStruct{
+		dockerHandler: dockerHandler,
+		clients:       make(map[string]*client.Client),
+		contexts:      make(map[string]context.Context),
+		clientCancels: make(map[string]context.CancelFunc),
+		statsCancel:   make(map[string]map[string]context.CancelFunc),
+	}
+}
+
+func (handlerStruct *DockerSdkHandlerStruct) AddDockerClient(id int) error {
+	handlerStruct.mutex.Lock()
+	defer handlerStruct.mutex.Unlock()
+
+	docker, err := handlerStruct.dockerHandler.GetDockerConnectionByIdWithoutToken(id)
+	if err != nil {
+		return fmt.Errorf("erro ao buscar conexão Docker: %w", err)
+	}
+
+	dockerId := fmt.Sprintf("%d", docker.ID)
+
+	if cancel, exists := handlerStruct.clientCancels[dockerId]; exists {
+		cancel()
+		delete(handlerStruct.clientCancels, dockerId)
+	}
+	if cancelsMap, ok := handlerStruct.statsCancel[dockerId]; ok {
+		for _, c := range cancelsMap {
+			c()
+		}
+		delete(handlerStruct.statsCancel, dockerId)
+	}
+
+	if existingClient, exists := handlerStruct.clients[dockerId]; exists {
+		existingClient.Close()
+		delete(handlerStruct.clients, dockerId)
+	}
+
+	if _, exists := handlerStruct.contexts[dockerId]; exists {
+		delete(handlerStruct.contexts, dockerId)
+	}
+
+	httpClient, err := functions.BuildTLSHTTPClient(
+		docker.Ca.Plaintext,
+		docker.Cert.Plaintext,
+		docker.Key.Plaintext,
+	)
+	if err != nil {
+		return fmt.Errorf("erro ao montar TLS: %w", err)
+	}
+
+	cli, err := client.NewClientWithOpts(
+		client.WithHost(docker.Url.Plaintext),
+		client.WithHTTPClient(httpClient),
 		client.WithAPIVersionNegotiation(),
 	)
 	if err != nil {
-		log.Fatalf("Erro criando Docker client: %v", err)
+		return fmt.Errorf("erro ao criar cliente Docker: %w", err)
 	}
 
-	return &DockerSdkHandlerStruct{
-		context:              context.Background(),
-		commandLineInterface: commandLineInterface,
-		statsCancel:          make(map[string]context.CancelFunc),
+	baseContext := handlerStruct.appContext
+	if baseContext == nil {
+		baseContext = context.Background()
+	}
+
+	ctx, cancel := context.WithCancel(baseContext)
+
+	handlerStruct.clients[dockerId] = cli
+	handlerStruct.contexts[dockerId] = ctx
+	handlerStruct.clientCancels[dockerId] = cancel
+	handlerStruct.statsCancel[dockerId] = make(map[string]context.CancelFunc)
+
+	return nil
+}
+
+func (handlerStruct *DockerSdkHandlerStruct) CatchClient(clientId int) (*client.Client, context.Context, error) {
+	id := fmt.Sprintf("%d", clientId)
+
+	handlerStruct.mutex.Lock()
+	defer handlerStruct.mutex.Unlock()
+
+	cli, exists := handlerStruct.clients[id]
+	ctx, ctxExists := handlerStruct.contexts[id]
+
+	if !exists || !ctxExists {
+		return nil, nil, &APIError{
+			Code:    404,
+			Message: fmt.Sprintf("cliente %d não encontrado", clientId),
+		}
+	}
+
+	return cli, ctx, nil
+}
+
+func (handlerStruct *DockerSdkHandlerStruct) ConnectDocker(id int) error {
+	return handlerStruct.AddDockerClient(id)
+}
+
+func (handlerStruct *DockerSdkHandlerStruct) Startup(ctx context.Context) {
+	handlerStruct.mutex.Lock()
+	defer handlerStruct.mutex.Unlock()
+
+	handlerStruct.appContext = ctx
+
+	for id := range handlerStruct.clients {
+		handlerStruct.contexts[id] = ctx
 	}
 }
 
-func (handlerStruct *DockerSdkHandlerStruct) Startup(context context.Context) {
-	handlerStruct.context = context
-}
+// ################## Images ##################################################################
 
-// ##################Images##################################################################
-func (handlerStruct *DockerSdkHandlerStruct) ImagesList() ([]image.Summary, error) {
-	images, err := handlerStruct.commandLineInterface.ImageList(context.Background(), image.ListOptions{All: true})
+func (handlerStruct *DockerSdkHandlerStruct) ImagesList(clientId int) ([]image.Summary, error) {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return nil, err
+	}
+
+	images, err := cli.ImageList(ctx, image.ListOptions{All: true})
 	if err != nil {
 		return nil, &APIError{Code: 500, Message: err.Error()}
 	}
+
 	return images, nil
 }
 
-func (handlerStruct *DockerSdkHandlerStruct) RemoveImage(ImageId string) ([]image.DeleteResponse, error) {
-	images, err := handlerStruct.commandLineInterface.ImageRemove(context.Background(), ImageId, image.RemoveOptions{Force: false})
+func (handlerStruct *DockerSdkHandlerStruct) RemoveImage(clientId int, imageId string) ([]image.DeleteResponse, error) {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return nil, err
+	}
+
+	removed, err := cli.ImageRemove(ctx, imageId, image.RemoveOptions{Force: false})
 	if err != nil {
 		return nil, &APIError{Code: 500, Message: err.Error()}
 	}
-	return images, nil
+
+	return removed, nil
 }
 
-func (handlerStruct *DockerSdkHandlerStruct) PruneImages() (image.PruneReport, error) {
+func (handlerStruct *DockerSdkHandlerStruct) PruneImages(clientId int) (image.PruneReport, error) {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return image.PruneReport{}, err
+	}
+
 	pruneFilters := filters.NewArgs()
 	pruneFilters.Add("dangling", "false")
-	images, err := handlerStruct.commandLineInterface.ImagesPrune(context.Background(), pruneFilters)
+
+	report, err := cli.ImagesPrune(ctx, pruneFilters)
 	if err != nil {
 		return image.PruneReport{}, &APIError{Code: 500, Message: err.Error()}
 	}
-	return images, nil
+
+	return report, nil
 }
 
-func (handlerStruct *DockerSdkHandlerStruct) InspectImage(imageId string) (string, error) {
+func (handlerStruct *DockerSdkHandlerStruct) InspectImage(clientId int, imageId string) (string, error) {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return "", err
+	}
+
 	var raw bytes.Buffer
 
-	_, err := handlerStruct.commandLineInterface.ImageInspect(
-		context.Background(),
+	_, err = cli.ImageInspect(
+		ctx,
 		imageId,
 		client.ImageInspectWithRawResponse(&raw),
 	)
@@ -109,47 +218,64 @@ func (handlerStruct *DockerSdkHandlerStruct) InspectImage(imageId string) (strin
 	return pretty.String(), nil
 }
 
-//#########################################################################################################
+// #################### Stats ################################################################
 
-// ####################Stats##############################################################################
-func (handlerStruct *DockerSdkHandlerStruct) StartContainerStats(containerID string) {
+func (handlerStruct *DockerSdkHandlerStruct) StartContainerStats(clientId int, containerID string) error {
+	dockerId := fmt.Sprintf("%d", clientId)
+
+	cli, baseCtx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return err
+	}
+
 	handlerStruct.mutex.Lock()
-	if handlerStruct.statsCancel == nil {
-		handlerStruct.statsCancel = make(map[string]context.CancelFunc)
+
+	if handlerStruct.statsCancel[dockerId] == nil {
+		handlerStruct.statsCancel[dockerId] = make(map[string]context.CancelFunc)
 	}
-	if container, ok := handlerStruct.statsCancel[containerID]; ok {
-		container()
+
+	if oldCancel, ok := handlerStruct.statsCancel[dockerId][containerID]; ok {
+		oldCancel()
 	}
-	context, cancel := context.WithCancel(handlerStruct.context)
-	handlerStruct.statsCancel[containerID] = cancel
+
+	ctx, cancel := context.WithCancel(baseCtx)
+	handlerStruct.statsCancel[dockerId][containerID] = cancel
+
+	appCtx := handlerStruct.contexts[dockerId]
+
 	handlerStruct.mutex.Unlock()
 
-	go handlerStruct.StreamStats(context, containerID)
+	go handlerStruct.StreamStats(cli, ctx, containerID, appCtx)
+
+	return nil
 }
 
-func (handlerStruct *DockerSdkHandlerStruct) StreamStats(context context.Context, containerID string) {
-	response, err := handlerStruct.commandLineInterface.ContainerStats(context, containerID, true)
+func (handlerStruct *DockerSdkHandlerStruct) StreamStats(dockerClient *client.Client, ctx context.Context, containerID string, appContext context.Context) {
+	stats, err := dockerClient.ContainerStats(ctx, containerID, true)
 	if err != nil {
-		runtime.EventsEmit(handlerStruct.context, "container:stats:error", map[string]string{
-			"containerId": containerID, "error": err.Error(),
+		runtime.EventsEmit(appContext, "container:stats:error", map[string]string{
+			"containerId": containerID,
+			"error":       err.Error(),
 		})
 		return
 	}
-	defer response.Body.Close()
+	defer stats.Body.Close()
 
-	decoded := json.NewDecoder(response.Body)
+	decoder := json.NewDecoder(stats.Body)
+
 	for {
 		select {
-		case <-context.Done():
+		case <-ctx.Done():
 			return
 		default:
 			var body ctn.StatsResponse
-			if err := decoded.Decode(&body); err != nil {
-				if err == io.EOF || context.Err() != nil {
+			if err := decoder.Decode(&body); err != nil {
+				if err == io.EOF || ctx.Err() != nil {
 					return
 				}
-				runtime.EventsEmit(handlerStruct.context, "container:stats:error", map[string]string{
-					"containerId": containerID, "error": err.Error(),
+				runtime.EventsEmit(appContext, "container:stats:error", map[string]string{
+					"containerId": containerID,
+					"error":       err.Error(),
 				})
 				return
 			}
@@ -166,25 +292,33 @@ func (handlerStruct *DockerSdkHandlerStruct) StreamStats(context context.Context
 				Pids:             body.PidsStats.Current,
 				Time:             time.Now().UnixMilli(),
 			}
-			runtime.EventsEmit(handlerStruct.context, "container:stats", payload)
+
+			runtime.EventsEmit(appContext, "container:stats", payload)
 		}
 	}
 }
 
-func (handlerStruct *DockerSdkHandlerStruct) StopContainerStats(containerID string) {
+func (handlerStruct *DockerSdkHandlerStruct) StopContainerStats(clientId int, containerID string) error {
+	dockerId := fmt.Sprintf("%d", clientId)
+
 	handlerStruct.mutex.Lock()
 	defer handlerStruct.mutex.Unlock()
 
-	if handlerStruct.statsCancel == nil {
-		return
+	cancelsMap := handlerStruct.statsCancel[dockerId]
+	if cancelsMap == nil {
+		return nil
 	}
-	if cancel, ok := handlerStruct.statsCancel[containerID]; ok {
+
+	if cancel, ok := cancelsMap[containerID]; ok {
 		cancel()
-		delete(handlerStruct.statsCancel, containerID)
-		runtime.EventsEmit(handlerStruct.context, "container:stats:stopped", map[string]string{
+		delete(cancelsMap, containerID)
+
+		runtime.EventsEmit(handlerStruct.contexts[dockerId], "container:stats:stopped", map[string]string{
 			"containerId": containerID,
 		})
 	}
+
+	return nil
 }
 
 func cpuPercent(body *ctn.StatsResponse) float64 {
@@ -193,6 +327,7 @@ func cpuPercent(body *ctn.StatsResponse) float64 {
 	if cpuDelta <= 0 || sysDelta <= 0 {
 		return 0
 	}
+
 	numberOfCpus := float64(body.CPUStats.OnlineCPUs)
 	if numberOfCpus == 0 {
 		numberOfCpus = float64(len(body.CPUStats.CPUUsage.PercpuUsage))
@@ -200,6 +335,7 @@ func cpuPercent(body *ctn.StatsResponse) float64 {
 			numberOfCpus = 1
 		}
 	}
+
 	return (cpuDelta / sysDelta) * numberOfCpus * 100.0
 }
 
@@ -237,29 +373,54 @@ func sumTx(body *ctn.StatsResponse) uint64 {
 	return total
 }
 
-// #################################################################################################
-// ##############################Containers#########################################################
-func (handlerStruct *DockerSdkHandlerStruct) ContainerPause(containerId string) {
-	err := handlerStruct.commandLineInterface.ContainerPause(context.Background(), containerId)
+// ############################## Containers #########################################################
+
+func (handlerStruct *DockerSdkHandlerStruct) ContainerPause(clientId int, containerId string) error {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
-}
-func (handlerStruct *DockerSdkHandlerStruct) ContainerUnPause(containerId string) {
-	err := handlerStruct.commandLineInterface.ContainerUnpause(context.Background(), containerId)
-	if err != nil {
-		fmt.Println(err)
+
+	if err := cli.ContainerPause(ctx, containerId); err != nil {
+		return &APIError{Code: 500, Message: err.Error()}
 	}
-}
-func (handlerStruct *DockerSdkHandlerStruct) ContainerRename(containerId, newName string) error {
-	err := handlerStruct.commandLineInterface.ContainerRename(context.Background(), containerId, newName)
-	if err == nil {
-	}
-	return &APIError{Code: 500, Message: err.Error()}
+
+	return nil
 }
 
-func (handlerStruct *DockerSdkHandlerStruct) ContainerLogs(containerId string) (string, error) {
-	logs, err := handlerStruct.commandLineInterface.ContainerLogs(context.Background(), containerId, container.LogsOptions{
+func (handlerStruct *DockerSdkHandlerStruct) ContainerUnPause(clientId int, containerId string) error {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return err
+	}
+
+	if err := cli.ContainerUnpause(ctx, containerId); err != nil {
+		return &APIError{Code: 500, Message: err.Error()}
+	}
+
+	return nil
+}
+
+func (handlerStruct *DockerSdkHandlerStruct) ContainerRename(clientId int, containerId, newName string) error {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return err
+	}
+
+	if err := cli.ContainerRename(ctx, containerId, newName); err != nil {
+		return &APIError{Code: 500, Message: err.Error()}
+	}
+
+	return nil
+}
+
+func (handlerStruct *DockerSdkHandlerStruct) ContainerLogs(clientId int, containerId string) (string, error) {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return "", err
+	}
+
+	logs, err := cli.ContainerLogs(ctx, containerId, ctn.LogsOptions{
 		ShowStdout: true,
 		ShowStderr: true,
 		Follow:     false,
@@ -272,24 +433,43 @@ func (handlerStruct *DockerSdkHandlerStruct) ContainerLogs(containerId string) (
 	return functions.LogsTreatment(logs), nil
 }
 
-func (handlerStruct *DockerSdkHandlerStruct) ContainersList() ([]container.Summary, error) {
-	containers, err := handlerStruct.commandLineInterface.ContainerList(context.Background(), container.ListOptions{All: true})
+func (handlerStruct *DockerSdkHandlerStruct) ContainersList(clientId int) ([]ctn.Summary, error) {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return nil, err
+	}
+
+	containers, err := cli.ContainerList(ctx, ctn.ListOptions{All: true})
 	if err != nil {
 		return nil, &APIError{Code: 500, Message: err.Error()}
 	}
+
 	return containers, nil
 }
 
-func (handlerStruct *DockerSdkHandlerStruct) ContainerRemove(containerId string) error {
-	err := handlerStruct.commandLineInterface.ContainerRemove(context.Background(), containerId, container.RemoveOptions{Force: true, RemoveVolumes: true})
+func (handlerStruct *DockerSdkHandlerStruct) ContainerRemove(clientId int, containerId string) error {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
 	if err != nil {
+		return err
+	}
+
+	if err := cli.ContainerRemove(ctx, containerId, ctn.RemoveOptions{
+		Force:         true,
+		RemoveVolumes: true,
+	}); err != nil {
 		return &APIError{Code: 500, Message: err.Error()}
 	}
+
 	return nil
 }
 
-func (handlerStruct *DockerSdkHandlerStruct) ContainerInspect(containerId string) (string, error) {
-	inspect, err := handlerStruct.commandLineInterface.ContainerInspect(context.Background(), containerId)
+func (handlerStruct *DockerSdkHandlerStruct) ContainerInspect(clientId int, containerId string) (string, error) {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return "", err
+	}
+
+	inspect, err := cli.ContainerInspect(ctx, containerId)
 	if err != nil {
 		return "", err
 	}
@@ -302,13 +482,20 @@ func (handlerStruct *DockerSdkHandlerStruct) ContainerInspect(containerId string
 	return string(bytesArray), nil
 }
 
-func (handlerStruct *DockerSdkHandlerStruct) ContainerRestart(containerId string) error {
-	time := 10
-	err := handlerStruct.commandLineInterface.ContainerRestart(context.Background(), containerId, container.StopOptions{Timeout: &time, Signal: "SIGTERM"})
+func (handlerStruct *DockerSdkHandlerStruct) ContainerRestart(clientId int, containerId string) error {
+	timeoutSec := 10
+
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
 	if err != nil {
 		return err
 	}
+
+	if err := cli.ContainerRestart(ctx, containerId, ctn.StopOptions{
+		Timeout: &timeoutSec,
+		Signal:  "SIGTERM",
+	}); err != nil {
+		return &APIError{Code: 500, Message: err.Error()}
+	}
+
 	return nil
 }
-
-//###########################################################################################################

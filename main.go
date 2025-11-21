@@ -28,8 +28,10 @@ func main() {
 	database.InitDb()
 	app := NewApp()
 	sessionManager := auth.NewManager(8 * time.Hour)
-	dockerSdk := handlers.NewDockerSdkHandler()
 	terminal := handlers.NewTerminalHandler(sessionManager)
+	docker := handlers.NewDockerHandler(database.DataBase, sessionManager)
+	dockerSdk := handlers.NewDockerSdkHandler(docker)
+	docker.RegisterDockerSdkHandler(dockerSdk)
 	sshHandler := handlers.NewSshHandler(database.DataBase, sessionManager)
 	authHandler := handlers.NewAuthHandler(database.DataBase, sessionManager)
 	userHandler := handlers.NewUserHandler(database.DataBase, sessionManager)
@@ -44,6 +46,7 @@ func main() {
 		BackgroundColour: &options.RGBA{R: 0, G: 0, B: 0, A: 1},
 		OnStartup: func(ctx context.Context) {
 			app.startup(ctx)
+			docker.Startup(ctx)
 			terminal.Startup(ctx)
 			dockerSdk.Startup(ctx)
 			sshHandler.Startup(ctx)
@@ -54,6 +57,7 @@ func main() {
 		Bind: []interface{}{
 			app,
 			terminal,
+			docker,
 			dockerSdk,
 			sshHandler,
 			authHandler,

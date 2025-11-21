@@ -21,6 +21,7 @@ export interface ToolbarProps {
   query: string;
   view: ViewMode;
   loading: boolean;
+  disabled?: boolean;
   onRefresh: () => void;
   onDeleted?: () => void;
   setQuery: (v: string) => void;
