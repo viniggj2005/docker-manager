@@ -22,3 +22,8 @@
   --dark-secondary: rgb(39, 39, 42);
   --dark-tertiary: rgb(255 255 255 / 0.1);
 }
+
+
+input[type="password"]::-ms-reveal {
+  display: none;
+}

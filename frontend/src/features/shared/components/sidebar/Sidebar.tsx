@@ -3,9 +3,9 @@ import { navItems } from './SidebarItems';
 import { NavLink } from 'react-router-dom';
 import appIcon from '../../../../assets/images/appicon.png';
 import ToggleThemeButton from '../buttons/ToggleThemeButton';
-import DockerCredentialSelector from '../../../dockerCredentials/components/DockerCredentialSelector';
 import { SidebarProps } from '../../../../interfaces/SharedInterfaces';
 import { HiOutlineX, HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
+import DockerCredentialSelector from '../../../dockerCredentials/components/DockerCredentialSelector';
 
 const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCollapse }) => {
   return (

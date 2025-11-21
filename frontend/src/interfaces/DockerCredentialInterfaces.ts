@@ -13,7 +13,7 @@ export interface CreateDockerCredentialPayload {
 }
 
 export interface DockerCredentialSelectorProps {
-  variant?: 'default' | 'navbar';
+  variant?: 'default' | 'navbar' ;
 }
 
 export interface DockerClientContextValue {
