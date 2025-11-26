@@ -4,6 +4,8 @@ import (
 	"docker-manager-go/src/models"
 	"fmt"
 	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
@@ -15,7 +17,15 @@ var (
 )
 
 func InitDb() {
-	dataBasePath := "secure.db"
+	exe, err := os.Executable()
+	if err != nil {
+		log.Fatalf("erro ao obter caminho do executável: %v", err)
+	}
+
+	exeDir := filepath.Dir(exe)
+
+	dataBasePath := filepath.Join(exeDir, "secure.db")
+
 	dsn := fmt.Sprintf("file:%s?_journal_mode=WAL&_foreign_keys=on", dataBasePath)
 
 	DataBase, err = gorm.Open(sqlite.Open(dsn), &gorm.Config{})
