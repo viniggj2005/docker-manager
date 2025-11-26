@@ -28,6 +28,16 @@ jobs:
         with:
           node-version: "18"
 
+      - name: Install Linux Deps
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            libgtk-3-dev \
+            libwebkit2gtk-4.0-dev \
+            libgtk-3-0 \
+            webkit2gtk-4.0
+
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
