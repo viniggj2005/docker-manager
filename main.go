@@ -31,9 +31,11 @@ func main() {
 	userHandler := handlers.NewUserHandler(database.DataBase, sessionManager)
 
 	err := wails.Run(&options.App{
-		Title:  "Docker Manager",
-		Width:  1024,
-		Height: 768,
+		Title:      "Docker Manager",
+		Width:      1024,
+		Height:     768,
+		Fullscreen: true,
+		Frameless:  true,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},

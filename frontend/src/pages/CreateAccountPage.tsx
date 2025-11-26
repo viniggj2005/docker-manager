@@ -7,7 +7,7 @@ const CreateAccountPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-[var(--dark-primary)] via-[var(--dark-secondary)] to-[var(--system-black)] px-4 py-12">
+    <div className="relative flex h-full items-center justify-center overflow-hidden bg-gradient-to-br from-[var(--dark-primary)] via-[var(--dark-secondary)] to-[var(--system-black)] px-4 py-12">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,var(--docker-blue)_0,transparent_60%)] opacity-40" />
       <div className="w-full max-w-6xl overflow-hidden rounded-3xl border border-[var(--dark-tertiary)] bg-[var(--system-white)]/90 shadow-2xl backdrop-blur dark:bg-[var(--dark-secondary)]/90">
         <div className="grid gap-0 lg:grid-cols-[1.1fr,1fr]">

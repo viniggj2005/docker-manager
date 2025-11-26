@@ -34,14 +34,14 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="min-w-0">
           <div className="relative w-fit">
-            <div className="inline-block max-w-full truncate text-xl font-medium text-[var(--system-black)] transition hover:scale-[0.99] dark:text-[var(--system-white)] peer">
+            <div className="flex  truncate text-xl font-medium text-[var(--system-black)] transition hover:scale-[0.99] dark:text-[var(--system-white)] ">
               {name}
             </div>
 
             {!isEditing && (
               <button
                 onClick={onOpenEdit}
-                className="absolute -top-1 -right-6 rounded-full border border-[var(--medium-gray)] bg-[var(--system-white)] p-1 shadow-md opacity-0 transition hover:bg-[var(--light-gray)] hover:opacity-100 peer-hover:opacity-100 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]"
+                className="absolute -top-1 truncate -right-6 rounded-full border border-[var(--medium-gray)] bg-[var(--system-white)] p-1 shadow-md opacity-0 transition hover:bg-[var(--light-gray)] hover:opacity-100 peer-hover:opacity-100 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]"
                 title="Editar nome"
               >
                 <GoPencil className="h-4 w-4 text-[var(--system-black)] dark:text-[var(--system-white)]" />
@@ -60,7 +60,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
             {isSeeing && <LogsModal id={container.Id} setLogsModal={onCloseLogs} />}
           </div>
 
-          <div className="mt-1 truncate text-lg text-[var(--medium-gray)]">{container.Image}</div>
+          <div title='Imagem Docker' className="mt-1 truncate text-md text-[var(--medium-gray)]">{container.Image}</div>
         </div>
 
         <div className="flex flex-wrap items-center justify-end gap-2">

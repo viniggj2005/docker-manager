@@ -27,3 +27,20 @@
 input[type="password"]::-ms-reveal {
   display: none;
 }
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+.appframe-drag {
+  --wails-draggable: drag;
+}
+
+.appframe-no-drag {
+  --wails-draggable: no-drag;
+}
+

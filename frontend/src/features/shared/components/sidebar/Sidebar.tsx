@@ -16,16 +16,27 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
       />
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-72 transform flex-col overflow-y-auto bg-[var(--system-white)] px-6 py-8 text-[var(--system-black)] shadow-xl transition-transform duration-200 dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)] lg:translate-x-0 ${
-          open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        } ${collapsed ? 'lg:px-4' : 'lg:px-6'} ${collapsed ? 'lg:w-24 xl:w-28' : 'lg:w-72'}`}
+        className={`
+    z-40 flex w-72 transform flex-col overflow-y-auto
+    bg-[var(--system-white)] px-6 py-8 text-[var(--system-black)]
+    shadow-xl transition-transform duration-200
+    dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)]
+
+    fixed inset-y-0 left-0           /* mobile: sidebar fixo */
+    lg:static lg:h-full lg:inset-auto /* desktop: participa do layout, respeita o AppFrame */
+
+    lg:translate-x-0
+    ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+    ${collapsed ? 'lg:px-4' : 'lg:px-6'}
+    ${collapsed ? 'lg:w-24 xl:w-28' : 'lg:w-72'}
+  `}
       >
+
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div
-              className={`hidden h-12 w-12 items-center justify-center rounded-2xl  text-lg font-semibold text-[var(--docker-blue)] dark:border-[var(--dark-tertiary)] dark:text-[var(--docker-blue)] lg:flex ${
-                collapsed ? '' : 'lg:hidden'
-              }`}
+              className={`hidden h-12 w-12 items-center justify-center rounded-2xl  text-lg font-semibold text-[var(--docker-blue)] dark:border-[var(--dark-tertiary)] dark:text-[var(--docker-blue)] lg:flex ${collapsed ? '' : 'lg:hidden'
+                }`}
             >
               <img src={appIcon} alt="Docker Manager" className="h-16 w-16 object-contain" />
             </div>
@@ -70,14 +81,12 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
               onClick={onClose}
               title={label}
               className={({ isActive }) =>
-                `group flex items-center gap-3 rounded-xl border border-transparent bg-transparent px-4 py-3 transition  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--docker-blue)]  ${
-                  collapsed
-                    ? 'lg:w-full lg:justify-center lg:px-2'
-                    : 'hover:border-[var(--light-gray)] hover:bg-[var(--light-overlay)] dark:hover:border-[var(--dark-tertiary)] dark:hover:bg-[var(--dark-tertiary)]'
-                } ${
-                  isActive
-                    ? 'border-[var(--docker-blue)]  text-[var(--docker-blue)] '
-                    : 'text-[var(--medium-gray)] dark:text-[var(--grey-text)]'
+                `group flex items-center gap-3 rounded-xl border border-transparent bg-transparent px-4 py-3 transition  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--docker-blue)]  ${collapsed
+                  ? 'lg:w-full lg:justify-center lg:px-2'
+                  : 'hover:border-[var(--light-gray)] hover:bg-[var(--light-overlay)] dark:hover:border-[var(--dark-tertiary)] dark:hover:bg-[var(--dark-tertiary)]'
+                } ${isActive
+                  ? 'border-[var(--docker-blue)]  text-[var(--docker-blue)] '
+                  : 'text-[var(--medium-gray)] dark:text-[var(--grey-text)]'
                 }`
               }
             >
@@ -95,23 +104,20 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
         </nav>
 
         <div
-          className={`mt-6 ${
-            collapsed
+          className={`mt-6 ${collapsed
               ? 'lg:hidden'
               : 'rounded-xl border border-[var(--light-gray)] bg-[var(--light-overlay)] p-4 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-tertiary)]'
-          }`}
+            }`}
         >
           <h2
-            className={`text-sm font-semibold text-[var(--system-black)] dark:text-[var(--system-white)] ${
-              collapsed ? 'lg:hidden' : ''
-            }`}
+            className={`text-sm font-semibold text-[var(--system-black)] dark:text-[var(--system-white)] ${collapsed ? 'lg:hidden' : ''
+              }`}
           >
             Credencial ativa
           </h2>
           <p
-            className={`mt-1 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)] ${
-              collapsed ? 'lg:hidden' : ''
-            }`}
+            className={`mt-1 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)] ${collapsed ? 'lg:hidden' : ''
+              }`}
           >
             Escolha qual credencial Docker usar nas demais telas.
           </p>
@@ -121,23 +127,20 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
         </div>
 
         <div
-          className={`mt-6 rounded-xl  ${
-            collapsed
+          className={`mt-6 rounded-xl  ${collapsed
               ? 'lg:flex lg:flex-col lg:items-center lg:gap-2 lg:p-3'
               : 'p-4 border border-[var(--light-gray)] bg-[var(--light-overlay)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-tertiary)]'
-          }`}
+            }`}
         >
           <h2
-            className={`text-sm font-semibold text-[var(--system-black)] dark:text-[var(--system-white)] ${
-              collapsed ? 'lg:hidden' : ''
-            }`}
+            className={`text-sm font-semibold text-[var(--system-black)] dark:text-[var(--system-white)] ${collapsed ? 'lg:hidden' : ''
+              }`}
           >
             Tema
           </h2>
           <p
-            className={`mt-1 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)] ${
-              collapsed ? 'lg:hidden' : ''
-            }`}
+            className={`mt-1 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)] ${collapsed ? 'lg:hidden' : ''
+              }`}
           >
             Alterne entre os modos claro e escuro para personalizar sua experiência.
           </p>

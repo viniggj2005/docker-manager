@@ -1,7 +1,10 @@
 import './index.css';
+import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import GlobalTerminalHost from './features/terminal/GlobalTerminalHost';
+import { AppFrame } from './features/appFrame/appFrame';
 import AppShell from './features/shared/components/sidebar/AppShell';
+import GlobalTerminalHost from './features/terminal/GlobalTerminalHost';
+import { WindowIsFullscreen } from '../wailsjs/runtime/runtime';
 
 const authRoutes = ['/login', '/create-account'];
 
@@ -9,16 +12,32 @@ export default function App() {
   const location = useLocation();
   const isAuthRoute = authRoutes.includes(location.pathname);
 
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const fs = await WindowIsFullscreen();
+      setIsFullscreen(fs);
+    }, 150);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="min-h-screen">
+    <div className="w-screen h-screen flex flex-col overflow-hidden">
+      {!isFullscreen && <AppFrame />}
+
       <GlobalTerminalHost />
-      {isAuthRoute ? (
-        <Outlet />
-      ) : (
-        <AppShell>
+
+      <div className="flex-1 min-h-0">
+        {isAuthRoute ? (
           <Outlet />
-        </AppShell>
-      )}
+        ) : (
+          <AppShell>
+            <Outlet />
+          </AppShell>
+        )}
+      </div>
     </div>
   );
 }

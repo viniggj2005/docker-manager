@@ -10,7 +10,7 @@ const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const desktopPadding = isSidebarCollapsed ? 'lg:pl-24 xl:pl-28' : 'lg:pl-72';
 
   return (
-    <div className="relative flex min-h-screen bg-[var(--system-white)] text-[var(--system-black)] transition-colors duration-200 dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]">
+    <div className="relative flex h-full min-h-0 bg-[var(--system-white)] text-[var(--system-black)] transition-colors duration-200 dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]">
       <Sidebar
         open={isSidebarOpen}
         collapsed={isSidebarCollapsed}
@@ -19,7 +19,11 @@ const AppShell: React.FC<AppShellProps> = ({ children }) => {
       />
 
       <div
-        className={`flex min-h-screen flex-1 flex-col transition-[padding] duration-200 ${desktopPadding}`}
+        className={`
+          flex flex-1 h-full min-h-0 flex-col
+          transition-[padding] duration-200
+          ${desktopPadding}
+        `}
       >
         <div className="px-4 pt-4 lg:hidden">
           <button
@@ -33,7 +37,7 @@ const AppShell: React.FC<AppShellProps> = ({ children }) => {
           </button>
         </div>
 
-        <main className="flex flex-1 flex-col px-4 pb-6 pt-0 sm:px-6 sm:pt-0 lg:px-8 lg:pt-6 xl:px-10">
+        <main className="flex-1 min-h-0 flex flex-col px-4 pb-6 pt-0 sm:px-6 sm:pt-0 lg:px-8 lg:pt-6 xl:px-10 overflow-auto">
           {children}
         </main>
       </div>
