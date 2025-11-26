@@ -7,7 +7,7 @@ const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  const desktopPadding = isSidebarCollapsed ? 'lg:pl-24 xl:pl-28' : 'lg:pl-72';
+  const desktopPadding = isSidebarCollapsed ? 'lg:pl-24 xl:pl-28' : 'lg:pl-30';
 
   return (
     <div className="relative flex h-full min-h-0 bg-[var(--system-white)] text-[var(--system-black)] transition-colors duration-200 dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]">
