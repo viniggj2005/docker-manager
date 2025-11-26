@@ -45,14 +45,28 @@ jobs:
       - name: Build App
         run: wails build
 
-      - name: Upload Release Assets (Windows/Linux)
+      - name: Create GitHub Release (Linux only)
+        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
-        if: matrix.os != 'macos-latest' && startsWith(github.ref, 'refs/tags/')
+        with:
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Assets (Linux)
+        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/bin/*
+
+      - name: Upload Release Assets (Windows)
+        if: matrix.os == 'windows-latest' && startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
         with:
           files: build/bin/*
 
       - name: Upload Release Assets (macOS)
-        uses: softprops/action-gh-release@v1
         if: matrix.os == 'macos-latest' && startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
         with:
-          files: build/darwin/*
+
+          files: build/bin/**/*.app
