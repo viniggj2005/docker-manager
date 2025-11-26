@@ -7,7 +7,6 @@ toolchain go1.24.6
 require (
 	github.com/docker/docker v28.0.0+incompatible
 	github.com/glebarez/sqlite v1.11.0
-	github.com/joho/godotenv v1.5.1
 	github.com/wailsapp/wails/v2 v2.11.0
 	golang.org/x/crypto v0.43.0
 	gorm.io/gorm v1.31.0

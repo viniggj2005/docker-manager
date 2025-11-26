@@ -22,32 +22,32 @@ type EncryptedString struct {
 }
 
 func (es *EncryptedString) Scan(value interface{}) error {
-	if b, ok := value.([]byte); ok {
-		pt, err := decrypt(b, currentKey())
+	if byteValue, ok := value.([]byte); ok {
+		plainText, err := decrypt(byteValue, currentKey())
 		if err != nil {
 			return err
 		}
-		es.Ciphertext = b
-		es.Plaintext = string(pt)
+		es.Ciphertext = byteValue
+		es.Plaintext = string(plainText)
 		return nil
 	}
 	return fmt.Errorf("invalid type for EncryptedString")
 }
 
 func (es *EncryptedString) Value() (driver.Value, error) {
-	ct, err := encrypt([]byte(es.Plaintext), currentKey())
+	context, err := encrypt([]byte(es.Plaintext), currentKey())
 	if err != nil {
 		return nil, err
 	}
-	return ct, nil
+	return context, nil
 }
 
 func (EncryptedString) GormDataType() string                    { return "blob" }
 func (EncryptedString) GormDBDataType(*gorm.DB, *schema) string { return "BLOB" }
 
-func (es EncryptedString) GormValue(ctx context.Context, db *gorm.DB) clause.Expr {
-	v, _ := (&es).Value()
-	return gorm.Expr("?", v)
+func (es EncryptedString) GormValue(context context.Context, db *gorm.DB) clause.Expr {
+	value, _ := (&es).Value()
+	return gorm.Expr("?", value)
 }
 
 type schema struct{}
@@ -92,6 +92,6 @@ func decrypt(ciphertext []byte, key []byte) ([]byte, error) {
 	if len(ciphertext) < nonceSize {
 		return nil, fmt.Errorf("malformed ciphertext")
 	}
-	nonce, ct := ciphertext[:nonceSize], ciphertext[nonceSize:]
-	return aesgcm.Open(nil, nonce, ct, nil)
+	nonce, context := ciphertext[:nonceSize], ciphertext[nonceSize:]
+	return aesgcm.Open(nil, nonce, context, nil)
 }
