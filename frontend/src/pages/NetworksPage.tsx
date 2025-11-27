@@ -1,22 +1,18 @@
-import { IoMdAddCircleOutline } from 'react-icons/io';
-import { NetworkItem } from '../interfaces/NetworkInterfaces';
 import React, { useCallback, useEffect, useState } from 'react';
+import { IoMdAddCircleOutline } from 'react-icons/io';
+
 import { useDockerClient } from '../contexts/DockerClientContext';
-import { NetworkService } from '../features/networks/services/NetworkService';
 import NetworkCards from '../features/networks/components/cards/NetworkCards';
-import CreateNetworkModal from '../features/networks/components/modals/CreateNetworkModals';
+import CreateNetworkModal from '../features/networks/components/modals/CreateNetworkModal';
+import { NetworkService } from '../features/networks/services/NetworkService';
+import { NetworkItem } from '../interfaces/NetworkInterfaces';
 
 const NetworksPage: React.FC = () => {
-  const {
-      connecting,
-      selectedCredentialId,
-    loading: credentialsLoading,
-  } = useDockerClient();
-const [openCreateModal, setOpenCreateModal] = useState(false);
-
+  const { connecting, selectedCredentialId, loading: credentialsLoading } = useDockerClient();
+  const [openCreateModal, setOpenCreateModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [networks, setNetworks] = useState<NetworkItem[] | null>(null);
+  const [networks, setNetworks] = useState<NetworkItem[]>([]);
 
   const fetchNetworks = useCallback(async () => {
     if (!selectedCredentialId) return;
@@ -26,18 +22,10 @@ const [openCreateModal, setOpenCreateModal] = useState(false);
       setError(null);
 
       const result = await NetworkService.findAllNetworks(selectedCredentialId);
-      console.log('ListNetworks result bruto:', result);
-
-      if (Array.isArray(result)) {
-        setNetworks(result);
-      } else {
-        console.warn('Formato inesperado de redes:', result);
-        setNetworks([]);
-      }
+      setNetworks(Array.isArray(result) ? result : []);
     } catch (err) {
       console.error('Erro ao carregar redes Docker:', err);
       setError('Erro ao carregar redes Docker');
-      setNetworks([]);
     } finally {
       setLoading(false);
     }
@@ -49,63 +37,87 @@ const [openCreateModal, setOpenCreateModal] = useState(false);
   }, [selectedCredentialId, credentialsLoading, connecting, fetchNetworks]);
 
   const handleDeleted = (networkId: string) => {
-    setNetworks((prev) =>
-      Array.isArray(prev) ? prev.filter((n) => n.Id === networkId ? false : true) : prev
-    );
+    setNetworks((prev) => prev.filter((network) => network.Id !== networkId));
   };
 
-  if (credentialsLoading || connecting) {
-    return <div>Conectando ao cliente Docker...</div>;
-  }
-
-  if (!selectedCredentialId) {
-    return <div>Nenhuma credencial Docker selecionada.</div>;
-  }
-
-  const safeNetworks = Array.isArray(networks) ? networks : [];
+  const showStatusMessage = (message: string, isError = false) => (
+    <div
+      className={`rounded-xl border px-4 py-3 text-sm shadow-sm ${
+        isError
+          ? 'border-[var(--exit-red)] text-[var(--exit-red)]'
+          : 'border-[var(--light-gray)] text-[var(--medium-gray)] dark:border-[var(--dark-tertiary)] dark:text-[var(--grey-text)]'
+      }`}
+    >
+      {message}
+    </div>
+  );
 
   return (
-    <div className="space-y-4">
-      <div>
-          <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
-            Redes Docker
-          </h1>
-          <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-            Gerencie suas rede docker e crie novas.
-          </p>
-        </div>
-      <button
-              onClick={() => setOpenCreateModal(true)}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-4 py-3 text-sm font-semibold text-[var(--docker-blue)] shadow-sm transition hover:scale-[0.99] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)] sm:w-fit"
-            >
-              <IoMdAddCircleOutline className="h-5 w-5" />
-              Nova Network
-            </button>
-      {loading && <div>Carregando redes...</div>}
-      {error && <div className="text-[var(--exit-red)] text-sm">{error}</div>}
+    <div className="flex flex-1 flex-col gap-6">
+      <header className="flex flex-col gap-2">
+        <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+          Redes Docker
+        </h1>
+        <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+          Gerencie suas redes Docker, crie novas e acompanhe detalhes das existentes.
+        </p>
+      </header>
 
-      {!loading && safeNetworks.length === 0 && !error && (
-        <div className="text-sm text-[var(--medium-gray)]">
-          Nenhuma rede encontrada.
-        </div>
-      )}
+      <div className="flex flex-1 flex-col gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-5 shadow-sm dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-1">
+            <span className="text-sm font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">
+              Conexão Docker
+            </span>
+            <span className="text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+              {connecting || credentialsLoading
+                ? 'Sincronizando credenciais...'
+                : selectedCredentialId
+                  ? 'Credencial ativa para listagem de redes.'
+                  : 'Selecione uma credencial para gerenciar as redes.'}
+            </span>
+          </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {safeNetworks.map((network) => (
-          <NetworkCards
-            key={network.Id}
-            clientId={selectedCredentialId}
-            onDeleted={handleDeleted}
-            {...network}
-          />
-        ))}
+          <button
+            onClick={() => setOpenCreateModal(true)}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-4 py-2 text-sm font-semibold text-[var(--docker-blue)] shadow-sm transition hover:scale-[0.99] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)] sm:w-fit"
+          >
+            <IoMdAddCircleOutline className="h-5 w-5" />
+            Nova rede
+          </button>
+        </div>
+
+        {credentialsLoading || connecting ? (
+          showStatusMessage('Conectando ao cliente Docker...')
+        ) : !selectedCredentialId ? (
+          showStatusMessage('Nenhuma credencial Docker selecionada.', true)
+        ) : (
+          <div className="flex flex-col gap-4">
+            {loading && showStatusMessage('Carregando redes...')}
+            {error && showStatusMessage(error, true)}
+
+            {!loading && networks.length === 0 && !error &&
+              showStatusMessage('Nenhuma rede encontrada para a credencial selecionada.')}
+
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {networks.map((network) => (
+                <NetworkCards
+                  key={network.Id}
+                  clientId={selectedCredentialId}
+                  onDeleted={handleDeleted}
+                  {...network}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-      <CreateNetworkModal
-  open={openCreateModal}
-  onClose={() => setOpenCreateModal(false)}
-  onCreated={fetchNetworks}
-/>
 
+      <CreateNetworkModal
+        open={openCreateModal}
+        onClose={() => setOpenCreateModal(false)}
+        onCreated={fetchNetworks}
+      />
     </div>
   );
 };

@@ -1,11 +1,14 @@
+import React, { useCallback, useState } from 'react';
 import { IoMdTrash } from 'react-icons/io';
 import { RiFileList2Line } from 'react-icons/ri';
-import React, { useCallback, useState } from 'react';
-import { NetworkService } from '../../services/NetworkService';
-import { FmtAgo } from '../../../shared/functions/TreatmentFunction';
-import InfoTile from '../../../containers/components/badges/InfoTile';
+
 import { NetworkItem } from '../../../../interfaces/NetworkInterfaces';
+import InfoTile from '../../../containers/components/badges/InfoTile';
+import { FmtAgo } from '../../../shared/functions/TreatmentFunction';
 import InspectModal from '../../../shared/components/modals/InspectModal';
+import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
+import { NetworkService } from '../../services/NetworkService';
+import iziToast from 'izitoast';
 
 interface NetworkCardProps extends NetworkItem {
   clientId: number;
@@ -31,17 +34,17 @@ const NetworkCards: React.FC<NetworkCardProps> = ({
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [isInspectLoading, setIsInspectLoading] = useState(false);
   const [inspectData, setInspectData] = useState<string | null>(null);
+  const confirmToast = useConfirmToast();
 
   const handleOpenInspect = useCallback(async () => {
     try {
       setIsInspectLoading(true);
       const data = await NetworkService.InspectNetwork(clientId, Id);
-      console.log(data)
-      setInspectData(data);
+      const formattedData = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+      setInspectData(formattedData);
       setIsInspectOpen(true);
     } catch (error) {
-      setInspectData('Erro ao buscar dados de inspeção.');
-      setIsInspectOpen(true);
+      iziToast.error({ title: 'Erro', message: 'Erro ao buscar dados de inspeção.', position: 'bottomRight' });
     } finally {
       setIsInspectLoading(false);
     }
@@ -51,22 +54,24 @@ const NetworkCards: React.FC<NetworkCardProps> = ({
     setIsInspectOpen(false);
   }, []);
 
-  const handleDelete = useCallback(async () => {
-    const confirmDelete = window.confirm(
-      `Tem certeza que deseja remover a rede "${Name}"?\n(ID: ${Id})`
-    );
-    if (!confirmDelete) return;
-
-    try {
-      setDeleteLoading(true);
-      await NetworkService.deleteNetwork(clientId, Id);
-      onDeleted?.(Id);
-    } catch (error) {
-      alert('Erro ao remover rede. Verifique os logs.');
-    } finally {
-      setDeleteLoading(false);
-    }
-  }, [clientId, Id, Name, onDeleted]);
+  const handleDelete = useCallback(() => {
+    confirmToast({
+      id: Id,
+      title: 'Rede removida com sucesso!',
+      message: `Deseja remover a rede "${Name}"?`,
+      onConfirm: async () => {
+        setDeleteLoading(true);
+        try {
+          await NetworkService.deleteNetwork(clientId, Id);
+          onDeleted?.(Id);
+        } catch (error) {
+          throw error instanceof Error ? error : new Error('Erro ao remover a rede.');
+        } finally {
+          setDeleteLoading(false);
+        }
+      },
+    });
+  }, [Id, Name, clientId, confirmToast, onDeleted]);
 
   const mainSubnet = IPAM?.Config?.[0]?.Subnet ?? '—';
   const mainGateway = IPAM?.Config?.[0]?.Gateway ?? '—';
@@ -82,20 +87,14 @@ const NetworkCards: React.FC<NetworkCardProps> = ({
                 {Name}
               </div>
 
-              <div className="mt-1 truncate text-xs text-[var(--medium-gray)]">
-                ID: {Id}
-              </div>
+              <div className="mt-1 truncate text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)]">ID: {Id}</div>
             </div>
 
-            <div className="mt-1 text-sm text-[var(--medium-gray)]">
+            <div className="mt-1 text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
               Driver:{' '}
-              <span className="font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">
-                {Driver}
-              </span>{' '}
+              <span className="font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">{Driver}</span>{' '}
               • Scope:{' '}
-              <span className="font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">
-                {Scope}
-              </span>
+              <span className="font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">{Scope}</span>
             </div>
           </div>
           <div className="flex flex-wrap items-center justify-end gap-2">
