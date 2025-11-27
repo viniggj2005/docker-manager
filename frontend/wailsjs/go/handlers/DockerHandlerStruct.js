@@ -10,6 +10,10 @@ export function CreateDockerConnection(arg1, arg2) {
   return window['go']['handlers']['DockerHandlerStruct']['CreateDockerConnection'](arg1, arg2);
 }
 
+export function DeleteDockerConnection(arg1, arg2) {
+  return window['go']['handlers']['DockerHandlerStruct']['DeleteDockerConnection'](arg1, arg2);
+}
+
 export function FindAllByUser(arg1, arg2) {
   return window['go']['handlers']['DockerHandlerStruct']['FindAllByUser'](arg1, arg2);
 }

@@ -1,6 +1,7 @@
 import {
   FindAllByUser,
   CreateDockerConnection,
+  DeleteDockerConnection,
 } from '../../../../wailsjs/go/handlers/DockerHandlerStruct';
 import {
   DockerCredentialSummary,
@@ -28,6 +29,9 @@ export const DockerCredentialService = {
     return response
       .map(mapCredential)
       .filter((credential): credential is DockerCredentialSummary => Boolean(credential));
+  },
+  async delete(token: string,credentialId: number): Promise<void> {
+    await DeleteDockerConnection(token,credentialId);
   },
 
   async connect(credentialId: number): Promise<void> {

@@ -26,25 +26,25 @@ const TerminalModal: React.FC<TerminalProps> = ({
   const [minimized, setMinimized] = useState(false);
   const [miniPos, setMiniPos] = useState({ x: 40, y: 40 });
 
-useEffect(() => {
-  if (!minimized) return;
+  useEffect(() => {
+    if (!minimized) return;
 
-  const padding = 20;
-  const width = 200;
-  const height = 50;
+    const padding = 20;
+    const width = 200;
+    const height = 50;
 
-  const handleResize = () => {
-    setMiniPos({
-      x: window.innerWidth - width - padding,
-      y: window.innerHeight - height - padding,
-    });
-  };
+    const handleResize = () => {
+      setMiniPos({
+        x: window.innerWidth - width - padding,
+        y: window.innerHeight - height - padding,
+      });
+    };
 
-  window.addEventListener("resize", handleResize);
+    handleResize();
 
-  return () => window.removeEventListener("resize", handleResize);
-}, [minimized]);
-
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [minimized]);
 
   useEffect(() => {
     const move = (e: MouseEvent) => {
@@ -67,7 +67,6 @@ useEffect(() => {
       window.removeEventListener('mouseup', up);
     };
   }, []);
-
 
   const startYRef = useRef(0);
   const startHRef = useRef(420);
@@ -97,7 +96,7 @@ useEffect(() => {
   }, [open]);
 
   useEffect(() => {
-    if (!open || minimized) return;
+    if (!open) return;
 
     const terminal = new Terminal({
       fontSize: 18,
@@ -113,6 +112,44 @@ useEffect(() => {
         foreground: 'var(--grey-text)',
       },
     });
+
+    terminal.attachCustomKeyEventHandler((e) => {
+      if (e.ctrlKey && !e.shiftKey && (e.key === 'v' || e.key === 'V')) {
+        e.preventDefault();
+        if (navigator.clipboard?.readText) {
+          navigator.clipboard
+            .readText()
+            .then((text) => {
+              if (!text) return;
+              const anyTerm = terminal as any;
+              if (typeof anyTerm.paste === 'function') {
+                anyTerm.paste(text);
+              } else {
+                terminal.write(text);
+                Send(text);
+              }
+            })
+            .catch(() => {
+            });
+        }
+        return false;
+      }
+
+      if (e.ctrlKey && !e.shiftKey && (e.key === 'c' || e.key === 'C')) {
+        const selection = terminal.getSelection();
+        if (selection) {
+          e.preventDefault();
+          if (navigator.clipboard?.writeText) {
+            navigator.clipboard.writeText(selection).catch(() => {});
+          }
+          return false; 
+        }
+        return true;
+      }
+
+      return true; 
+    });
+
 
     const fit = new FitAddon();
     terminal.loadAddon(fit);
@@ -162,7 +199,7 @@ useEffect(() => {
 
       window.removeEventListener('resize', onWindowResize);
     };
-  }, [open, minimized, configure]);
+  }, [open, configure]);
 
   useEffect(() => {
     if (!open || minimized) return;
@@ -176,39 +213,6 @@ useEffect(() => {
   }, [maximized, docked, dockHeight, open, minimized]);
 
   if (!open) return null;
-
-  if (minimized) {
-    return (
-      <div
-        style={{
-          position: 'fixed',
-          left: miniPos.x,
-          top: miniPos.y,
-          zIndex: 99999,
-        }}
-        className="cursor-move bg-[var(--system-white)] text-[var(--system-black)] 
-                   dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)]
-                   shadow-xl rounded-md px-3 py-2 flex items-center gap-3 select-none"
-        onMouseDown={(e) => {
-          dragRef.current = true;
-          dragStartRef.current = { x: e.clientX - miniPos.x, y: e.clientY - miniPos.y };
-        }}
-      >
-        <span className="font-semibold">{title}</span>
-
-        <button
-          className="px-2 py-1 bg-[var(--accent)] hover:scale-95 text-[var(--system-black)] 
-                     dark:text-[var(--system-white)] rounded"
-          onMouseDown={(e) => e.stopPropagation()}
-          onClick={() => setMinimized(false)}
-        >
-          <MdOpenInNew />
-        </button>
-      </div>
-    );
-  }
-
-  
 
   const closeOnBackdrop = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!docked && event.target === event.currentTarget) onClose();
@@ -256,46 +260,83 @@ useEffect(() => {
     height: maximized ? '100vh' : docked ? dockHeight : undefined,
   };
 
+  const backdropBase = 'fixed inset-0 z-50';
+  const backdropVisible =
+    'flex ' +
+    (docked
+      ? 'items-end justify-center pointer-events-none'
+      : 'items-center justify-center bg-[var(--light-overlay)] dark:bg-[var(--dark-overlay)] backdrop-blur-sm');
+
+  const backdropHidden = 'pointer-events-none opacity-0 hidden';
+
   return (
-    <div
-      onClick={closeOnBackdrop}
-      className={
-        'fixed inset-0 z-50 flex ' +
-        (docked
-          ? 'items-end justify-center pointer-events-none'
-          : 'items-center justify-center bg-[var(--light-overlay)] dark:bg-[var(--dark-overlay)] backdrop-blur-sm')
-      }
-      aria-modal
-      role="dialog"
-    >
+    <>
+      {minimized && (
+        <div
+          style={{
+            position: 'fixed',
+            left: miniPos.x,
+            top: miniPos.y,
+            zIndex: 99999,
+          }}
+          className="cursor-move bg-[var(--system-white)] text-[var(--system-black)] 
+                     dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)]
+                     shadow-xl rounded-md px-3 py-2 flex items-center gap-3 select-none"
+          onMouseDown={(e) => {
+            dragRef.current = true;
+            dragStartRef.current = { x: e.clientX - miniPos.x, y: e.clientY - miniPos.y };
+          }}
+        >
+          <span className="font-semibold">{title}</span>
+
+          <button
+            className="px-2 py-1 bg-[var(--accent)] hover:scale-95 text-[var(--system-black)] 
+                       dark:text-[var(--system-white)] rounded"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => setMinimized(false)}
+          >
+            <MdOpenInNew />
+          </button>
+        </div>
+      )}
+
       <div
-        style={containerStyle}
-        onClick={(event) => event.stopPropagation()}
-        className={containerClasses + ' pointer-events-auto'}
+        onClick={closeOnBackdrop}
+        className={
+          backdropBase + ' ' + (minimized ? backdropHidden : backdropVisible)
+        }
+        aria-modal
+        role="dialog"
       >
-        {docked && !maximized && (
-          <div
-            onMouseDown={onDockGripDown}
-            className="h-2 cursor-row-resize bg-transparent hover:scale-95 rounded-t-2xl"
-            title="Arraste para redimensionar"
+        <div
+          style={containerStyle}
+          onClick={(event) => event.stopPropagation()}
+          className={containerClasses + ' pointer-events-auto'}
+        >
+          {docked && !maximized && (
+            <div
+              onMouseDown={onDockGripDown}
+              className="h-2 cursor-row-resize bg-transparent hover:scale-95 rounded-t-2xl"
+              title="Arraste para redimensionar"
+            />
+          )}
+
+          <TerminalModalHeader
+            title={title}
+            docked={docked}
+            onClose={onClose}
+            maximized={maximized}
+            onToggleDock={() => setDocked((v) => !v)}
+            onToggleMax={() => setMaximized((v) => !v)}
+            onMinimize={() => setMinimized(true)}
           />
-        )}
 
-        <TerminalModalHeader
-          title={title}
-          docked={docked}
-          onClose={onClose}
-          maximized={maximized}
-          onToggleDock={() => setDocked((v) => !v)}
-          onToggleMax={() => setMaximized((v) => !v)}
-          onMinimize={() => setMinimized(true)}
-        />
-
-        <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg pl-2 pt-1 bg-[var(--terminal-background)]">
-          <div ref={hostRef} className="flex-1 min-h-0 w-full" />
+          <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg pl-2 pt-1 bg-[var(--terminal-background)]">
+            <div ref={hostRef} className="flex-1 min-h-0 w-full" />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
