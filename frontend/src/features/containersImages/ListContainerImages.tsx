@@ -2,10 +2,10 @@ import React, { useMemo, useState } from 'react';
 import Toolbar from './components/toolbar/Toolbar';
 import ImageCard from './components/cards/ImageCard';
 import ImagesTable from './components/tables/ImagesTable';
+import { useDockerClient } from '../../contexts/DockerClientContext';
 import { ViewMode } from '../../interfaces/ContainerImagesInterfaces';
 import { ParseNameAndTag } from '../shared/functions/TreatmentFunction';
 import { ContainerImagesService } from './services/ContainerImagesService';
-import { useDockerClient } from '../../contexts/DockerClientContext';
 
 const ListContainersImages: React.FC = () => {
   const [query, setQuery] = useState('');
@@ -70,7 +70,7 @@ const ListContainersImages: React.FC = () => {
           Conectando ao daemon Docker…
         </div>
       ) : view === 'grid' ? (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 ">
           {filteredSorted.map((image) => (
             <ImageCard
               key={image.Id ?? Math.random().toString(36)}

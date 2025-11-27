@@ -17,14 +17,18 @@ var (
 )
 
 func InitDb() {
-	exe, err := os.Executable()
+	configDir, err := os.UserConfigDir()
 	if err != nil {
-		log.Fatalf("erro ao obter caminho do executável: %v", err)
+		log.Fatalf("erro ao obter diretório de configuração do usuário: %v", err)
 	}
 
-	exeDir := filepath.Dir(exe)
+	appDir := filepath.Join(configDir, "DockerManager")
 
-	dataBasePath := filepath.Join(exeDir, "secure.db")
+	if err := os.MkdirAll(appDir, 0o700); err != nil {
+		log.Fatalf("erro ao criar diretório do app: %v", err)
+	}
+
+	dataBasePath := filepath.Join(appDir, "secure.db")
 
 	dsn := fmt.Sprintf("file:%s?_journal_mode=WAL&_foreign_keys=on", dataBasePath)
 

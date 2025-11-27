@@ -120,3 +120,15 @@ func (handlerStruct *DockerHandlerStruct) GetDockerConnectionByIdWithoutToken(id
 	}
 	return dockerConnections, nil
 }
+
+func (handlerStruct *DockerHandlerStruct) DeleteDockerConnection(token string, id uint) error {
+	if err := auth.MustAuth(handlerStruct.Session, token); err != nil {
+		return err
+	}
+
+	if err := handlerStruct.DataBase.Delete(&models.DockerCredentialsModel{}, id).Error; err != nil {
+		return fmt.Errorf("erro ao deletar conexão: %w", err)
+	}
+
+	return nil
+}

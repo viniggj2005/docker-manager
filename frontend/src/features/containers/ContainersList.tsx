@@ -58,13 +58,13 @@ const ContainersListView: React.FC = () => {
   return (
     <div className="w-full h-full">
       <div className="mx-auto max-w-8xl p-6">
-        <header className="mb-4 flex containers-center justify-between">
+        <header className="mb-4 flex items-center justify-between">
           <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
             Containers
           </h1>
           <button
             onClick={fetchContainers}
-            className="inline-flex containers-center hover:scale-95 gap-2 px-3 py-2 rounded-xl transition bg-[var(--system-white)] text-[var(--system-black)] dark:text-[var(--system-white)] border dark:border-[var(--dark-tertiary)] border-[var(--light-gray)] dark:bg-[var(--dark-secondary)]"
+            className="inline-flex items-center hover:scale-95 gap-2 px-3 py-2 rounded-xl transition bg-[var(--system-white)] text-[var(--system-black)] dark:text-[var(--system-white)] border dark:border-[var(--dark-tertiary)] border-[var(--light-gray)] dark:bg-[var(--dark-secondary)]"
             title="Atualizar"
           >
             <FiRefreshCw className="h-4 w-4" />
@@ -89,7 +89,7 @@ const ContainersListView: React.FC = () => {
             Nenhum container encontrado.
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2   items-stretch">
             {containers.map((container) => {
               const name = FmtName(container.Names);
               const isSeeing = LogsModalId === container.Id;

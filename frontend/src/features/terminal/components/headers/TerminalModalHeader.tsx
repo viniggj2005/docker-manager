@@ -1,4 +1,5 @@
 import React from 'react';
+import { RxMinus } from 'react-icons/rx';
 import { TerminalHeaderProps } from '../../../../interfaces/TerminalInterfaces';
 import { IoMdCloseCircleOutline, IoIosExpand, IoIosContract } from 'react-icons/io';
 
@@ -7,15 +8,16 @@ const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
   docked,
   onClose,
   maximized,
+  onMinimize,
   onToggleMax,
   onToggleDock,
 }) => {
   return (
     <div
-      className="sticky h-[52px] top-0 z-10 flex items-center gap-3 border-b  rounded-t-2xl
+      className="sticky h-[52px] top-0 z-10 flex items-center gap-3 border-b rounded-t-2xl
                  border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]
                  bg-[var(--system-white)] dark:bg-[var(--dark-primary)]
-                 px-5 py-3 "
+                 px-5 py-3"
     >
       <div className="flex items-center gap-2">
         <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
@@ -23,11 +25,23 @@ const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
         <span className="text-xs text-[var(--grey-text)]">{docked ? 'Painel' : 'Modal'}</span>
       </div>
 
-      <div className="ml-auto flex items-center gap-2">
+      <div className="ml-auto flex items-center gap-3">
+
+        {!maximized && (
+          <button
+            onClick={onMinimize}
+            className="text-[var(--grey-text)] hover:scale-95"
+            title="Minimizar"
+            type="button"
+          >
+            <RxMinus className="w-5 h-5" />
+          </button>
+        )}
+
         {!maximized && (
           <button
             onClick={onToggleDock}
-            className="text-[var(--grey-text)] hover:scale-95 text-xs px-2 py-1 rounded border border-transparent "
+            className="text-[var(--grey-text)] hover:scale-95 text-xs px-2 py-1 rounded border border-transparent"
             title={docked ? 'Desancorar (modal)' : 'Ancorar embaixo (painel)'}
             type="button"
           >
@@ -46,11 +60,12 @@ const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
 
         <button
           onClick={onClose}
-          className="ml-1 text-[var(--light-red)] hover:scale-95"
-          title="Fechar"
-          type="button"
+          className="inline-flex h-6 w-6 items-center justify-center
+                     rounded-full text-[var(--exit-red)]
+                     hover:bg-[var(--exit-red)] hover:text-[var(--system-white)] hover:scale-95 transition"
+          aria-label="Fechar"
         >
-          <IoMdCloseCircleOutline className="h-5 w-5" />
+          <IoMdCloseCircleOutline className="w-5 h-5" />
         </button>
       </div>
     </div>

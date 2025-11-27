@@ -115,7 +115,7 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
         position="left"
         size={8}
         color={`${theme.theme === 'dark' ? 'var(--dark-secondary)' : 'var(--system-white)'} `}
-        offset={14}
+        offset={0}
       />
       <div
         className="bg-[var(--system-white)] dark:bg-[var(--dark-primary)] rounded-xl shadow-lg p-3 flex flex-col items-stretch gap-2"
@@ -148,7 +148,7 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
             if (clientId == null) return;
             setIsStatsOpen(!isStatsOpen);
           }}
-          title="Restart Container"
+          title="Verificar estatísticas do container"
           className="w-full flex items-center dark:text-[var(--system-white)] justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
         >
           <MdOutlineQueryStats className="w-6 h-6" />

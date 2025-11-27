@@ -5,27 +5,19 @@ import React, { useState, useCallback } from 'react';
 import { MdContentCopy, MdContentPasteSearch } from 'react-icons/md';
 import { copyToClipboard } from '../../../shared/functions/clipboard';
 import InspectModal from '../../../shared/components/modals/InspectModal';
+import { useDockerClient } from '../../../../contexts/DockerClientContext';
 import { ImageProps } from '../../../../interfaces/ContainerImagesInterfaces';
 import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
-import {
-  InspectImage,
-  RemoveImage,
-} from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
-import {
-  FmtAgo,
-  FormatBytes,
-  EpochToDateStr,
-  ParseNameAndTag,
-} from '../../../shared/functions/TreatmentFunction';
-import { useDockerClient } from '../../../../contexts/DockerClientContext';
+import { InspectImage, RemoveImage } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
+import { FmtAgo, FormatBytes, EpochToDateStr, ParseNameAndTag } from '../../../shared/functions/TreatmentFunction';
 
 const ImagesTable: React.FC<ImageProps> = ({ image, onDeleted }) => {
   const id = image.Id ?? '';
   const confirmToast = useConfirmToast();
+  const { selectedCredentialId } = useDockerClient();
   const { name, tag } = ParseNameAndTag(image.RepoTags);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
   const [inspectContent, setInspectContent] = useState<string | null>(null);
-  const { selectedCredentialId } = useDockerClient();
 
   const ensureClient = () => {
     if (selectedCredentialId == null) {

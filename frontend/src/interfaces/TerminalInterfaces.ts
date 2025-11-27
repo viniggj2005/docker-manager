@@ -4,8 +4,8 @@ export type SSHConnectionDto = dtos.SSHConnectionDto;
 export interface TerminalProps {
   open: boolean;
   title?: string;
-  configure: SSHConnectionDto;
   onClose: () => void;
+  configure: SSHConnectionDto;
 }
 
 export interface TerminalHeaderProps {
@@ -13,6 +13,7 @@ export interface TerminalHeaderProps {
   docked: boolean;
   maximized: boolean;
   onClose: () => void;
+  onMinimize: () => void;
   onToggleMax: () => void;
   onToggleDock: () => void;
 }

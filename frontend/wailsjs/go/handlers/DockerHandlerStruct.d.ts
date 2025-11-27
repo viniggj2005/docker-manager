@@ -9,6 +9,8 @@ export function ConnectDockerCredential(arg1:string,arg2:number):Promise<void>;
 
 export function CreateDockerConnection(arg1:string,arg2:dtos.CreateDockerConnectionDto):Promise<void>;
 
+export function DeleteDockerConnection(arg1:string,arg2:number):Promise<void>;
+
 export function FindAllByUser(arg1:string,arg2:number):Promise<Array<models.DockerCredentialsModel>>;
 
 export function GetDockerConnectionById(arg1:string,arg2:number):Promise<models.DockerCredentialsModel>;

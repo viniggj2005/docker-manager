@@ -4,8 +4,8 @@ import 'izitoast/dist/css/iziToast.min.css';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 import React, { useEffect, useRef, useState } from 'react';
 import { LogsProps } from '../../../../interfaces/ContainerInterfaces';
-import { ContainerLogs } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
 import { useDockerClient } from '../../../../contexts/DockerClientContext';
+import { ContainerLogs } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
 
 const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
   const firstScrollDone = useRef(false);
@@ -61,9 +61,9 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
 
   const display = filter
     ? containerLogs
-        .split(/<br\s*\/?>/i)
-        .filter((line) => line.toLowerCase().includes(filter.toLowerCase()))
-        .join('<br>')
+      .split(/<br\s*\/?>/i)
+      .filter((line) => line.toLowerCase().includes(filter.toLowerCase()))
+      .join('<br>')
     : containerLogs;
 
   const closeOnBackdrop = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -97,10 +97,16 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
             </div>
             <button
               onClick={() => setLogsModal(false)}
-              className="ml-1 text-rose-400 hover:text-rose-300"
-              title="Fechar"
+              className="
+                                    inline-flex h-6 w-6 items-center justify-center
+                                    rounded-full
+                                    text-[var(--exit-red)]
+                                    hover:bg-[var(--exit-red)] hover:text-[var(--system-white)] hover:scale-95
+                                    transition
+                                  "
+              aria-label="Fechar"
             >
-              <IoMdCloseCircleOutline className="h-5 w-5" />
+              <IoMdCloseCircleOutline className="w-5 h-5" />
             </button>
           </div>
         </div>

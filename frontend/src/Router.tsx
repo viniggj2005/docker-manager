@@ -3,11 +3,13 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import ImagesPage from './pages/ImagesPage';
 import ProtectedRoute from './ProtectedRoute';
+import NetworksPage from './pages/NetworksPage';
 import ContainersPage from './pages/ContainersPage';
 import TerminalFormPage from './pages/TerminalFormPage';
 import CreateAccountPage from './pages/CreateAccountPage';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import DockerCredentialsPage from './pages/DockerCredentialsPage';
+
 
 export const router = createBrowserRouter(
   [
@@ -25,6 +27,7 @@ export const router = createBrowserRouter(
             { path: 'containers', element: <ContainersPage /> },
             { path: 'createConnectionForm', element: <TerminalFormPage /> },
             { path: 'docker-credentials', element: <DockerCredentialsPage /> },
+            { path: 'networks', element: <NetworksPage /> },
           ],
         },
 

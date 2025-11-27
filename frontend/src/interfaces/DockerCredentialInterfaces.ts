@@ -27,3 +27,12 @@ export interface DockerClientContextValue {
   credentials: DockerCredentialSummary[];
   setSelectedCredentialId: (credentialId: number | null) => void;
 }
+
+
+export interface CreateDockerCredentialModalProps {
+  open: boolean;
+  onClose: () => void;
+  token: string;
+  userId: string | number;
+  refresh: () => void;
+}

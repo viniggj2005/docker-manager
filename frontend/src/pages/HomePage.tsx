@@ -5,7 +5,7 @@ import { HiOutlinePhotograph, HiOutlinePlus, HiOutlineViewGrid } from 'react-ico
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex flex-1 flex-col gap-8">
+    <div className="flex flex-1 flex-col h-full gap-8">
       <header className="flex flex-col gap-2">
         <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
           Bem-vindo ao painel Docker Manager

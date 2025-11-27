@@ -46,6 +46,14 @@ export function ContainersList(arg1) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['ContainersList'](arg1);
 }
 
+export function CreateNetwork(arg1, arg2, arg3) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['CreateNetwork'](arg1, arg2, arg3);
+}
+
+export function DeleteNetwork(arg1, arg2) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['DeleteNetwork'](arg1, arg2);
+}
+
 export function ImagesList(arg1) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['ImagesList'](arg1);
 }
@@ -54,8 +62,20 @@ export function InspectImage(arg1, arg2) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['InspectImage'](arg1, arg2);
 }
 
+export function InspectNetwork(arg1, arg2) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['InspectNetwork'](arg1, arg2);
+}
+
+export function ListNetworks(arg1) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['ListNetworks'](arg1);
+}
+
 export function PruneImages(arg1) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['PruneImages'](arg1);
+}
+
+export function PruneNetworks(arg1) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['PruneNetworks'](arg1);
 }
 
 export function RemoveImage(arg1, arg2) {

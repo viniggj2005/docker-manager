@@ -1,9 +1,11 @@
-import React, { useMemo, useState } from 'react';
 import iziToast from 'izitoast';
-import { FileUploader } from 'react-drag-drop-files';
+import { FaTrashCan } from 'react-icons/fa6';
+import React, { useMemo, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { FileUploader } from 'react-drag-drop-files';
 import { useDockerClient } from '../contexts/DockerClientContext';
 import TextField from '../features/login/components/fields/TextField';
+import { useConfirmToast } from '../features/shared/components/toasts/ConfirmToast';
 import { DockerCredentialService } from '../features/dockerCredentials/services/DockerCredentialService';
 
 const fileTypes = ['PEM', 'TXT'];
@@ -18,16 +20,16 @@ const DockerCredentialsPage: React.FC = () => {
     loading: credentialsLoading,
     connecting,
   } = useDockerClient();
-
-  const [alias, setAlias] = useState('');
-  const [url, setUrl] = useState('');
   const [ca, setCa] = useState('');
-  const [cert, setCert] = useState('');
+  const [url, setUrl] = useState('');
   const [key, setKey] = useState('');
+  const confirmToast = useConfirmToast();
+  const [cert, setCert] = useState('');
+  const [alias, setAlias] = useState('');
   const [caFileName, setCaFileName] = useState('');
-  const [certFileName, setCertFileName] = useState('');
   const [keyFileName, setKeyFileName] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [certFileName, setCertFileName] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 
   const disableForm = !token || !user || submitting;
@@ -80,6 +82,17 @@ const DockerCredentialsPage: React.FC = () => {
       </div>
     );
   }
+  const handleDelete = (id: number, name: string) => {
+    confirmToast({
+      id: `${id}`,
+      title: `Conexão ${name} deletada!`,
+      message: `Deseja deletar A conexão ${name} docker?`,
+      onConfirm: async () => {
+        await DockerCredentialService.delete(token, id)
+        await refresh()
+      },
+    });
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -178,11 +191,10 @@ const DockerCredentialsPage: React.FC = () => {
                     CA (PEM)
                   </label>
                   <div
-                    className={`rounded-xl border border-dashed border-[var(--light-gray)] p-4 text-sm transition dark:border-[var(--dark-tertiary)] ${
-                      disableForm
+                    className={`rounded-xl border border-dashed border-[var(--light-gray)] p-4 text-sm transition dark:border-[var(--dark-tertiary)] ${disableForm
                         ? 'cursor-not-allowed opacity-60'
                         : 'cursor-pointer hover:border-[var(--docker-blue)]'
-                    }`}
+                      }`}
                   >
                     <FileUploader
                       handleChange={handleCaUpload}
@@ -221,11 +233,10 @@ const DockerCredentialsPage: React.FC = () => {
                     Cert (PEM)
                   </label>
                   <div
-                    className={`rounded-xl border border-dashed border-[var(--light-gray)] p-4 text-sm transition dark:border-[var(--dark-tertiary)] ${
-                      disableForm
+                    className={`rounded-xl border border-dashed border-[var(--light-gray)] p-4 text-sm transition dark:border-[var(--dark-tertiary)] ${disableForm
                         ? 'cursor-not-allowed opacity-60'
                         : 'cursor-pointer hover:border-[var(--docker-blue)]'
-                    }`}
+                      }`}
                   >
                     <FileUploader
                       handleChange={handleCertUpload}
@@ -264,11 +275,10 @@ const DockerCredentialsPage: React.FC = () => {
                     Key (PEM)
                   </label>
                   <div
-                    className={`rounded-xl border border-dashed border-[var(--light-gray)] p-4 text-sm transition dark:border-[var(--dark-tertiary)] ${
-                      disableForm
+                    className={`rounded-xl border border-dashed border-[var(--light-gray)] p-4 text-sm transition dark:border-[var(--dark-tertiary)] ${disableForm
                         ? 'cursor-not-allowed opacity-60'
                         : 'cursor-pointer hover:border-[var(--docker-blue)]'
-                    }`}
+                      }`}
                   >
                     <FileUploader
                       handleChange={handleKeyUpload}
@@ -346,11 +356,10 @@ const DockerCredentialsPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setSelectedCredentialId(credential.id)}
-                      className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition hover:scale-[0.99] ${
-                        isActive
+                      className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition hover:scale-[0.99] ${isActive
                           ? 'border-[var(--docker-blue)] bg-[var(--light-overlay)] text-[var(--docker-blue)] dark:border-[var(--docker-blue)] dark:bg-[var(--dark-tertiary)]'
                           : 'border-[var(--light-gray)] bg-[var(--system-white)] text-[var(--system-black)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]'
-                      }`}
+                        }`}
                     >
                       <div className="flex flex-col">
                         <span className="text-sm font-semibold">{credential.alias}</span>
@@ -358,11 +367,22 @@ const DockerCredentialsPage: React.FC = () => {
                           ID {credential.id}
                         </span>
                       </div>
+                      
                       {isActive ? (
                         <span className="text-xs font-semibold uppercase tracking-wide text-[var(--docker-blue)] dark:text-[var(--system-white)]">
                           Selecionada
                         </span>
                       ) : null}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(credential.id, credential.alias);
+                        }}
+                        title="Excluir Conexão"
+                        className="px-2 py-1 hover:scale-90 rounded-lg"
+                      >
+                        <FaTrashCan className="text-[var(--exit-red)] h-6 w-6" />
+                      </button>
                     </button>
                   </li>
                 );
@@ -382,3 +402,4 @@ const DockerCredentialsPage: React.FC = () => {
 };
 
 export default DockerCredentialsPage;
+
