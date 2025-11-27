@@ -5,12 +5,19 @@ import {
   HiOutlinePhotograph,
   HiOutlineKey,
 } from 'react-icons/hi';
+import { PiNetworkBold } from "react-icons/pi";
 export const navItems = [
   {
     label: 'Painel',
     description: 'Visão geral dos containers',
     to: '/home',
     icon: HiOutlineHome,
+  },
+  {
+    label: 'Networks',
+    description: 'Visão das redes do docker',
+    to: '/networks',
+    icon: PiNetworkBold ,
   },
   {
     label: 'Containers',
