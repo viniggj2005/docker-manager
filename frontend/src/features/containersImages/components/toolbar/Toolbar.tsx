@@ -1,10 +1,10 @@
 import React from 'react';
 import { FaTrashCan } from 'react-icons/fa6';
 import { FiSearch, FiRefreshCw, FiGrid, FiList } from 'react-icons/fi';
+import { useDockerClient } from '../../../../contexts/DockerClientContext';
 import { ToolbarProps } from '../../../../interfaces/ContainerImagesInterfaces';
 import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { PruneImages } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
-import { useDockerClient } from '../../../../contexts/DockerClientContext';
 
 const Toolbar: React.FC<ToolbarProps> = ({
   view,
@@ -34,7 +34,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
       <div className="relative flex-1 min-w-[220px]">
         <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--system-black)] dark:text-[var(--system-white)]" />
         <input
-          className="w-full pl-9 pr-3 py-2 rounded-xl outline-none transition bg-[var(--system-white)] dark:bg-[var(--dark-primary)] dark:bg-[var(--dark-primary)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]   text-[var(--system-black)] placeholder-[var(--light-gray)]"
+          className="w-full pl-9 pr-3 py-2 rounded-xl outline-none transition bg-[var(--system-white)] dark:bg-[var(--dark-primary)] border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:text-[var(--system-white)]   text-[var(--system-black)] placeholder-[var(--light-gray)]"
           placeholder="Buscar por nome, tag, id ou label"
           value={query}
           onChange={(event) => setQuery(event.target.value)}

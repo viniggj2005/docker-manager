@@ -1,6 +1,7 @@
 import 'xterm/css/xterm.css';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
+import { MdOpenInNew } from "react-icons/md";
 import React, { useEffect, useRef, useState } from 'react';
 import TerminalModalHeader from '../headers/TerminalModalHeader';
 import { EventsOn } from '../../../../../wailsjs/runtime/runtime';
@@ -18,6 +19,56 @@ const TerminalModal: React.FC<TerminalProps> = ({
   configure,
   title = 'Terminal SSH',
 }) => {
+
+  const dragRef = useRef(false);
+  const dragStartRef = useRef({ x: 0, y: 0 });
+
+  const [minimized, setMinimized] = useState(false);
+  const [miniPos, setMiniPos] = useState({ x: 40, y: 40 });
+
+useEffect(() => {
+  if (!minimized) return;
+
+  const padding = 20;
+  const width = 200;
+  const height = 50;
+
+  const handleResize = () => {
+    setMiniPos({
+      x: window.innerWidth - width - padding,
+      y: window.innerHeight - height - padding,
+    });
+  };
+
+  window.addEventListener("resize", handleResize);
+
+  return () => window.removeEventListener("resize", handleResize);
+}, [minimized]);
+
+
+  useEffect(() => {
+    const move = (e: MouseEvent) => {
+      if (!dragRef.current) return;
+      setMiniPos({
+        x: e.clientX - dragStartRef.current.x,
+        y: e.clientY - dragStartRef.current.y,
+      });
+    };
+
+    const up = () => {
+      dragRef.current = false;
+    };
+
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+
+    return () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+  }, []);
+
+
   const startYRef = useRef(0);
   const startHRef = useRef(420);
   const resizingRef = useRef(false);
@@ -46,7 +97,8 @@ const TerminalModal: React.FC<TerminalProps> = ({
   }, [open]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || minimized) return;
+
     const terminal = new Terminal({
       fontSize: 18,
       lineHeight: 1,
@@ -61,6 +113,7 @@ const TerminalModal: React.FC<TerminalProps> = ({
         foreground: 'var(--grey-text)',
       },
     });
+
     const fit = new FitAddon();
     terminal.loadAddon(fit);
     terminal.open(hostRef.current!);
@@ -84,6 +137,7 @@ const TerminalModal: React.FC<TerminalProps> = ({
       fit.fit();
       Resize(terminal.cols, terminal.rows);
     });
+
     resizeObserver.observe(hostRef.current!);
     resizeObserverRef.current = resizeObserver;
 
@@ -91,33 +145,70 @@ const TerminalModal: React.FC<TerminalProps> = ({
       fit.fit();
       Resize(terminal.cols, terminal.rows);
     };
+
     window.addEventListener('resize', onWindowResize);
 
     return () => {
       Disconnect();
       terminal.dispose();
+      subscription.dispose();
       offData && offData();
       offExit && offExit();
-      fitRef.current = null;
-      subscription.dispose();
-      terminalRef.current = null;
       resizeObserver.disconnect();
+
+      fitRef.current = null;
+      terminalRef.current = null;
       resizeObserverRef.current = null;
+
       window.removeEventListener('resize', onWindowResize);
     };
-  }, [open, configure]);
+  }, [open, minimized, configure]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || minimized) return;
+
     queueMicrotask(() => {
       if (fitRef.current && terminalRef.current) {
         fitRef.current.fit();
         Resize(terminalRef.current.cols, terminalRef.current.rows);
       }
     });
-  }, [maximized, docked, dockHeight, open]);
+  }, [maximized, docked, dockHeight, open, minimized]);
 
   if (!open) return null;
+
+  if (minimized) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          left: miniPos.x,
+          top: miniPos.y,
+          zIndex: 99999,
+        }}
+        className="cursor-move bg-[var(--system-white)] text-[var(--system-black)] 
+                   dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)]
+                   shadow-xl rounded-md px-3 py-2 flex items-center gap-3 select-none"
+        onMouseDown={(e) => {
+          dragRef.current = true;
+          dragStartRef.current = { x: e.clientX - miniPos.x, y: e.clientY - miniPos.y };
+        }}
+      >
+        <span className="font-semibold">{title}</span>
+
+        <button
+          className="px-2 py-1 bg-[var(--accent)] hover:scale-95 text-[var(--system-black)] 
+                     dark:text-[var(--system-white)] rounded"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={() => setMinimized(false)}
+        >
+          <MdOpenInNew />
+        </button>
+      </div>
+    );
+  }
+
+  
 
   const closeOnBackdrop = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!docked && event.target === event.currentTarget) onClose();
@@ -140,6 +231,7 @@ const TerminalModal: React.FC<TerminalProps> = ({
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
     };
+
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
   };
@@ -150,7 +242,9 @@ const TerminalModal: React.FC<TerminalProps> = ({
   const modalSize =
     'w-[min(90vw,1100px)] h-[min(85vh,780px)] rounded-2xl border ' +
     'border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]';
+
   const fullscreenSize = 'w-screen h-screen rounded-none border-0';
+
   const dockedSize =
     'w-screen rounded-t-2xl border-t ' +
     'border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]';
@@ -182,7 +276,7 @@ const TerminalModal: React.FC<TerminalProps> = ({
         {docked && !maximized && (
           <div
             onMouseDown={onDockGripDown}
-            className="h-2 cursor-row-resize bg-transparent hover:scale-95  rounded-t-2xl"
+            className="h-2 cursor-row-resize bg-transparent hover:scale-95 rounded-t-2xl"
             title="Arraste para redimensionar"
           />
         )}
@@ -192,12 +286,13 @@ const TerminalModal: React.FC<TerminalProps> = ({
           docked={docked}
           onClose={onClose}
           maximized={maximized}
-          onToggleDock={() => setDocked((value) => !value)}
-          onToggleMax={() => setMaximized((value) => !value)}
+          onToggleDock={() => setDocked((v) => !v)}
+          onToggleMax={() => setMaximized((v) => !v)}
+          onMinimize={() => setMinimized(true)}
         />
 
         <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg pl-2 pt-1 bg-[var(--terminal-background)]">
-          <div ref={hostRef} className="flex-1 min-h-0 w-full " />
+          <div ref={hostRef} className="flex-1 min-h-0 w-full" />
         </div>
       </div>
     </div>

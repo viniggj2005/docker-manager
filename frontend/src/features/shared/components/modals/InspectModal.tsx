@@ -54,11 +54,17 @@ const InspectModal: React.FC<InspectProps> = ({ name, data, title, onClose }) =>
 
           <div className="ml-auto flex items-center gap-2">
             <button
-              onClick={onClose}
-              className="ml-1 text-rose-400 hover:text-rose-300"
-              title="Fechar"
+              onClick={() => onClose()}
+              className="
+                        inline-flex h-6 w-6 items-center justify-center
+                        rounded-full
+                        text-[var(--exit-red)]
+                        hover:bg-[var(--exit-red)] hover:text-[var(--system-white)] hover:scale-95
+                        transition
+                      "
+              aria-label="Fechar"
             >
-              <IoMdCloseCircleOutline className="h-5 w-5" />
+              <IoMdCloseCircleOutline className="w-5 h-5" />
             </button>
           </div>
         </div>

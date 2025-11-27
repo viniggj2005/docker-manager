@@ -32,17 +32,20 @@ export function AppFrame() {
         appframe-drag
         h-11
         flex items-center
-        px-4
-        bg-zinc-900
-        border-b border-zinc-800
+        px-1
+        rounded-t-xl
+        bg-[var(--system-white)]
+        dark:bg-[var(--dark-primary)]
+        border-[var(--light-gray)]
+        border-b dark:border-[var(--dark-tertiary)]
         shadow-sm
         select-none
-        z-10
+       
       "
       onDoubleClick={toggleMax}
     >
       <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center rounded-xl bg-zinc-800/90 p-1.5 shadow-inner">
+        <div className="flex items-center justify-center  pl-1 ">
           <img
             src={appIcon}
             className="w-6 h-6"
@@ -50,7 +53,7 @@ export function AppFrame() {
           />
         </div>
         <div className="flex flex-col leading-tight">
-          <span className="text-xs uppercase tracking-[0.18em] text-zinc-400">
+          <span className="text-xs uppercase tracking-[0.18em] text-[var(--grey-text)]">
             Docker Manager
           </span>
         </div>
@@ -67,13 +70,13 @@ export function AppFrame() {
           className="
             inline-flex h-8 w-8 items-center justify-center
             rounded-full
-            text-zinc-300
-            hover:bg-zinc-800/90 hover:text-zinc-50
+            dark:text-[var(--light-gray)] hover:bg-[var(--light-gray)]
+            dark:hover:bg-[var(--dark-secondary)] hover:scale-95
             transition
           "
           aria-label="Minimizar"
         >
-          <IoIosRemoveCircleOutline className="w-4 h-4" />
+          <IoIosRemoveCircleOutline className="w-6 h-6" />
         </button>
 
         <button
@@ -81,13 +84,13 @@ export function AppFrame() {
           className="
             inline-flex h-8 w-8 items-center justify-center
             rounded-full
-            text-zinc-300
-            hover:bg-zinc-800/90 hover:text-zinc-50
+            dark:text-[var(--light-gray)] hover:bg-[var(--light-gray)]
+            dark:hover:bg-[var(--dark-secondary)] hover:scale-95
             transition
           "
           aria-label={maximized ? "Restaurar" : "Maximizar"}
         >
-          <FaRegWindowRestore className="w-4 h-4" />
+          <FaRegWindowRestore className="w-5 h-5" />
         </button>
 
         <button
@@ -96,12 +99,12 @@ export function AppFrame() {
             inline-flex h-8 w-8 items-center justify-center
             rounded-full
             text-[var(--exit-red)]
-            hover:bg-[var(--exit-red)] hover:text-white
+            hover:bg-[var(--exit-red)] hover:text-[var(--system-white)] hover:scale-95
             transition
           "
           aria-label="Fechar"
         >
-          <IoMdCloseCircleOutline className="w-4 h-4" />
+          <IoMdCloseCircleOutline className="w-6 h-6" />
         </button>
       </div>
     </div>

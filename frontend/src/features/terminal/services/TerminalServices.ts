@@ -1,16 +1,6 @@
-import {
-  GetById,
-  DeleteConnection,
-  CreateSshConnection,
-  UpdateSshConnection,
-  FindAllConnectionByUser,
-} from '../../../../wailsjs/go/handlers/SshHandlerStruct';
 import { normalizeKey } from '../functions/TreatmentFunctions';
-import type {
-  CreateSshConnectionInterface,
-  SSHConnectionDto,
-  SshDto,
-} from '../../../interfaces/TerminalInterfaces';
+import type { CreateSshConnectionInterface, SSHConnectionDto, SshDto } from '../../../interfaces/TerminalInterfaces';
+import { GetById, DeleteConnection, CreateSshConnection, UpdateSshConnection, FindAllConnectionByUser } from '../../../../wailsjs/go/handlers/SshHandlerStruct';
 
 export function toSshConn(dto: SshDto): SSHConnectionDto {
   return {

@@ -28,12 +28,11 @@ const EditContainerNameModal: React.FC<EditContainerNameModalProps> = ({
       />
       <button
         onClick={() => setEditNameModal(false)}
-        className="absolute  cursor-pointer -top-2 -right-2 text-[var(--exit-red)] hover:text-[var(--exit-red)]"
+        className="absolute  cursor-pointer -top-2 -right-2 text-[var(--exit-red)] hover:bg-[var(--exit-red)] hover:text-[var(--system-white)] hover:scale-95 rounded-full "
         title="Fechar"
       >
         <IoMdCloseCircleOutline className="w-5 h-5" />
       </button>
-
       <input
         type="text"
         placeholder="Novo nome"
