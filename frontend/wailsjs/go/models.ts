@@ -992,3 +992,168 @@ export namespace v1 {
 
 }
 
+export namespace volume {
+	
+	export class CapacityRange {
+	    RequiredBytes: number;
+	    LimitBytes: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new CapacityRange(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.RequiredBytes = source["RequiredBytes"];
+	        this.LimitBytes = source["LimitBytes"];
+	    }
+	}
+	export class TopologyRequirement {
+	
+	
+	    static createFrom(source: any = {}) {
+	        return new TopologyRequirement(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	
+	    }
+	}
+	export class TypeBlock {
+	
+	
+	    static createFrom(source: any = {}) {
+	        return new TypeBlock(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	
+	    }
+	}
+	export class TypeMount {
+	
+	
+	    static createFrom(source: any = {}) {
+	        return new TypeMount(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	
+	    }
+	}
+	export class AccessMode {
+	    // Go type: TypeMount
+	    ""?: any;
+	    // Go type: TypeBlock
+	    ""?: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new AccessMode(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this[""] = this.convertValues(source[""], null);
+	        this[""] = this.convertValues(source[""], null);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ClusterVolumeSpec {
+	    // Go type: AccessMode
+	    ""?: any;
+	    // Go type: TopologyRequirement
+	    ""?: any;
+	    // Go type: CapacityRange
+	    ""?: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new ClusterVolumeSpec(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this[""] = this.convertValues(source[""], null);
+	        this[""] = this.convertValues(source[""], null);
+	        this[""] = this.convertValues(source[""], null);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class CreateOptions {
+	    // Go type: ClusterVolumeSpec
+	    ClusterVolumeSpec?: any;
+	    Driver?: string;
+	    DriverOpts?: Record<string, string>;
+	    Labels?: Record<string, string>;
+	    Name?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new CreateOptions(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.ClusterVolumeSpec = this.convertValues(source["ClusterVolumeSpec"], null);
+	        this.Driver = source["Driver"];
+	        this.DriverOpts = source["DriverOpts"];
+	        this.Labels = source["Labels"];
+	        this.Name = source["Name"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+
+}
+

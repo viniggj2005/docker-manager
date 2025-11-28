@@ -4,6 +4,7 @@ import {
   HiOutlineServer,
   HiOutlinePhotograph,
   HiOutlineKey,
+  HiOutlineArchive,
 } from 'react-icons/hi';
 import { PiNetworkBold } from "react-icons/pi";
 export const navItems = [
@@ -18,6 +19,12 @@ export const navItems = [
     description: 'Visão das redes do docker',
     to: '/networks',
     icon: PiNetworkBold ,
+  },
+  {
+    label: 'Volumes',
+    description: 'Gerencie volumes Docker',
+    to: '/volumes',
+    icon: HiOutlineArchive,
   },
   {
     label: 'Containers',

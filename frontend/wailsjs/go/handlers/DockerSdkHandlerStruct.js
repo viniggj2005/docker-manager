@@ -50,8 +50,16 @@ export function CreateNetwork(arg1, arg2, arg3) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['CreateNetwork'](arg1, arg2, arg3);
 }
 
+export function CreateVolume(arg1, arg2) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['CreateVolume'](arg1, arg2);
+}
+
 export function DeleteNetwork(arg1, arg2) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['DeleteNetwork'](arg1, arg2);
+}
+
+export function DeleteVolume(arg1, arg2) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['DeleteVolume'](arg1, arg2);
 }
 
 export function ImagesList(arg1) {
@@ -66,8 +74,16 @@ export function InspectNetwork(arg1, arg2) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['InspectNetwork'](arg1, arg2);
 }
 
+export function InspectVolume(arg1, arg2) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['InspectVolume'](arg1, arg2);
+}
+
 export function ListNetworks(arg1) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['ListNetworks'](arg1);
+}
+
+export function ListVolumes(arg1) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['ListVolumes'](arg1);
 }
 
 export function PruneImages(arg1) {
