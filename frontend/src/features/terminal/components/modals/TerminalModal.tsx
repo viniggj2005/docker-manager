@@ -29,9 +29,9 @@ const TerminalModal: React.FC<TerminalProps> = ({
   useEffect(() => {
     if (!minimized) return;
 
-    const padding = 20;
     const width = 200;
     const height = 50;
+    const padding = 20; 
 
     const handleResize = () => {
       setMiniPos({
@@ -250,7 +250,7 @@ const TerminalModal: React.FC<TerminalProps> = ({
   const fullscreenSize = 'w-screen h-screen rounded-none border-0';
 
   const dockedSize =
-    'w-screen rounded-t-2xl border-t ' +
+    'w-screen rounded-t-2xl  ' +
     'border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]';
 
   const containerClasses =
