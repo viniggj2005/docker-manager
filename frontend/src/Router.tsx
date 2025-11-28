@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage';
 import ImagesPage from './pages/ImagesPage';
 import ProtectedRoute from './ProtectedRoute';
 import NetworksPage from './pages/NetworksPage';
+import VolumesPage from './pages/VolumesPage';
 import ContainersPage from './pages/ContainersPage';
 import TerminalFormPage from './pages/TerminalFormPage';
 import CreateAccountPage from './pages/CreateAccountPage';
@@ -28,6 +29,7 @@ export const router = createBrowserRouter(
             { path: 'createConnectionForm', element: <TerminalFormPage /> },
             { path: 'docker-credentials', element: <DockerCredentialsPage /> },
             { path: 'networks', element: <NetworksPage /> },
+            { path: 'volumes', element: <VolumesPage /> },
           ],
         },
 

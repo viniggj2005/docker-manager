@@ -3,6 +3,7 @@
 import {client} from '../models';
 import {container} from '../models';
 import {network} from '../models';
+import {volume} from '../models';
 import {image} from '../models';
 import {context} from '../models';
 
@@ -30,13 +31,19 @@ export function ContainersList(arg1:number):Promise<Array<container.Summary>>;
 
 export function CreateNetwork(arg1:number,arg2:string,arg3:network.CreateOptions):Promise<string>;
 
+export function CreateVolume(arg1:number,arg2:volume.CreateOptions):Promise<string>;
+
 export function DeleteNetwork(arg1:number,arg2:string):Promise<void>;
+
+export function DeleteVolume(arg1:number,arg2:string):Promise<void>;
 
 export function ImagesList(arg1:number):Promise<Array<image.Summary>>;
 
 export function InspectImage(arg1:number,arg2:string):Promise<string>;
 
 export function InspectNetwork(arg1:number,arg2:string):Promise<string>;
+
+export function InspectVolume(arg1:number,arg2:string):Promise<string>;
 
 export function ListNetworks(arg1:number):Promise<string>;
 

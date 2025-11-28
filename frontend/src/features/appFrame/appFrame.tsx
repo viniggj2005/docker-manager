@@ -33,7 +33,7 @@ export function AppFrame() {
         h-11
         flex items-center
         px-1
-        rounded-t-xl
+        rounded-t-lg
         bg-[var(--system-white)]
         dark:bg-[var(--dark-primary)]
         border-[var(--light-gray)]
