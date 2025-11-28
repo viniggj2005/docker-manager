@@ -40,6 +40,8 @@ export function InspectNetwork(arg1:number,arg2:string):Promise<string>;
 
 export function ListNetworks(arg1:number):Promise<string>;
 
+export function ListVolumes(arg1:number):Promise<string>;
+
 export function PruneImages(arg1:number):Promise<image.PruneReport>;
 
 export function PruneNetworks(arg1:number):Promise<string>;

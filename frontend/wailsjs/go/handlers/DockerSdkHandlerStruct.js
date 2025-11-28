@@ -70,6 +70,10 @@ export function ListNetworks(arg1) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['ListNetworks'](arg1);
 }
 
+export function ListVolumes(arg1) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['ListVolumes'](arg1);
+}
+
 export function PruneImages(arg1) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['PruneImages'](arg1);
 }
