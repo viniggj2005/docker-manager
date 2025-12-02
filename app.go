@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -36,7 +35,7 @@ func (a *App) LoadImage(name string) (string, error) {
 	execPath, _ := os.Getwd()
 	imgPath := filepath.Join(execPath, "uploads", name)
 
-	data, err := ioutil.ReadFile(imgPath)
+	data, err := os.ReadFile(imgPath)
 	if err != nil {
 		return "", err
 	}
@@ -44,7 +43,6 @@ func (a *App) LoadImage(name string) (string, error) {
 	return base64Str, nil
 }
 func (a *App) SaveImage(base64Str, path string) error {
-	// remove prefix "data:image/png;base64,"
 	parts := strings.Split(base64Str, ",")
 	data, err := base64.StdEncoding.DecodeString(parts[len(parts)-1])
 	if err != nil {

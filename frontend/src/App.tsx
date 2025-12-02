@@ -2,9 +2,9 @@ import './index.css';
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { AppFrame } from './features/appFrame/appFrame';
+import { WindowIsFullscreen } from '../wailsjs/runtime/runtime';
 import AppShell from './features/shared/components/sidebar/AppShell';
 import GlobalTerminalHost from './features/terminal/GlobalTerminalHost';
-import { WindowIsFullscreen } from '../wailsjs/runtime/runtime';
 
 const authRoutes = ['/login', '/create-account'];
 
@@ -15,12 +15,16 @@ export default function App() {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(async () => {
+    const handleResize = async () => {
       const fs = await WindowIsFullscreen();
       setIsFullscreen(fs);
-    }, 150);
+    };
 
-    return () => clearInterval(interval);
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
