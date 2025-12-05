@@ -9,5 +9,12 @@
   "author": {
     "name": "Vinicius Gabriel Graupmann Juraszek",
     "email": "102488557+viniggj2005@users.noreply.github.com"
+  },
+  "info": {
+    "productName": "Docker Manager",
+    "companyName": "Vinicius Gabriel Graupmann Juraszek",
+    "productVersion": "1.0.0",
+    "fileDescription": "Docker Manager Application",
+    "copyright": "Vinicius Gabriel Graupmann Juraszek"
   }
 }
