@@ -30,6 +30,8 @@ export function AppFrame() {
     <div
       className="
         appframe-drag
+        cursor-grab
+        active:cursor-grabbing
         h-11
         flex items-center
         px-1

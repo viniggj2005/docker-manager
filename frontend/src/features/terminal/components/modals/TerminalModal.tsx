@@ -31,7 +31,7 @@ const TerminalModal: React.FC<TerminalProps> = ({
 
     const width = 200;
     const height = 50;
-    const padding = 20; 
+    const padding = 20;
 
     const handleResize = () => {
       setMiniPos({
@@ -140,14 +140,14 @@ const TerminalModal: React.FC<TerminalProps> = ({
         if (selection) {
           e.preventDefault();
           if (navigator.clipboard?.writeText) {
-            navigator.clipboard.writeText(selection).catch(() => {});
+            navigator.clipboard.writeText(selection).catch(() => { });
           }
-          return false; 
+          return false;
         }
         return true;
       }
 
-      return true; 
+      return true;
     });
 
 
@@ -247,7 +247,7 @@ const TerminalModal: React.FC<TerminalProps> = ({
     'w-[min(90vw,1100px)] h-[min(85vh,780px)] rounded-2xl border ' +
     'border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]';
 
-  const fullscreenSize = 'w-screen h-screen rounded-none border-0';
+  const fullscreenSize = 'w-screen h-screen appframe-drag cursor-grab active:cursor-grabbing rounded-none border-0';
 
   const dockedSize =
     'w-screen rounded-t-2xl  ' +
