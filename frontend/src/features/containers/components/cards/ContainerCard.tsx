@@ -1,20 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GoPencil } from 'react-icons/go';
 import InfoTile from '../badges/InfoTile';
+import { CgSpinner } from 'react-icons/cg';
 import LogsModal from '../modals/LogsModal';
 import CardFooter from './ContainerCardFooter';
 import StatusBadge from '../badges/StatusBadge';
 import PortsList from '../../../ports/PortsList';
 import { RiFileList2Line } from 'react-icons/ri';
-import { CiPlay1, CiPause1 } from 'react-icons/ci';
 import ContainersMenuModal from '../modals/MenuModal';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
+import { CiPlay1, CiPause1, CiStop1 } from 'react-icons/ci';
 import { FmtAgo } from '../../../shared/functions/TreatmentFunction';
 import EditContainerNameModal from '../modals/EditContainerNameModal';
 import { ContainerCardProps } from '../../../../interfaces/ContainerInterfaces';
 
 const ContainerCard: React.FC<ContainerCardProps> = ({
   name,
+  onStop,
+  onStart,
   onRename,
   isSeeing,
   isOpened,
@@ -28,7 +31,10 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
   onCloseMenu,
   onCloseEdit,
   onTogglePause,
+  onOpenTerminal,
 }) => {
+  const [loading, setLoading] = useState(false);
+
   return (
     <div className="group flex flex-col gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-5 shadow-sm transition hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -83,6 +89,35 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
           </button>
 
           <button
+            disabled={loading}
+            title={container.State === 'running' ? 'Parar Container' : 'Iniciar Container'}
+            onClick={async () => {
+              setLoading(true);
+              try {
+                if (container.State === 'running') await onStop(container.Id);
+                else await onStart(container.Id);
+              } finally {
+                setLoading(false);
+              }
+            }}
+            className={`flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm font-medium transition hover:scale-95 sm:w-auto dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] ${container.State === 'running'
+              ? 'text-[var(--exit-red)]'
+              : 'text-[var(--success-green)]'
+              }`}
+          >
+            {loading ? (
+              <CgSpinner className="h-5 w-5 animate-spin text-[var(--system-black)] dark:text-[var(--system-white)]" />
+            ) : container.State === 'running' ? (
+              <CiStop1 className="h-5 w-5" />
+            ) : (
+              <CiPlay1 className="h-5 w-5" />
+            )}
+            <span className="sm:hidden">
+              {loading ? 'Carregando' : container.State === 'running' ? 'Parar' : 'Iniciar'}
+            </span>
+          </button>
+
+          <button
             title={container.State === 'paused' ? 'Despausar container' : 'Pausar Container'}
             onClick={() => onTogglePause(container.Id, container.State)}
             className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm font-medium text-[var(--system-black)] transition hover:scale-95 sm:w-auto dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]"
@@ -113,6 +148,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
                 name={container.Names?.[0] ?? name}
                 setMenuModal={onCloseMenu}
                 onDeleted={onDeleted}
+                onOpenTerminal={onOpenTerminal}
               />
             )}
           </div>

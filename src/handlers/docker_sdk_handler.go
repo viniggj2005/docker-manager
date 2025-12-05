@@ -8,9 +8,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net"
 	"sync"
 	"time"
 
+	"github.com/docker/docker/api/types/container"
 	ctn "github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/image"
@@ -21,13 +23,15 @@ import (
 )
 
 type DockerSdkHandlerStruct struct {
-	mutex         sync.Mutex
-	appContext    context.Context
-	dockerHandler *DockerHandlerStruct
-	clients       map[string]*client.Client
-	contexts      map[string]context.Context
-	clientCancels map[string]context.CancelFunc
-	statsCancel   map[string]map[string]context.CancelFunc
+	mutex           sync.Mutex
+	appContext      context.Context
+	dockerHandler   *DockerHandlerStruct
+	clients         map[string]*client.Client
+	contexts        map[string]context.Context
+	clientCancels   map[string]context.CancelFunc
+	statsCancel     map[string]map[string]context.CancelFunc
+	terminalConns   map[string]net.Conn
+	terminalExecIds map[string]string
 }
 
 type APIError struct {
@@ -41,11 +45,13 @@ func (err *APIError) Error() string {
 
 func NewDockerSdkHandler(dockerHandler *DockerHandlerStruct) *DockerSdkHandlerStruct {
 	return &DockerSdkHandlerStruct{
-		dockerHandler: dockerHandler,
-		clients:       make(map[string]*client.Client),
-		contexts:      make(map[string]context.Context),
-		clientCancels: make(map[string]context.CancelFunc),
-		statsCancel:   make(map[string]map[string]context.CancelFunc),
+		dockerHandler:   dockerHandler,
+		clients:         make(map[string]*client.Client),
+		contexts:        make(map[string]context.Context),
+		clientCancels:   make(map[string]context.CancelFunc),
+		statsCancel:     make(map[string]map[string]context.CancelFunc),
+		terminalConns:   make(map[string]net.Conn),
+		terminalExecIds: make(map[string]string),
 	}
 }
 
@@ -377,6 +383,32 @@ func sumTx(body *ctn.StatsResponse) uint64 {
 
 // ############################## Containers #########################################################
 
+func (handlerStruct *DockerSdkHandlerStruct) ContainerStart(clientId int, containerId string) error {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return err
+	}
+
+	if err := cli.ContainerStart(ctx, containerId, container.StartOptions{}); err != nil {
+		return &APIError{Code: 500, Message: err.Error()}
+	}
+
+	return nil
+}
+
+func (handlerStruct *DockerSdkHandlerStruct) ContainerStop(clientId int, containerId string) error {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return err
+	}
+
+	if err := cli.ContainerStop(ctx, containerId, container.StopOptions{}); err != nil {
+		return &APIError{Code: 500, Message: err.Error()}
+	}
+
+	return nil
+}
+
 func (handlerStruct *DockerSdkHandlerStruct) ContainerPause(clientId int, containerId string) error {
 	cli, ctx, err := handlerStruct.CatchClient(clientId)
 	if err != nil {
@@ -426,6 +458,7 @@ func (handlerStruct *DockerSdkHandlerStruct) ContainerLogs(clientId int, contain
 		ShowStdout: true,
 		ShowStderr: true,
 		Follow:     false,
+		Tail:       "2000",
 	})
 	if err != nil {
 		return "", &APIError{Code: 500, Message: err.Error()}
@@ -653,4 +686,107 @@ func (handlerStruct *DockerSdkHandlerStruct) InspectVolume(clientId int, volumeI
 		return "", err
 	}
 	return string(bytesArray), nil
+}
+
+// #########################################Exec#####################################################################
+func (handlerStruct *DockerSdkHandlerStruct) ContainerExec(clientId int, containerId string) (string, error) {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return "", err
+	}
+
+	execConfig := ctn.ExecOptions{
+		AttachStdin:  true,
+		AttachStdout: true,
+		AttachStderr: true,
+		Tty:          true,
+		Cmd:          []string{"/bin/sh"},
+	}
+
+	execID, err := cli.ContainerExecCreate(ctx, containerId, execConfig)
+	if err != nil {
+		return "", &APIError{Code: 500, Message: fmt.Sprintf("Erro ao criar exec: %v", err)}
+	}
+
+	attachConfig := ctn.ExecStartOptions{
+		Detach: false,
+		Tty:    true,
+	}
+
+	resp, err := cli.ContainerExecAttach(ctx, execID.ID, attachConfig)
+	if err != nil {
+		return "", &APIError{Code: 500, Message: fmt.Sprintf("Erro ao conectar exec: %v", err)}
+	}
+
+	handlerStruct.mutex.Lock()
+	handlerStruct.terminalConns[containerId] = resp.Conn
+	handlerStruct.terminalExecIds[containerId] = execID.ID
+	handlerStruct.mutex.Unlock()
+
+	go func() {
+		defer resp.Conn.Close()
+		buf := make([]byte, 1024)
+		for {
+			n, err := resp.Conn.Read(buf)
+			if err != nil {
+				if err != io.EOF {
+					fmt.Printf("Erro ao ler terminal: %v\n", err)
+				}
+				break
+			}
+			if n > 0 {
+				runtime.EventsEmit(handlerStruct.appContext, "terminal:data:"+containerId, string(buf[:n]))
+			}
+		}
+		handlerStruct.mutex.Lock()
+		delete(handlerStruct.terminalConns, containerId)
+		delete(handlerStruct.terminalExecIds, containerId)
+		handlerStruct.mutex.Unlock()
+		runtime.EventsEmit(handlerStruct.appContext, "terminal:closed:"+containerId, true)
+	}()
+
+	return "Connected", nil
+}
+
+func (handlerStruct *DockerSdkHandlerStruct) TerminalWrite(containerId string, data string) error {
+	handlerStruct.mutex.Lock()
+	conn, ok := handlerStruct.terminalConns[containerId]
+	handlerStruct.mutex.Unlock()
+
+	if !ok {
+		return fmt.Errorf("conexão terminal não encontrada para container %s", containerId)
+	}
+
+	_, err := conn.Write([]byte(data))
+	if err != nil {
+		return fmt.Errorf("Erro ao escrever terminal: %w", err)
+	}
+	return nil
+}
+
+func (handlerStruct *DockerSdkHandlerStruct) TerminalResize(clientId int, containerId string, cols, rows int) error {
+	handlerStruct.mutex.Lock()
+	execID, ok := handlerStruct.terminalExecIds[containerId]
+	handlerStruct.mutex.Unlock()
+
+	if !ok {
+		return fmt.Errorf("exec ID não encontrado para container %s", containerId)
+	}
+
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return err
+	}
+
+	resizeOptions := ctn.ResizeOptions{
+		Height: uint(rows),
+		Width:  uint(cols),
+	}
+
+	err = cli.ContainerExecResize(ctx, execID, resizeOptions)
+	if err != nil {
+		return &APIError{Code: 500, Message: fmt.Sprintf("Erro ao redimensionar terminal: %v", err)}
+	}
+
+	return nil
 }

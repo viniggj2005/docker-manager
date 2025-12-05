@@ -14,6 +14,10 @@ export function ConnectDocker(arg1) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['ConnectDocker'](arg1);
 }
 
+export function ContainerExec(arg1, arg2) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['ContainerExec'](arg1, arg2);
+}
+
 export function ContainerInspect(arg1, arg2) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['ContainerInspect'](arg1, arg2);
 }
@@ -36,6 +40,14 @@ export function ContainerRename(arg1, arg2, arg3) {
 
 export function ContainerRestart(arg1, arg2) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['ContainerRestart'](arg1, arg2);
+}
+
+export function ContainerStart(arg1, arg2) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['ContainerStart'](arg1, arg2);
+}
+
+export function ContainerStop(arg1, arg2) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['ContainerStop'](arg1, arg2);
 }
 
 export function ContainerUnPause(arg1, arg2) {
@@ -112,4 +124,12 @@ export function StopContainerStats(arg1, arg2) {
 
 export function StreamStats(arg1, arg2, arg3, arg4) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['StreamStats'](arg1, arg2, arg3, arg4);
+}
+
+export function TerminalResize(arg1, arg2, arg3, arg4) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['TerminalResize'](arg1, arg2, arg3, arg4);
+}
+
+export function TerminalWrite(arg1, arg2) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['TerminalWrite'](arg1, arg2);
 }

@@ -41,6 +41,7 @@ export interface ContainerProps {
   isOpen: boolean;
   onDeleted?: () => void;
   setMenuModal: (state: boolean) => void;
+  onOpenTerminal: () => void;
 }
 
 export interface StatsPayload {
@@ -76,6 +77,9 @@ export interface ContainerCardProps {
   onDeleted: () => Promise<void>;
   onRename: (name: string, id: string) => Promise<void>;
   onTogglePause: (id: string, state: string) => Promise<void>;
+  onStart: (id: string) => Promise<void>;
+  onStop: (id: string) => Promise<void>;
+  onOpenTerminal: () => void;
 }
 
 interface Point {

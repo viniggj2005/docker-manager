@@ -1,16 +1,24 @@
 import { FiRefreshCw } from 'react-icons/fi';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ContainerCard from './components/cards/ContainerCard';
+import TerminalModal from './components/modals/TerminalModal';
 import { FmtName } from '../shared/functions/TreatmentFunction';
 import { ContainerItem } from '../../interfaces/ContainerInterfaces';
-import { getContainers, renameContainer, toggleContainerState } from './services/ContainersService';
 import { useDockerClient } from '../../contexts/DockerClientContext';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  getContainers,
+  stopContainer,
+  startContainer,
+  renameContainer,
+  toggleContainerState,
+} from './services/ContainersService';
 
 const ContainersListView: React.FC = () => {
   const timerRef = useRef<number | null>(null);
-  const [containers, setcontainers] = useState<ContainerItem[] | null>(null);
   const [LogsModalId, setLogsModalId] = useState<string | null>(null);
   const [MenuModalId, setMenuModalId] = useState<string | null>(null);
+  const [containers, setcontainers] = useState<ContainerItem[] | null>(null);
+  const [TerminalModalId, setTerminalModalId] = useState<string | null>(null);
   const [editNameModalId, setEditNameModalId] = useState<string | null>(null);
   const { selectedCredentialId, loading: credentialsLoading, connecting } = useDockerClient();
 
@@ -55,6 +63,18 @@ const ContainersListView: React.FC = () => {
     };
   }, [fetchContainers, selectedCredentialId]);
 
+  const handleStart = async (id: string) => {
+    if (selectedCredentialId == null) return;
+    await startContainer(selectedCredentialId, id);
+    await fetchContainers();
+  };
+
+  const handleStop = async (id: string) => {
+    if (selectedCredentialId == null) return;
+    await stopContainer(selectedCredentialId, id);
+    await fetchContainers();
+  };
+
   return (
     <div className="w-full h-full">
       <div className="mx-auto max-w-8xl p-6">
@@ -97,26 +117,37 @@ const ContainersListView: React.FC = () => {
               const isEditing = editNameModalId === container.Id;
 
               return (
-                <ContainerCard
-                  name={name}
-                  key={container.Id}
-                  isSeeing={isSeeing}
-                  isOpened={isOpened}
-                  container={container}
-                  isEditing={isEditing}
-                  onRename={handleRename}
-                  onTogglePause={changeContainerStage}
-                  onCloseLogs={() => setLogsModalId(null)}
-                  onCloseMenu={() => setMenuModalId(null)}
-                  onCloseEdit={() => setEditNameModalId(null)}
-                  onOpenLogs={() => setLogsModalId(container.Id)}
-                  onOpenMenu={() => setMenuModalId(container.Id)}
-                  onOpenEdit={() => setEditNameModalId(container.Id)}
-                  onDeleted={async () => {
-                    await fetchContainers();
-                    setMenuModalId(null);
-                  }}
-                />
+                <div key={container.Id}>
+                  <ContainerCard
+                    name={name}
+                    isSeeing={isSeeing}
+                    isOpened={isOpened}
+                    container={container}
+                    isEditing={isEditing}
+                    onRename={handleRename}
+                    onStart={handleStart}
+                    onStop={handleStop}
+                    onTogglePause={changeContainerStage}
+                    onCloseLogs={() => setLogsModalId(null)}
+                    onCloseMenu={() => setMenuModalId(null)}
+                    onCloseEdit={() => setEditNameModalId(null)}
+                    onOpenLogs={() => setLogsModalId(container.Id)}
+                    onOpenMenu={() => setMenuModalId(container.Id)}
+                    onOpenEdit={() => setEditNameModalId(container.Id)}
+                    onOpenTerminal={() => setTerminalModalId(container.Id)}
+                    onDeleted={async () => {
+                      await fetchContainers();
+                      setMenuModalId(null);
+                    }}
+                  />
+                  {TerminalModalId === container.Id && (
+                    <TerminalModal
+                      id={container.Id}
+                      name={name}
+                      setTerminalModal={() => setTerminalModalId(null)}
+                    />
+                  )}
+                </div>
               );
             })}
           </div>

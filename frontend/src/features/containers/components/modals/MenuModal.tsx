@@ -6,6 +6,7 @@ import ArrowTip from '../../../shared/components/ArrowTip';
 import React, { useEffect, useRef, useState } from 'react';
 import { FmtName } from '../../../shared/functions/TreatmentFunction';
 import InspectModal from '../../../shared/components/modals/InspectModal';
+import { useDockerClient } from '../../../../contexts/DockerClientContext';
 import { ContainerProps } from '../../../../interfaces/ContainerInterfaces';
 import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { MdContentPasteSearch, MdOutlineQueryStats, MdRestartAlt } from 'react-icons/md';
@@ -14,7 +15,6 @@ import {
   ContainerInspect,
   ContainerRestart,
 } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
-import { useDockerClient } from '../../../../contexts/DockerClientContext';
 
 const ContainersMenuModal: React.FC<ContainerProps> = ({
   id,
@@ -22,14 +22,15 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   isOpen,
   onDeleted,
   setMenuModal,
+  onOpenTerminal,
 }) => {
   const theme = useTheme();
   const confirmToast = useConfirmToast();
+  const { selectedCredentialId } = useDockerClient();
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isInspectOpen, setIsInspectOpen] = useState(false);
   const [inspectContent, setInspectContent] = useState<string | null>(null);
-  const { selectedCredentialId } = useDockerClient();
 
   const ensureClient = () => {
     if (selectedCredentialId == null) {
@@ -141,6 +142,16 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
           className="w-full flex items-center dark:text-[var(--system-white)] justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
         >
           <MdRestartAlt className="w-6 h-6" />
+        </button>
+        <button
+          onClick={() => {
+            onOpenTerminal();
+            setMenuModal(false);
+          }}
+          title="Terminal do Container"
+          className="w-full flex items-center dark:text-[var(--system-white)] justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
+        >
+          <span className="font-mono text-xs border border-current rounded px-1">_&gt;</span>
         </button>
         <button
           onClick={() => {
