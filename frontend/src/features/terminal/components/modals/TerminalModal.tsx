@@ -1,25 +1,28 @@
 import 'xterm/css/xterm.css';
+import iziToast from 'izitoast';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { MdOpenInNew } from "react-icons/md";
 import React, { useEffect, useRef, useState } from 'react';
 import TerminalModalHeader from '../headers/TerminalModalHeader';
-import { EventsOn } from '../../../../../wailsjs/runtime/runtime';
 import { TerminalProps } from '../../../../interfaces/TerminalInterfaces';
+import { useDockerClient } from '../../../../contexts/DockerClientContext';
+import { EventsOff, EventsOn } from '../../../../../wailsjs/runtime/runtime';
 import {
   Send,
   Resize,
   Disconnect,
   ConnectWith,
 } from '../../../../../wailsjs/go/handlers/TerminalHandlerStruct';
+import { containerExec, terminalWrite } from '../../../containers/services/ContainersService';
 
 const TerminalModal: React.FC<TerminalProps> = ({
+  id,
   open,
   onClose,
   configure,
   title = 'Terminal SSH',
 }) => {
-
   const dragRef = useRef(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
 
@@ -47,11 +50,11 @@ const TerminalModal: React.FC<TerminalProps> = ({
   }, [minimized]);
 
   useEffect(() => {
-    const move = (e: MouseEvent) => {
+    const move = (event: MouseEvent) => {
       if (!dragRef.current) return;
       setMiniPos({
-        x: e.clientX - dragStartRef.current.x,
-        y: e.clientY - dragStartRef.current.y,
+        x: event.clientX - dragStartRef.current.x,
+        y: event.clientY - dragStartRef.current.y,
       });
     };
 
@@ -71,6 +74,9 @@ const TerminalModal: React.FC<TerminalProps> = ({
   const startYRef = useRef(0);
   const startHRef = useRef(420);
   const resizingRef = useRef(false);
+
+  const connectedRef = useRef(false);
+  const { selectedCredentialId } = useDockerClient();
 
   const [docked, setDocked] = useState(false);
   const [maximized, setMaximized] = useState(false);
@@ -99,7 +105,8 @@ const TerminalModal: React.FC<TerminalProps> = ({
     if (!open) return;
 
     const terminal = new Terminal({
-      fontSize: 18,
+      fontSize: 14
+      ,
       lineHeight: 1,
       convertEol: true,
       scrollback: 5000,
@@ -159,16 +166,50 @@ const TerminalModal: React.FC<TerminalProps> = ({
 
     fitRef.current = fit;
     terminalRef.current = terminal;
+    let subscription: any;
+    let offData: any;
+    let offExit: any;
+    if (!id) {
+      subscription = terminal.onData((d) => Send(d));
+      offData = EventsOn('ssh:data', (chunk: string) => terminal.write(chunk));
+      offExit = EventsOn('ssh:exit', (msg: string) =>
+        terminal.write(`\r\n[conexão encerrada] ${msg || ''}\r\n`)
+      );
 
-    const subscription = terminal.onData((d) => Send(d));
-    const offData = EventsOn('ssh:data', (chunk: string) => terminal.write(chunk));
-    const offExit = EventsOn('ssh:exit', (msg: string) =>
-      terminal.write(`\r\n[conexão encerrada] ${msg || ''}\r\n`)
-    );
+      ConnectWith({ ...(configure as any), Cols: terminal.cols, Rows: terminal.rows }).catch(
+        (e: any) => terminal.write(`\r\n[erro] ${String(e)}\r\n`)
+      );
+    } else if (id) {
+      terminal.onData((data: string) => {
+        if (connectedRef.current) {
+          terminalWrite(id, data).catch((err) => console.error(err));
+        }
+      });
 
-    ConnectWith({ ...(configure as any), Cols: terminal.cols, Rows: terminal.rows }).catch(
-      (e: any) => terminal.write(`\r\n[erro] ${String(e)}\r\n`)
-    );
+      EventsOn(`terminal:data:${id}`, (data: string) => {
+        terminal.write(data);
+      });
+
+      EventsOn(`terminal:closed:${id}`, () => {
+        terminal.writeln('\r\nConnection closed by remote host.');
+        connectedRef.current = false;
+      });
+
+      (async () => {
+        try {
+          if (!selectedCredentialId) return;
+          await containerExec(selectedCredentialId, id);
+          connectedRef.current = true;
+          terminal.clear();
+          fit.fit();
+          terminal.focus();
+        } catch (error: any) {
+          terminal.writeln(`\r\nError connecting: ${error?.message || error}`);
+          iziToast.error({ title: 'Erro', message: error?.message || String(error) });
+        }
+      })();
+    }
+
 
     const resizeObserver = new ResizeObserver(() => {
       fit.fit();
@@ -188,9 +229,14 @@ const TerminalModal: React.FC<TerminalProps> = ({
     return () => {
       Disconnect();
       terminal.dispose();
-      subscription.dispose();
-      offData && offData();
-      offExit && offExit();
+      if (!id) {
+        subscription.dispose();
+        offData && offData();
+        offExit && offExit();
+      } else if (id) {
+        EventsOff(`terminal:data:${id}`);
+        EventsOff(`terminal:closed:${id}`);
+      }
       resizeObserver.disconnect();
 
       fitRef.current = null;
@@ -199,7 +245,7 @@ const TerminalModal: React.FC<TerminalProps> = ({
 
       window.removeEventListener('resize', onWindowResize);
     };
-  }, [open, configure]);
+  }, [open, configure, id, selectedCredentialId]);
 
   useEffect(() => {
     if (!open || minimized) return;

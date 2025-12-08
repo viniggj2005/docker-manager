@@ -2,10 +2,11 @@ import type { dtos } from '../../wailsjs/go/models';
 export type SSHConnectionDto = dtos.SSHConnectionDto;
 
 export interface TerminalProps {
+  id?: string;
   open: boolean;
   title?: string;
   onClose: () => void;
-  configure: SSHConnectionDto;
+  configure?: SSHConnectionDto;
 }
 
 export interface TerminalHeaderProps {
@@ -78,8 +79,11 @@ export interface TerminalStateProps {
   askPassword: boolean;
   error: string | null;
   config: SSHConnectionDto | null;
+  containerId: string | null;
+  containerName: string | null;
   setError: (event: string | null) => void;
   submitPassword: (password: string) => void;
   openWith: (config: SSHConnectionDto) => void;
+  openForContainer: (id: string, name: string) => void;
   requirePassword: (config: SSHConnectionDto) => void;
 }

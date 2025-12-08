@@ -15,11 +15,22 @@ function ensureRoot(): HTMLElement {
 
 export default function GlobalTerminalHost() {
   const root = ensureRoot();
-  const { open, config, askPassword, close, submitPassword } = useTerminalStore();
+  const { open, config, containerId, containerName, askPassword, close, submitPassword } = useTerminalStore();
+
+  const isSsh = !!config;
+  const isContainer = !!containerId;
 
   return createPortal(
     <>
-      {open && config && <TerminalModal open={true} onClose={close} configure={config} />}
+      {open && (isSsh || isContainer) && (
+        <TerminalModal
+          open={true}
+          onClose={close}
+          configure={config || undefined}
+          id={containerId || undefined}
+          title={isContainer ? `Terminal: ${containerName}` : (config ? `${config.User}@${config.Host}` : 'Terminal SSH')}
+        />
+      )}
       <PasswordModal open={askPassword} onClose={close} onSubmit={(pwd) => submitPassword(pwd)} />
     </>,
     root

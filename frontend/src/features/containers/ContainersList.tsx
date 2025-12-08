@@ -1,6 +1,6 @@
 import { FiRefreshCw } from 'react-icons/fi';
 import ContainerCard from './components/cards/ContainerCard';
-import TerminalModal from './components/modals/TerminalModal';
+// import TerminalModal from './components/modals/TerminalModal';
 import { FmtName } from '../shared/functions/TreatmentFunction';
 import { ContainerItem } from '../../interfaces/ContainerInterfaces';
 import { useDockerClient } from '../../contexts/DockerClientContext';
@@ -12,15 +12,18 @@ import {
   renameContainer,
   toggleContainerState,
 } from './services/ContainersService';
+import { useTerminalStore } from '../terminal/TerminalStore';
 
 const ContainersListView: React.FC = () => {
   const timerRef = useRef<number | null>(null);
   const [LogsModalId, setLogsModalId] = useState<string | null>(null);
   const [MenuModalId, setMenuModalId] = useState<string | null>(null);
   const [containers, setcontainers] = useState<ContainerItem[] | null>(null);
-  const [TerminalModalId, setTerminalModalId] = useState<string | null>(null);
+
   const [editNameModalId, setEditNameModalId] = useState<string | null>(null);
   const { selectedCredentialId, loading: credentialsLoading, connecting } = useDockerClient();
+
+
 
   const fetchContainers = useCallback(async () => {
     if (selectedCredentialId == null) {
@@ -134,19 +137,14 @@ const ContainersListView: React.FC = () => {
                     onOpenLogs={() => setLogsModalId(container.Id)}
                     onOpenMenu={() => setMenuModalId(container.Id)}
                     onOpenEdit={() => setEditNameModalId(container.Id)}
-                    onOpenTerminal={() => setTerminalModalId(container.Id)}
+                    onOpenTerminal={() => {
+                      useTerminalStore.getState().openForContainer(container.Id, container.Names[0] || 'Container');
+                    }}
                     onDeleted={async () => {
                       await fetchContainers();
                       setMenuModalId(null);
                     }}
                   />
-                  {TerminalModalId === container.Id && (
-                    <TerminalModal
-                      id={container.Id}
-                      name={name}
-                      setTerminalModal={() => setTerminalModalId(null)}
-                    />
-                  )}
                 </div>
               );
             })}

@@ -5,12 +5,17 @@ export const useTerminalStore = create<TerminalStateProps>((set) => ({
   open: false,
   error: null,
   config: null,
+  containerId: null,
+  containerName: null,
   askPassword: false,
 
   openWith: (config) => {
-    set({ config: config, open: true, askPassword: false });
+    set({ config: config, containerId: null, containerName: null, open: true, askPassword: false });
   },
-  requirePassword: (config) => set({ config: config, askPassword: true, open: false }),
+  openForContainer: (id, name) => {
+    set({ config: null, containerId: id, containerName: name, open: true, askPassword: false });
+  },
+  requirePassword: (config) => set({ config: config, containerId: null, containerName: null, askPassword: true, open: false }),
   submitPassword: (password) =>
     set((storeState) =>
       storeState.config
@@ -22,6 +27,8 @@ export const useTerminalStore = create<TerminalStateProps>((set) => ({
       open: false,
       askPassword: false,
       config: null,
+      containerId: null,
+      containerName: null,
     }),
   setError: (event) => set({ error: event }),
 }));
