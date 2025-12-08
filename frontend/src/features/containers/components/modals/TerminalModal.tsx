@@ -1,16 +1,15 @@
-import iziToast from 'izitoast';
 import 'xterm/css/xterm.css';
+import iziToast from 'izitoast';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
+import React, { useEffect, useRef } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
-import React, { useEffect, useRef, useState } from 'react';
 import { useDockerClient } from '../../../../contexts/DockerClientContext';
+import { EventsOn, EventsOff } from '../../../../../wailsjs/runtime/runtime';
 import {
     containerExec,
     terminalWrite,
-    terminalResize,
 } from '../../services/ContainersService';
-import { EventsOn, EventsOff } from '../../../../../wailsjs/runtime/runtime';
 
 interface TerminalModalProps {
     id: string;
@@ -19,16 +18,16 @@ interface TerminalModalProps {
 }
 
 const TerminalModal: React.FC<TerminalModalProps> = ({ id, name, setTerminalModal }) => {
-    const terminalRef = useRef<HTMLDivElement>(null);
+    const connectedRef = useRef(false);
     const xtermRef = useRef<Terminal | null>(null);
+    const terminalRef = useRef<HTMLDivElement>(null);
     const fitAddonRef = useRef<FitAddon | null>(null);
     const { selectedCredentialId } = useDockerClient();
-    const [connected, setConnected] = useState(false);
 
     useEffect(() => {
         if (selectedCredentialId == null || !terminalRef.current) return;
 
-        const term = new Terminal({
+        const terminal = new Terminal({
             cursorBlink: true,
             fontSize: 14,
             fontFamily: 'Consolas, "Courier New", monospace',
@@ -39,38 +38,82 @@ const TerminalModal: React.FC<TerminalModalProps> = ({ id, name, setTerminalModa
         });
 
         const fitAddon = new FitAddon();
-        term.loadAddon(fitAddon);
-        term.open(terminalRef.current);
-        fitAddon.fit();
-        term.focus();
+        terminal.loadAddon(fitAddon);
+        terminal.open(terminalRef.current);
 
-        xtermRef.current = term;
+        fitAddon.fit();
+        terminal.focus();
+
+        xtermRef.current = terminal;
         fitAddonRef.current = fitAddon;
 
-        term.onData((data) => {
-            if (connected) {
+        terminal.attachCustomKeyEventHandler((event) => {
+            if (event.code === 'Tab' || event.key === 'Tab') {
+                event.preventDefault();
+                return true;
+            }
+
+            if (event.ctrlKey && !event.shiftKey && (event.key === 'v' || event.key === 'V')) {
+                if (event.type === 'keydown') {
+                    event.preventDefault();
+                    if (navigator.clipboard?.readText) {
+                        navigator.clipboard
+                            .readText()
+                            .then((text) => {
+                                if (!text) return;
+                                const anyTerm = terminal as any;
+                                if (typeof anyTerm.paste === 'function') {
+                                    anyTerm.paste(text);
+                                } else {
+                                    terminalWrite(id, text).catch(console.error);
+                                }
+                            })
+                            .catch(console.error);
+                    }
+                }
+                return false;
+            }
+            if (event.ctrlKey && !event.shiftKey && (event.key === 'c' || event.key === 'C')) {
+                const selection = terminal.getSelection();
+                if (selection) {
+                    if (event.type === 'keydown') {
+                        event.preventDefault();
+                        if (navigator.clipboard?.writeText) {
+                            navigator.clipboard.writeText(selection).catch(console.error);
+                        }
+                    }
+                    return false;
+                }
+                return true;
+            }
+
+            return true;
+        });
+
+        terminal.onData((data) => {
+            if (connectedRef.current) {
                 terminalWrite(id, data).catch((err) => console.error(err));
             }
         });
 
         EventsOn(`terminal:data:${id}`, (data: string) => {
-            term.write(data);
+            terminal.write(data);
         });
 
         EventsOn(`terminal:closed:${id}`, () => {
-            term.writeln('\r\nConnection closed by remote host.');
-            setConnected(false);
+            terminal.writeln('\r\nConnection closed by remote host.');
+            connectedRef.current = false;
         });
 
         (async () => {
             try {
                 await containerExec(selectedCredentialId, id);
-                setConnected(true);
-                term.clear();
+                connectedRef.current = true;
+                terminal.clear();
                 fitAddon.fit();
-                term.focus();
+                terminal.focus();
             } catch (error: any) {
-                term.writeln(`\r\nError connecting: ${error?.message || error}`);
+                terminal.writeln(`\r\nError connecting: ${error?.message || error}`);
                 iziToast.error({ title: 'Erro', message: error?.message || String(error) });
             }
         })();
@@ -83,7 +126,7 @@ const TerminalModal: React.FC<TerminalModalProps> = ({ id, name, setTerminalModa
         return () => {
             EventsOff(`terminal:data:${id}`);
             EventsOff(`terminal:closed:${id}`);
-            term.dispose();
+            terminal.dispose();
             resizeObserver.disconnect();
         };
     }, [id, selectedCredentialId]);

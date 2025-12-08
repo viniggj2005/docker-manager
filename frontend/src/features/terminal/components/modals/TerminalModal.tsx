@@ -7,10 +7,10 @@ import TerminalModalHeader from '../headers/TerminalModalHeader';
 import { EventsOn } from '../../../../../wailsjs/runtime/runtime';
 import { TerminalProps } from '../../../../interfaces/TerminalInterfaces';
 import {
-  ConnectWith,
   Send,
   Resize,
   Disconnect,
+  ConnectWith,
 } from '../../../../../wailsjs/go/handlers/TerminalHandlerStruct';
 
 const TerminalModal: React.FC<TerminalProps> = ({
@@ -113,9 +113,9 @@ const TerminalModal: React.FC<TerminalProps> = ({
       },
     });
 
-    terminal.attachCustomKeyEventHandler((e) => {
-      if (e.ctrlKey && !e.shiftKey && (e.key === 'v' || e.key === 'V')) {
-        e.preventDefault();
+    terminal.attachCustomKeyEventHandler((event) => {
+      if (event.ctrlKey && !event.shiftKey && (event.key === 'v' || event.key === 'V')) {
+        event.preventDefault();
         if (navigator.clipboard?.readText) {
           navigator.clipboard
             .readText()
@@ -135,10 +135,10 @@ const TerminalModal: React.FC<TerminalProps> = ({
         return false;
       }
 
-      if (e.ctrlKey && !e.shiftKey && (e.key === 'c' || e.key === 'C')) {
+      if (event.ctrlKey && !event.shiftKey && (event.key === 'c' || event.key === 'C')) {
         const selection = terminal.getSelection();
         if (selection) {
-          e.preventDefault();
+          event.preventDefault();
           if (navigator.clipboard?.writeText) {
             navigator.clipboard.writeText(selection).catch(() => { });
           }

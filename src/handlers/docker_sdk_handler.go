@@ -82,9 +82,9 @@ func (handlerStruct *DockerSdkHandlerStruct) AddDockerClient(id int) error {
 		delete(handlerStruct.clients, dockerId)
 	}
 
-	if _, exists := handlerStruct.contexts[dockerId]; exists {
-		delete(handlerStruct.contexts, dockerId)
-	}
+	delete(handlerStruct.contexts, dockerId)
+	delete(handlerStruct.clientCancels, dockerId)
+	delete(handlerStruct.statsCancel, dockerId)
 
 	httpClient, err := functions.BuildTLSHTTPClient(
 		docker.Ca.Plaintext,
@@ -700,7 +700,8 @@ func (handlerStruct *DockerSdkHandlerStruct) ContainerExec(clientId int, contain
 		AttachStdout: true,
 		AttachStderr: true,
 		Tty:          true,
-		Cmd:          []string{"/bin/sh"},
+		Env:          []string{"TERM=xterm"},
+		Cmd:          []string{"/bin/sh", "-c", "[ -x /bin/bash ] && exec /bin/bash || exec /bin/sh"},
 	}
 
 	execID, err := cli.ContainerExecCreate(ctx, containerId, execConfig)
@@ -759,7 +760,7 @@ func (handlerStruct *DockerSdkHandlerStruct) TerminalWrite(containerId string, d
 
 	_, err := conn.Write([]byte(data))
 	if err != nil {
-		return fmt.Errorf("Erro ao escrever terminal: %w", err)
+		return fmt.Errorf("erro ao escrever terminal: %w", err)
 	}
 	return nil
 }

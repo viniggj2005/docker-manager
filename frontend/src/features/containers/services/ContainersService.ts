@@ -98,7 +98,7 @@ export const terminalWrite = async (id: string, data: string): Promise<void> => 
   try {
     await TerminalWrite(id, data);
   } catch (error: any) {
-    console.error('Terminal write error:', error);
+    throw error;
   }
 };
 
@@ -111,6 +111,6 @@ export const terminalResize = async (
   try {
     await TerminalResize(clientId, id, cols, rows);
   } catch (error: any) {
-    console.error('Terminal resize error:', error);
+    throw error;
   }
 };
