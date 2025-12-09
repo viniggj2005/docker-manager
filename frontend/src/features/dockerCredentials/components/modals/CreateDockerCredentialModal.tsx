@@ -23,6 +23,7 @@ export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalPr
   const [key, setKey] = useState<string>("");
   const [cert, setCert] = useState<string>("");
   const [alias, setAlias] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   const handleFileUpload = async (file: FileInput, setter: FileSetter): Promise<void> => {
@@ -42,6 +43,7 @@ export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalPr
         url,
         cert,
         alias,
+        description,
         userId: Number(userId),
       });
 
@@ -71,22 +73,28 @@ export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalPr
         <h2 className="text-xl font-semibold mb-4">Nova Credencial Docker</h2>
 
         <form className="grid gap-4" onSubmit={handleSubmit}>
-          <TextField 
-            label="Alias" 
-            value={alias} 
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAlias(e.target.value)} 
-            required 
+          <TextField
+            label="Alias"
+            value={alias}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAlias(e.target.value)}
+            required
+          />
+          <TextField
+            label="Descrição"
+            value={description}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
+            required
           />
 
-          <TextField 
-            label="URL" 
-            value={url} 
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)} 
-            required 
+          <TextField
+            label="URL"
+            value={url}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
+            required
           />
 
-          <FileUploader 
-            types={fileTypes} 
+          <FileUploader
+            types={fileTypes}
             handleChange={(f: FileInput) => handleFileUpload(f, setCa)}
           >
             <span className="px-2 py-1 bg-gray-200 rounded cursor-pointer">Enviar CA</span>
@@ -99,8 +107,8 @@ export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalPr
             required
           />
 
-          <FileUploader 
-            types={fileTypes} 
+          <FileUploader
+            types={fileTypes}
             handleChange={(f: FileInput) => handleFileUpload(f, setCert)}
           >
             <span className="px-2 py-1 bg-gray-200 rounded cursor-pointer">Enviar Cert</span>
@@ -113,8 +121,8 @@ export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalPr
             required
           />
 
-          <FileUploader 
-            types={fileTypes} 
+          <FileUploader
+            types={fileTypes}
             handleChange={(f: FileInput) => handleFileUpload(f, setKey)}
           >
             <span className="px-2 py-1 bg-gray-200 rounded cursor-pointer">Enviar Key</span>
@@ -128,16 +136,16 @@ export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalPr
           />
 
           <div className="flex gap-2 mt-4">
-            <button 
-              className="flex-1 bg-gray-300 rounded py-2" 
-              type="button" 
+            <button
+              className="flex-1 bg-gray-300 rounded py-2"
+              type="button"
               onClick={onClose}
             >
               Cancelar
             </button>
 
-            <button 
-              className="flex-1 bg-[var(--docker-blue)] text-white rounded py-2" 
+            <button
+              className="flex-1 bg-[var(--docker-blue)] text-white rounded py-2"
               disabled={submitting}
             >
               {submitting ? "Salvando..." : "Salvar"}

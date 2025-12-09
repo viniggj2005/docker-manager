@@ -19,11 +19,10 @@ const DockerCredentialSelector: React.FC<DockerCredentialSelectorProps> = ({
     variant === 'navbar'
       ? 'flex items-center gap-2 text-xs'
       : [
-          'w-full',
-          'rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-3 shadow-sm',
-          'dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]',
-          'flex flex-col gap-3 md:flex-row md:items-start md:justify-between',
-        ].join(' ');
+        'w-full',
+
+        'flex flex-col gap-3 md:flex-row md:items-start md:justify-between',
+      ].join(' ');
 
   const wrapperClass =
     variant === 'navbar'
@@ -33,7 +32,7 @@ const DockerCredentialSelector: React.FC<DockerCredentialSelectorProps> = ({
   const labelClass =
     variant === 'navbar'
       ? 'sr-only'
-      : 'text-[10px] font-medium uppercase tracking-wide text-[var(--medium-gray)] dark:text-[var(--grey-text)]';
+      : 'text-xs uppercase font-semibold tracking-wider text-black dark:text-[var(--grey-text)]';
 
   const labelId = 'docker-credential-selector-label';
 

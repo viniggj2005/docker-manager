@@ -10,5 +10,9 @@ export const mapCredential = (raw: any): DockerCredentialSummary | null => {
   const id = Number(raw?.ID ?? raw?.Id ?? raw?.id);
   const alias = String(raw?.Alias ?? raw?.alias ?? '').trim();
   if (!Number.isFinite(id)) return null;
-  return { id, alias: alias || `Credencial #${id}` };
+  let createdAt = raw?.CreatedAt ?? raw?.created_at ?? '';
+  if (createdAt && typeof createdAt === 'string' && createdAt.startsWith('0001')) {
+    createdAt = '';
+  }
+  return { id, description: raw?.Description ?? raw?.description ?? '', createdAt, alias: alias || `Credencial #${id}` };
 };

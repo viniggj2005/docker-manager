@@ -69,12 +69,13 @@ func (handlerStruct *DockerHandlerStruct) CreateDockerConnection(token string, b
 	}
 
 	connection := models.DockerCredentialsModel{
-		Alias:  body.Alias,
-		UserID: body.UserID,
-		Url:    types.EncryptedString{Plaintext: body.Url},
-		Ca:     types.EncryptedString{Plaintext: string(caBytes)},
-		Key:    types.EncryptedString{Plaintext: string(keyBytes)},
-		Cert:   types.EncryptedString{Plaintext: string(certBytes)},
+		Alias:       body.Alias,
+		UserID:      body.UserID,
+		Description: body.Description,
+		Url:         types.EncryptedString{Plaintext: body.Url},
+		Ca:          types.EncryptedString{Plaintext: string(caBytes)},
+		Key:         types.EncryptedString{Plaintext: string(keyBytes)},
+		Cert:        types.EncryptedString{Plaintext: string(certBytes)},
 	}
 
 	if connection.Url.Plaintext == "" {
@@ -94,7 +95,7 @@ func (handlerStruct *DockerHandlerStruct) FindAllByUser(token string, userId int
 	}
 	var dockerConnections []models.DockerCredentialsModel
 	if err := handlerStruct.DataBase.WithContext(handlerStruct.context).
-		Select("alias,id").
+		Select("alias,id,description,created_at").
 		Where("user_id = ?", userId).
 		Find(&dockerConnections).Error; err != nil {
 		return nil, err

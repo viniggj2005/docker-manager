@@ -15,22 +15,17 @@ const ToggleThemeButton: React.FC = () => {
   }, [theme.theme]);
 
   return (
-    <div
+    <button
       onClick={theme.toggleTheme}
-      className={`relative w-24 h-10 flex items-center cursor-pointer rounded-full transition-all shadow-md shadow-[var(--system-black)]
+      className={`w-full p-1  rounded-lg border flex items-center justify-center transition-colors
         ${theme.theme === 'dark' ? 'bg-[var(--dark-gray)] border-[var(--medium-gray)]' : 'bg-[var(--system-white)]'}`}
     >
-      <div
-        className={`absolute top-1/2 left-1 right-1 w-10 h-10 rounded-full py-1  transition-transform duration-500
-          -translate-y-1/2 ${theme.theme === 'dark' ? 'translate-x-1' : 'translate-x-14'}`}
-      >
-        {delayedTheme === 'dark' ? (
-          <MdDarkMode className="h-8 w-8 text-[var(--system-white)]" />
-        ) : (
-          <MdLightMode className="h-8 w-8 text-var(--dark-primary)]" />
-        )}
-      </div>
-    </div>
+      {delayedTheme === 'dark' ? (
+        <MdDarkMode className="h-8 w-8 text-[var(--system-white)]" />
+      ) : (
+        <MdLightMode className="h-8 w-8 text-var(--dark-primary)]" />
+      )}
+    </button>
   );
 };
 

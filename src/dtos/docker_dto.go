@@ -14,10 +14,11 @@ type StatsPayloadDto struct {
 }
 
 type CreateDockerConnectionDto struct {
-	Alias  string `json:"alias" binding:"required"`
-	Url    string `json:"url" binding:"required"`
-	Ca     string `json:"ca" binding:"required"`
-	Cert   string `json:"cert" binding:"required"`
-	Key    string `json:"key" binding:"required"`
-	UserID uint   `json:"userId" binding:"required"`
+	Alias       string `json:"alias" binding:"required"`
+	Description string `json:"description" binding:"required"`
+	Url         string `json:"url" binding:"required"`
+	Ca          string `json:"ca" binding:"required"`
+	Cert        string `json:"cert" binding:"required"`
+	Key         string `json:"key" binding:"required"`
+	UserID      uint   `json:"userId" binding:"required"`
 }

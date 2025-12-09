@@ -2,11 +2,12 @@ import {
   HiOutlineCube,
   HiOutlineHome,
   HiOutlineServer,
-  HiOutlinePhotograph,
-  HiOutlineKey,
   HiOutlineArchive,
+  HiOutlinePhotograph,
 } from 'react-icons/hi';
+import { FiKey } from "react-icons/fi";
 import { PiNetworkBold } from "react-icons/pi";
+import { RiHardDrive3Line } from "react-icons/ri";
 export const navItems = [
   {
     label: 'Painel',
@@ -18,13 +19,13 @@ export const navItems = [
     label: 'Networks',
     description: 'Visão das redes do docker',
     to: '/networks',
-    icon: PiNetworkBold ,
+    icon: PiNetworkBold,
   },
   {
     label: 'Volumes',
     description: 'Gerencie volumes Docker',
     to: '/volumes',
-    icon: HiOutlineArchive,
+    icon: RiHardDrive3Line,
   },
   {
     label: 'Containers',
@@ -42,7 +43,7 @@ export const navItems = [
     label: 'Credenciais Docker',
     description: 'Gerencie conexões TLS do Docker',
     to: '/docker-credentials',
-    icon: HiOutlineKey,
+    icon: FiKey,
   },
   {
     label: 'Conexões SSH',

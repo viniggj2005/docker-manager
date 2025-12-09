@@ -1,6 +1,6 @@
-import { GoPencil } from 'react-icons/go';
-import { FaTrashCan } from 'react-icons/fa6';
-import { MdCastConnected } from 'react-icons/md';
+import { FiEdit2 } from "react-icons/fi";
+import { LuMonitor } from "react-icons/lu";
+import { FaRegTrashAlt } from 'react-icons/fa';
 import { useTerminalStore } from '../../TerminalStore';
 import { useAuth } from '../../../../contexts/AuthContext';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -63,7 +63,7 @@ const SshConnectionList: React.FC<{ token: string }> = ({ token }) => {
       const ssh = toSshConn(connection);
       const hasKey = !!(connection.key && connection.key.length);
       hasKey ? openWith(ssh) : requirePassword(ssh);
-    } catch (e) {
+    } catch (error) {
       setError('Falha ao abrir terminal');
     }
   };
@@ -109,49 +109,50 @@ const SshConnectionList: React.FC<{ token: string }> = ({ token }) => {
     <>
       <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] p-2 dark:bg-[var(--dark-secondary)]">
         <ul className="divide-y divide-[var(--light-gray)] dark:divide-[var(--dark-tertiary)]">
-          {connectionsList.map((connection) => (
-            <li key={connection.id} className="flex items-center gap-4 p-4">
-              <div className="min-w-0">
-                <div className="truncate font-medium dark:text-[var(--system-white)]">
-                  {connection.alias || `${connection.systemUser}@${connection.host}`}
+          {connectionsList.map((connection) => {
+            return (
+              <li key={connection.id} className="flex items-center gap-4 p-4">
+                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <LuMonitor className="w-5 h-5 text-gray-600" />
                 </div>
-                <div className="text-xs text-[var(--grey-text)]">
-                  {connection.systemUser}@{connection.host}:{connection.port}
+                <div>
+                  <h3 className="mb-1">{connection.alias || `${connection.systemUser}@${connection.host}`}</h3>
+                  <div className="text-gray-500 text-sm">
+                    {connection.systemUser}@{connection.host}:{connection.port}
+                  </div>
                 </div>
-              </div>
 
-              <div className="ml-auto flex items-center">
-                <button
-                  onClick={() => handleConnect(connection.id)}
-                  title="Conectar ao terminal"
-                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:scale-[0.98] dark:text-[var(--system-white)]"
-                >
-                  <MdCastConnected className="h-6 w-6" />
-                </button>
+                <div className="ml-auto flex items-center">
+                  <button
+                    onClick={() => handleConnect(connection.id)}
+                    title="Conectar ao terminal"
+                    className=" p-2 hover:bg-gray-100 hover:scale-90 rounded-lg transition-colors"
+                  >
+                    <LuMonitor className="h-5 w-5" />
+                  </button>
 
-                <button
-                  onClick={() => handleEdit(connection)}
-                  title="Editar conexão"
-                  className="px-2 py-1 hover:scale-90 rounded-lg"
-                >
-                  <GoPencil className="text-[var(--docker-blue)] w-6 h-6" />
-                </button>
+                  <button
+                    onClick={() => handleEdit(connection)}
+                    title="Editar conexão"
+                    className="p-2 hover:bg-gray-100 hover:scale-90 rounded-lg transition-colors"
+                  >
+                    <FiEdit2 className="text-[var(--docker-blue)] w-5 h-5" />
+                  </button>
 
-                <button
-                  onClick={() =>
-                    handleRemove(
+                  <button
+                    onClick={() => handleRemove(
                       connection.id,
                       connection.alias || `${connection.systemUser}@${connection.host}`
-                    )
-                  }
-                  title="Excluir Conexão"
-                  className="px-2 py-1 hover:scale-90 rounded-lg"
-                >
-                  <FaTrashCan className="text-[var(--exit-red)] h-6 w-6" />
-                </button>
-              </div>
-            </li>
-          ))}
+                    )}
+                    title="Excluir Conexão"
+                    className="p-2 hover:bg-gray-100 hover:scale-90 rounded-lg transition-colors"
+                  >
+                    <FaRegTrashAlt className="text-red-600 h-5 w-5" />
+                  </button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </div>
 

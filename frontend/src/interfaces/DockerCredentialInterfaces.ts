@@ -1,6 +1,8 @@
 export interface DockerCredentialSummary {
   id: number;
   alias: string;
+  createdAt: string;
+  description: string;
 }
 
 export interface CreateDockerCredentialPayload {
@@ -10,10 +12,11 @@ export interface CreateDockerCredentialPayload {
   cert: string;
   alias: string;
   userId: number;
+  description: string;
 }
 
 export interface DockerCredentialSelectorProps {
-  variant?: 'default' | 'navbar' ;
+  variant?: 'default' | 'navbar';
 }
 
 export interface DockerClientContextValue {

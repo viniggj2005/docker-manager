@@ -1,18 +1,17 @@
-import React, { useCallback, useEffect, useState } from 'react';
 import { IoMdAddCircleOutline } from 'react-icons/io';
-
+import { NetworkItem } from '../interfaces/NetworkInterfaces';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDockerClient } from '../contexts/DockerClientContext';
 import NetworkCards from '../features/networks/components/cards/NetworkCards';
-import CreateNetworkModal from '../features/networks/components/modals/CreateNetworkModal';
 import { NetworkService } from '../features/networks/services/NetworkService';
-import { NetworkItem } from '../interfaces/NetworkInterfaces';
+import CreateNetworkModal from '../features/networks/components/modals/CreateNetworkModal';
 
 const NetworksPage: React.FC = () => {
-  const { connecting, selectedCredentialId, loading: credentialsLoading } = useDockerClient();
-  const [openCreateModal, setOpenCreateModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [networks, setNetworks] = useState<NetworkItem[]>([]);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const { connecting, selectedCredentialId, loading: credentialsLoading } = useDockerClient();
 
   const fetchNetworks = useCallback(async () => {
     if (!selectedCredentialId) return;
@@ -23,8 +22,8 @@ const NetworksPage: React.FC = () => {
 
       const result = await NetworkService.findAllNetworks(selectedCredentialId);
       setNetworks(Array.isArray(result) ? result : []);
-    } catch (err) {
-      console.error('Erro ao carregar redes Docker:', err);
+    } catch (error) {
+      console.error('Erro ao carregar redes Docker:', error);
       setError('Erro ao carregar redes Docker');
     } finally {
       setLoading(false);
@@ -42,11 +41,10 @@ const NetworksPage: React.FC = () => {
 
   const showStatusMessage = (message: string, isError = false) => (
     <div
-      className={`rounded-xl border px-4 py-3 text-sm shadow-sm ${
-        isError
-          ? 'border-[var(--exit-red)] text-[var(--exit-red)]'
-          : 'border-[var(--light-gray)] text-[var(--medium-gray)] dark:border-[var(--dark-tertiary)] dark:text-[var(--grey-text)]'
-      }`}
+      className={`rounded-xl border px-4 py-3 text-sm shadow-sm ${isError
+        ? 'border-[var(--exit-red)] text-[var(--exit-red)]'
+        : 'border-[var(--light-gray)] text-[var(--medium-gray)] dark:border-[var(--dark-tertiary)] dark:text-[var(--grey-text)]'
+        }`}
     >
       {message}
     </div>
@@ -99,7 +97,7 @@ const NetworksPage: React.FC = () => {
             {!loading && networks.length === 0 && !error &&
               showStatusMessage('Nenhuma rede encontrada para a credencial selecionada.')}
 
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {networks.map((network) => (
                 <NetworkCards
                   key={network.Id}

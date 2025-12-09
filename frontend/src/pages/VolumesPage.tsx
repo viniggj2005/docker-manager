@@ -1,19 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { IoMdAddCircleOutline } from 'react-icons/io';
-import { useDockerClient } from '../contexts/DockerClientContext';
-import { VolumeService } from '../features/volumes/services/VolumeService';
-import VolumeCard from '../features/volumes/components/cards/VolumeCard';
 import { VolumeItem } from '../interfaces/VolumeInterfaces';
+import { useDockerClient } from '../contexts/DockerClientContext';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import VolumeCard from '../features/volumes/components/cards/VolumeCard';
+import { VolumeService } from '../features/volumes/services/VolumeService';
 import CreateVolumeModal from '../features/volumes/components/modals/CreateVolumeModal';
 
 const VolumesPage: React.FC = () => {
-  const { connecting, selectedCredentialId, loading: credentialsLoading } = useDockerClient();
-
-  const [openCreateModal, setOpenCreateModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [warnings, setWarnings] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [volumes, setVolumes] = useState<VolumeItem[]>([]);
-  const [warnings, setWarnings] = useState<string[]>([]);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const { connecting, selectedCredentialId, loading: credentialsLoading } = useDockerClient();
 
   const fetchVolumes = useCallback(async () => {
     if (!selectedCredentialId) return;
@@ -91,7 +90,7 @@ const VolumesPage: React.FC = () => {
         <div className="text-sm text-[var(--medium-gray)]">Nenhum volume encontrado.</div>
       )}
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {safeVolumes.map((volume) => (
           <VolumeCard key={volume.Name} clientId={selectedCredentialId} onDeleted={handleDeleted} {...volume} />
         ))}

@@ -13,12 +13,13 @@ import { AddDockerClient } from '../../../../wailsjs/go/handlers/DockerSdkHandle
 export const DockerCredentialService = {
   async create(token: string, payload: CreateDockerCredentialPayload): Promise<void> {
     const body = {
-      alias: payload.alias,
       url: payload.url,
-      ca: toBase64(payload.ca),
-      cert: toBase64(payload.cert),
-      key: toBase64(payload.key),
+      alias: payload.alias,
       userId: payload.userId,
+      ca: toBase64(payload.ca),
+      key: toBase64(payload.key),
+      cert: toBase64(payload.cert),
+      description: payload.description,
     };
     await CreateDockerConnection(token, body);
   },
@@ -30,8 +31,8 @@ export const DockerCredentialService = {
       .map(mapCredential)
       .filter((credential): credential is DockerCredentialSummary => Boolean(credential));
   },
-  async delete(token: string,credentialId: number): Promise<void> {
-    await DeleteDockerConnection(token,credentialId);
+  async delete(token: string, credentialId: number): Promise<void> {
+    await DeleteDockerConnection(token, credentialId);
   },
 
   async connect(credentialId: number): Promise<void> {

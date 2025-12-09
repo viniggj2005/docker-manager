@@ -71,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
         </div>
 
         <nav
-          className={`mt-10 flex flex-1 flex-col gap-2 ${collapsed ? 'lg:items-center lg:gap-3' : ''}`}
+          className={`flex-1 overflow-y-auto px-3 ${collapsed ? 'lg:items-center lg:gap-3' : ''}`}
           aria-label="Menu principal"
         >
           {navItems.map(({ label, description, to, icon: Icon }) => (
@@ -81,21 +81,19 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
               onClick={onClose}
               title={label}
               className={({ isActive }) =>
-                `group flex items-center gap-3 rounded-xl border border-transparent bg-transparent px-4 py-3 transition  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--docker-blue)]  ${collapsed
+                `w-full flex items-start gap-3 p-3 rounded-lg mb-1 transition-colors ${collapsed
                   ? 'lg:w-full lg:justify-center lg:px-2'
-                  : 'hover:border-[var(--light-gray)] hover:bg-[var(--light-overlay)] dark:hover:border-[var(--dark-tertiary)] dark:hover:bg-[var(--dark-tertiary)]'
+                  : ''
                 } ${isActive
-                  ? 'border-[var(--docker-blue)]  text-[var(--docker-blue)] '
-                  : 'text-[var(--medium-gray)] dark:text-[var(--grey-text)]'
+                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300'
+                  : 'text-[var(--medium-gray)] hover:bg-gray-50 dark:text-[var(--grey-text)] dark:hover:bg-gray-700'
                 }`
               }
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--light-gray)] text-lg transition group-hover:border-[var(--docker-blue)] group-hover:text-[var(--docker-blue)] dark:border-[var(--dark-tertiary)]">
-                <Icon className="h-5 w-5" />
-              </span>
+              <Icon className="h-5 w-5" />
               <div className={`flex flex-col ${collapsed ? 'lg:hidden' : ''}`}>
                 <span className="font-semibold text-current">{label}</span>
-                <span className="text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+                <span className="text-xs mt-0.5 text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
                   {description}
                 </span>
               </div>
@@ -105,31 +103,31 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
 
         <div
           className={`mt-6 ${collapsed
-              ? 'lg:hidden'
-              : 'rounded-xl border border-[var(--light-gray)] bg-[var(--light-overlay)] p-4 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-tertiary)]'
+            ? 'lg:hidden'
+            : ' dark:bg-[var(--dark-tertiary)]'
             }`}
         >
-          <h2
-            className={`text-sm font-semibold text-[var(--system-black)] dark:text-[var(--system-white)] ${collapsed ? 'lg:hidden' : ''
+          <h4
+            className={` text-[var(--system-black)] dark:text-[var(--system-white)] ${collapsed ? 'lg:hidden' : ''
               }`}
           >
             Credencial ativa
-          </h2>
+          </h4>
           <p
-            className={`mt-1 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)] ${collapsed ? 'lg:hidden' : ''
+            className={`text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)] ${collapsed ? 'lg:hidden' : ''
               }`}
           >
             Escolha qual credencial Docker usar nas demais telas.
           </p>
-          <div className={`mt-3 ${collapsed ? 'lg:hidden' : ''}`}>
+          <div className={` ${collapsed ? 'lg:hidden' : ''}`}>
             <DockerCredentialSelector variant="default" />
           </div>
         </div>
 
         <div
           className={`mt-6 rounded-xl  ${collapsed
-              ? 'lg:flex lg:flex-col lg:items-center lg:gap-2 lg:p-3'
-              : 'p-4 border border-[var(--light-gray)] bg-[var(--light-overlay)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-tertiary)]'
+            ? 'lg:flex lg:flex-col lg:items-center lg:gap-2 lg:p-3'
+            : ''
             }`}
         >
           <h2

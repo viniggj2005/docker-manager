@@ -149,6 +149,7 @@ export namespace dtos {
 	
 	export class CreateDockerConnectionDto {
 	    alias: string;
+	    description: string;
 	    url: string;
 	    ca: string;
 	    cert: string;
@@ -162,6 +163,7 @@ export namespace dtos {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.alias = source["alias"];
+	        this.description = source["description"];
 	        this.url = source["url"];
 	        this.ca = source["ca"];
 	        this.cert = source["cert"];
@@ -674,6 +676,7 @@ export namespace models {
 	    DeletedAt: any;
 	    Alias: string;
 	    Url: types.EncryptedString;
+	    Description: string;
 	    Ca: types.EncryptedString;
 	    Cert: types.EncryptedString;
 	    Key: types.EncryptedString;
@@ -692,6 +695,7 @@ export namespace models {
 	        this.DeletedAt = this.convertValues(source["DeletedAt"], null);
 	        this.Alias = source["Alias"];
 	        this.Url = this.convertValues(source["Url"], types.EncryptedString);
+	        this.Description = source["Description"];
 	        this.Ca = this.convertValues(source["Ca"], types.EncryptedString);
 	        this.Cert = this.convertValues(source["Cert"], types.EncryptedString);
 	        this.Key = this.convertValues(source["Key"], types.EncryptedString);
