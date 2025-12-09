@@ -2,9 +2,9 @@ import './index.css';
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { AppFrame } from './features/appFrame/appFrame';
-import { WindowIsFullscreen } from '../wailsjs/runtime/runtime';
 import AppShell from './features/shared/components/sidebar/AppShell';
 import GlobalTerminalHost from './features/terminal/GlobalTerminalHost';
+import { WindowIsFullscreen, WindowFullscreen, WindowUnfullscreen, WindowIsMaximised, WindowUnmaximise } from '../wailsjs/runtime/runtime';
 
 const authRoutes = ['/login', '/create-account'];
 
@@ -20,11 +20,38 @@ export default function App() {
       setIsFullscreen(fs);
     };
 
+    const handleKeyDown = async (e: KeyboardEvent) => {
+      if (e.key === 'F11') {
+        const fs = await WindowIsFullscreen();
+        if (fs) {
+          await WindowUnfullscreen();
+          setIsFullscreen(false);
+        } else {
+          setIsFullscreen(true);
+          const isMax = await WindowIsMaximised();
+          if (isMax) {
+            await WindowUnmaximise();
+          }
+          await WindowFullscreen();
+        }
+      } else if (e.key === 'Escape') {
+        const fs = await WindowIsFullscreen();
+        if (fs) {
+          await WindowUnfullscreen();
+          setIsFullscreen(false);
+        }
+      }
+    };
+
     handleResize();
 
     window.addEventListener('resize', handleResize);
+    window.addEventListener('keydown', handleKeyDown);
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   return (
