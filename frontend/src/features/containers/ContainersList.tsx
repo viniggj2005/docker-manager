@@ -1,10 +1,8 @@
-import { FiRefreshCw } from 'react-icons/fi';
 import ContainerCard from './components/cards/ContainerCard';
-// import TerminalModal from './components/modals/TerminalModal';
 import { FmtName } from '../shared/functions/TreatmentFunction';
 import { ContainerItem } from '../../interfaces/ContainerInterfaces';
 import { useDockerClient } from '../../contexts/DockerClientContext';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import {
   getContainers,
   stopContainer,
@@ -14,7 +12,11 @@ import {
 } from './services/ContainersService';
 import { useTerminalStore } from '../terminal/TerminalStore';
 
-const ContainersListView: React.FC = () => {
+export interface ContainersListFetchRef {
+  refresh: () => Promise<void>;
+}
+
+const ContainersListView = forwardRef<ContainersListFetchRef>((_, ref) => {
   const timerRef = useRef<number | null>(null);
   const [LogsModalId, setLogsModalId] = useState<string | null>(null);
   const [MenuModalId, setMenuModalId] = useState<string | null>(null);
@@ -33,6 +35,10 @@ const ContainersListView: React.FC = () => {
     const containersList = await getContainers(selectedCredentialId);
     setcontainers(containersList);
   }, [selectedCredentialId]);
+
+  useImperativeHandle(ref, () => ({
+    refresh: fetchContainers
+  }));
 
   const handleRename = async (name: string, id: string) => {
     if (selectedCredentialId == null) return;
@@ -79,84 +85,64 @@ const ContainersListView: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full">
-      <div className="mx-auto max-w-8xl p-6">
-        <header className="mb-4 flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
-            Containers
-          </h1>
-          <button
-            onClick={fetchContainers}
-            className="inline-flex items-center hover:scale-95 gap-2 px-3 py-2 rounded-xl transition bg-[var(--system-white)] text-[var(--system-black)] dark:text-[var(--system-white)] border dark:border-[var(--dark-tertiary)] border-[var(--light-gray)] dark:bg-[var(--dark-secondary)]"
-            title="Atualizar"
-          >
-            <FiRefreshCw className="h-4 w-4" />
-            <span>Atualizar</span>
-          </button>
-        </header>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {credentialsLoading ? (
+        <p>Carregando credenciais…</p>
+      ) : selectedCredentialId == null ? (
+        <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+          Cadastre ou selecione uma credencial Docker para visualizar os containers.
+        </div>
+      ) : connecting ? (
+        <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+          Conectando ao daemon Docker remoto…
+        </div>
+      ) : !containers ? (
+        <p>Buscando contêineres…</p>
+      ) : containers.length === 0 ? (
+        <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+          Nenhum container encontrado.
+        </div>
+      ) : (
+        containers.map((container) => {
+          const name = FmtName(container.Names);
+          const isSeeing = LogsModalId === container.Id;
+          const isOpened = MenuModalId === container.Id;
+          const isEditing = editNameModalId === container.Id;
 
-        {credentialsLoading ? (
-          <p>Carregando credenciais…</p>
-        ) : selectedCredentialId == null ? (
-          <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-            Cadastre ou selecione uma credencial Docker para visualizar os containers.
-          </div>
-        ) : connecting ? (
-          <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-            Conectando ao daemon Docker remoto…
-          </div>
-        ) : !containers ? (
-          <p>Buscando contêineres…</p>
-        ) : containers.length === 0 ? (
-          <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-            Nenhum container encontrado.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2   items-stretch">
-            {containers.map((container) => {
-              const name = FmtName(container.Names);
-              const isSeeing = LogsModalId === container.Id;
-              const isOpened = MenuModalId === container.Id;
-              const isEditing = editNameModalId === container.Id;
+          return (
+            <ContainerCard
+              name={name}
+              isSeeing={isSeeing}
+              isOpened={isOpened}
+              container={container}
+              isEditing={isEditing}
+              onRename={handleRename}
+              onStart={handleStart}
+              onStop={handleStop}
+              onTogglePause={changeContainerStage}
+              onCloseLogs={() => setLogsModalId(null)}
+              onCloseMenu={() => setMenuModalId(null)}
+              onCloseEdit={() => setEditNameModalId(null)}
+              onOpenLogs={() => setLogsModalId(container.Id)}
+              onOpenMenu={() => setMenuModalId(container.Id)}
+              onOpenEdit={() => setEditNameModalId(container.Id)}
+              onOpenTerminal={() => {
+                useTerminalStore.getState().openForContainer(container.Id, container.Names[0] || 'Container');
+              }}
+              onDeleted={async () => {
+                await fetchContainers();
+                setMenuModalId(null);
+              }}
+            />
+          );
+        })
+      )}
 
-              return (
-                <div key={container.Id}>
-                  <ContainerCard
-                    name={name}
-                    isSeeing={isSeeing}
-                    isOpened={isOpened}
-                    container={container}
-                    isEditing={isEditing}
-                    onRename={handleRename}
-                    onStart={handleStart}
-                    onStop={handleStop}
-                    onTogglePause={changeContainerStage}
-                    onCloseLogs={() => setLogsModalId(null)}
-                    onCloseMenu={() => setMenuModalId(null)}
-                    onCloseEdit={() => setEditNameModalId(null)}
-                    onOpenLogs={() => setLogsModalId(container.Id)}
-                    onOpenMenu={() => setMenuModalId(container.Id)}
-                    onOpenEdit={() => setEditNameModalId(container.Id)}
-                    onOpenTerminal={() => {
-                      useTerminalStore.getState().openForContainer(container.Id, container.Names[0] || 'Container');
-                    }}
-                    onDeleted={async () => {
-                      await fetchContainers();
-                      setMenuModalId(null);
-                    }}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        <footer className="mt-6 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-          Atualiza a cada 2s. Clique em “Atualizar” para forçar agora.
-        </footer>
-      </div>
+      <footer className="mt-6 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+        Atualiza a cada 2s. Clique em “Atualizar” para forçar agora.
+      </footer>
     </div>
   );
-};
+});
 
 export default ContainersListView;

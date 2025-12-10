@@ -80,10 +80,10 @@ const NetworkCards: React.FC<NetworkCardProps> = ({
 
   return (
     <>
-      <div className="gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-5 shadow-sm transition hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]">
+      <div className="gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-5 shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="mb-1">{Name}</h3>
+            <h3 className="mb-1 dark:text-gray-100">{Name}</h3>
             <p className="text-xs text-gray-500 mb-2"></p>
           </div>
           <div className="flex gap-1">
@@ -91,71 +91,71 @@ const NetworkCards: React.FC<NetworkCardProps> = ({
               onClick={handleOpenInspect}
               disabled={isInspectLoading}
               title="Inspecionar rede"
-              className="p-1.5 hover:bg-gray-100 rounded transition-colors"
+              className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
             >
-              <FiInfo className="w-4 h-4 text-gray-600" />
+              <FiInfo className="w-4 h-4 text-gray-600 dark:text-gray-400" />
             </button>
             <button
               onClick={() => copyToClipboard(Id)}
-              className="p-1.5 hover:bg-gray-100 rounded transition-colors"
+              className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
               title="Copiar ID"
             >
-              <MdContentCopy className="w-4 h-4 text-gray-600" />
+              <MdContentCopy className="w-4 h-4 text-gray-600 dark:text-gray-400" />
             </button>
             <button
               onClick={handleDelete}
               disabled={deleteLoading}
-              className="p-1.5 hover:bg-red-50 rounded transition-colors"
+              className="p-1.5 hover:bg-red-50 dark:hover:bg-red-900/30 rounded transition-colors"
               title="Remover rede"
             >
-              <FaRegTrashAlt className="w-4 h-4 text-red-600" />
+              <FaRegTrashAlt className="w-4 h-4 text-red-600 dark:text-red-400" />
             </button>
           </div>
         </div>
         <div className="space-y-3 text-sm">
           <div className="flex items-center">
-            <span className="text-gray-600 mr-2">Driver:</span>
-            <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">{Driver}</span>
-            <span className="text-gray-600 mx-2">• Scope:</span>
-            <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">{Scope}</span>
+            <span className="text-gray-600 dark:text-gray-400 mr-2">Driver:</span>
+            <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 rounded text-xs">{Driver}</span>
+            <span className="text-gray-600 dark:text-gray-400 mx-2">• Scope:</span>
+            <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 rounded text-xs">{Scope}</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-100">
+          <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-100 dark:border-gray-700">
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Criado</p>
-              <p className="text-sm">{createdTimestamp ? FmtAgo(createdTimestamp) : '—'}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Criado</p>
+              <p className="text-sm dark:text-gray-200">{createdTimestamp ? FmtAgo(createdTimestamp) : '—'}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">IPv4 / IPv6</p>
-              <p className="text-sm">{EnableIPv4 ? 'IPv4: ativo' : 'IPv4: desativado'}
+              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">IPv4 / IPv6</p>
+              <p className="text-sm dark:text-gray-200">{EnableIPv4 ? 'IPv4: ativo' : 'IPv4: desativado'}
                 {' • '}
                 {EnableIPv6 ? 'IPv6: ativo' : 'IPv6: desativado'}</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-100">
+          <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-100 dark:border-gray-700">
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Interna / Attachável</p>
-              <p className="text-sm">
+              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Interna / Attachável</p>
+              <p className="text-sm dark:text-gray-200">
                 {Internal ? 'Interna' : 'Externa'}
                 {' • '}
                 {Attachable ? 'Atachável' : 'Não atachável'}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Ingress</p>
-              <p className="text-sm">{Ingress ? 'Sim' : 'Não'}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Ingress</p>
+              <p className="text-sm dark:text-gray-200">{Ingress ? 'Sim' : 'Não'}</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-100">
+          <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-100 dark:border-gray-700">
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Subnet Principal</p>
-              <p className="text-sm">{mainSubnet}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Subnet Principal</p>
+              <p className="text-sm dark:text-gray-200">{mainSubnet}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Gateway Principal</p>
-              <p className="text-sm">{mainGateway}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Gateway Principal</p>
+              <p className="text-sm dark:text-gray-200">{mainGateway}</p>
             </div>
           </div>
         </div>

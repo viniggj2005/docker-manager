@@ -1,9 +1,9 @@
 import { useMemo } from "react";
+import { FiKey } from "react-icons/fi";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { useAuth } from "../../../../contexts/AuthContext";
 import { useDockerClient } from "../../../../contexts/DockerClientContext";
 import { DockerCredentialService } from "../../services/DockerCredentialService";
-import { FaRegTrashAlt } from "react-icons/fa";
-import { FiKey } from "react-icons/fi";
 import { useConfirmToast } from "../../../shared/components/toasts/ConfirmToast";
 
 const DockerCredentialsList: React.FC = () => {
@@ -31,7 +31,7 @@ const DockerCredentialsList: React.FC = () => {
         });
     };
     return (
-        <div className="rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-6 shadow-sm dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]">
+        <div>
             {sortedCredentials.length === 0 ? (
                 <div className="rounded-xl border border-dashed border-[var(--light-gray)] p-6 text-sm text-[var(--medium-gray)] dark:border-[var(--dark-tertiary)] dark:text-[var(--grey-text)]">
                     Nenhuma credencial cadastrada até o momento.

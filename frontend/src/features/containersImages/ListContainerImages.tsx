@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import Toolbar from './components/toolbar/Toolbar';
 import ImageCard from './components/cards/ImageCard';
-import ImagesTable from './components/tables/ImagesTable';
+import ImageBuildModal from './components/ImageBuildModal';
 import { useDockerClient } from '../../contexts/DockerClientContext';
 import { ViewMode } from '../../interfaces/ContainerImagesInterfaces';
 import { ParseNameAndTag } from '../shared/functions/TreatmentFunction';
@@ -10,6 +10,7 @@ import { ContainerImagesService } from './services/ContainerImagesService';
 const ListContainersImages: React.FC = () => {
   const [query, setQuery] = useState('');
   const [view, setView] = useState<ViewMode>('grid');
+  const [showBuildModal, setShowBuildModal] = useState(false);
   const { selectedCredentialId, loading: credentialsLoading, connecting } = useDockerClient();
   const { images, loading, fetchImages } = ContainerImagesService(selectedCredentialId);
 
@@ -50,10 +51,9 @@ const ListContainersImages: React.FC = () => {
         view={view}
         query={query}
         setView={setView}
-        loading={loading}
         setQuery={setQuery}
-        onRefresh={fetchImages}
         onDeleted={handleDeleted}
+        onBuildImage={() => setShowBuildModal(true)}
         disabled={selectedCredentialId == null || connecting || credentialsLoading}
       />
 
@@ -80,9 +80,9 @@ const ListContainersImages: React.FC = () => {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="space-y-3">
           {filteredSorted.map((image) => (
-            <ImagesTable
+            <ImageCard
               key={image.Id ?? Math.random().toString(36)}
               image={image}
               onDeleted={handleDeleted}
@@ -95,6 +95,16 @@ const ListContainersImages: React.FC = () => {
         <div className="mt-10 text-center text-[var(--system-black)] dark:text-[var(--system-white)]">
           Nenhuma imagem encontrada.
         </div>
+      )}
+
+      {showBuildModal && selectedCredentialId && (
+        <ImageBuildModal
+          clientId={selectedCredentialId!}
+          onClose={() => setShowBuildModal(false)}
+          onSuccess={() => {
+            fetchImages();
+          }}
+        />
       )}
     </div>
   );

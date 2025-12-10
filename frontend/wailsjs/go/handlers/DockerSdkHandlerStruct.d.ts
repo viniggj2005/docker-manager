@@ -4,6 +4,7 @@ import {client} from '../models';
 import {container} from '../models';
 import {network} from '../models';
 import {volume} from '../models';
+import {dtos} from '../models';
 import {image} from '../models';
 import {context} from '../models';
 
@@ -42,6 +43,8 @@ export function CreateVolume(arg1:number,arg2:volume.CreateOptions):Promise<stri
 export function DeleteNetwork(arg1:number,arg2:string):Promise<void>;
 
 export function DeleteVolume(arg1:number,arg2:string):Promise<void>;
+
+export function ImageCreate(arg1:number,arg2:dtos.ImageCreateDto):Promise<void>;
 
 export function ImagesList(arg1:number):Promise<Array<image.Summary>>;
 

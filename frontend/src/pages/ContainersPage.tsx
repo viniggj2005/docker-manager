@@ -1,21 +1,35 @@
-import React from 'react';
-import ContainersListView from '../features/containers/ContainersList';
+import React, { useRef } from 'react';
+import { FiRefreshCw } from 'react-icons/fi';
+import ContainersListView, { ContainersListFetchRef } from '../features/containers/ContainersList';
 
 const ContainersPage: React.FC = () => {
-  return (
-    <div className="flex flex-1 flex-col gap-6">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
-          Containers Docker
-        </h1>
-        <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-          Monitore e administre seus containers em tempo real.
-        </p>
-      </header>
+  const containerListRef = useRef<ContainersListFetchRef>(null);
 
-      <div className="flex-1 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] shadow-sm dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]">
-        <ContainersListView />
+  const handleRefresh = () => {
+    containerListRef.current?.refresh();
+  };
+
+  return (
+    <div className="max-w-7xl">
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+            Containers Docker
+          </h1>
+          <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+            Monitore e administre seus containers em tempo real.
+          </p>
+        </div>
+        <button
+          onClick={handleRefresh}
+          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+          title="Atualizar"
+        >
+          <FiRefreshCw className="h-4 w-4" />
+          <span>Atualizar</span>
+        </button>
       </div>
+      <ContainersListView ref={containerListRef} />
     </div>
   );
 };

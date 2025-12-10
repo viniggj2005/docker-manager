@@ -46,7 +46,7 @@ const TerminalFormPage: React.FC = () => {
         Nova conexão
       </button>
 
-      <div className="rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-6 shadow-sm dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]">
+      <div>
         <SshConnectionList key={reloadFlag} token={token} />
       </div>
 

@@ -211,6 +211,22 @@ export namespace dtos {
 	        this.password = source["password"];
 	    }
 	}
+	export class ImageCreateDto {
+	    path: string;
+	    name: string;
+	    tag: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ImageCreateDto(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.path = source["path"];
+	        this.name = source["name"];
+	        this.tag = source["tag"];
+	    }
+	}
 	export class LoginInputDto {
 	    email: string;
 	    password: string;

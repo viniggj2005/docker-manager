@@ -20,10 +20,9 @@ export interface ImageProps {
 export interface ToolbarProps {
   query: string;
   view: ViewMode;
-  loading: boolean;
   disabled?: boolean;
-  onRefresh: () => void;
   onDeleted?: () => void;
+  onBuildImage?: () => void;
   setQuery: (v: string) => void;
   setView: (v: ViewMode) => void;
 }

@@ -61,29 +61,15 @@ const NetworksPage: React.FC = () => {
         </p>
       </header>
 
-      <div className="flex flex-1 flex-col gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-5 shadow-sm dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-col gap-1">
-            <span className="text-sm font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">
-              Conexão Docker
-            </span>
-            <span className="text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-              {connecting || credentialsLoading
-                ? 'Sincronizando credenciais...'
-                : selectedCredentialId
-                  ? 'Credencial ativa para listagem de redes.'
-                  : 'Selecione uma credencial para gerenciar as redes.'}
-            </span>
-          </div>
+      <div>
 
-          <button
-            onClick={() => setOpenCreateModal(true)}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-4 py-2 text-sm font-semibold text-[var(--docker-blue)] shadow-sm transition hover:scale-[0.99] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)] sm:w-fit"
-          >
-            <IoMdAddCircleOutline className="h-5 w-5" />
-            Nova rede
-          </button>
-        </div>
+        <button
+          onClick={() => setOpenCreateModal(true)}
+          className="inline-flex w-full items-center mb-3 justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-4 py-3 text-sm font-semibold text-[var(--docker-blue)] shadow-sm transition hover:scale-[0.99] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)] sm:w-fit"
+        >
+          <IoMdAddCircleOutline className="h-5 w-5" />
+          Nova rede
+        </button>
 
         {credentialsLoading || connecting ? (
           showStatusMessage('Conectando ao cliente Docker...')
@@ -116,7 +102,7 @@ const NetworksPage: React.FC = () => {
         onClose={() => setOpenCreateModal(false)}
         onCreated={fetchNetworks}
       />
-    </div>
+    </div >
   );
 };
 

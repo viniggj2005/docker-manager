@@ -74,6 +74,10 @@ export function DeleteVolume(arg1, arg2) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['DeleteVolume'](arg1, arg2);
 }
 
+export function ImageCreate(arg1, arg2) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['ImageCreate'](arg1, arg2);
+}
+
 export function ImagesList(arg1) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['ImagesList'](arg1);
 }
