@@ -2,13 +2,12 @@ package handlers
 
 import (
 	"context"
-	"encoding/base64"
-	"fmt"
-
 	"docker-manager-go/src/auth"
 	"docker-manager-go/src/dtos"
 	"docker-manager-go/src/models"
 	"docker-manager-go/src/types"
+	"encoding/base64"
+	"fmt"
 
 	"gorm.io/gorm"
 )
