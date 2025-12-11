@@ -38,9 +38,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
       />
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-72 transform flex-col overflow-y-auto bg-[var(--system-white)] px-6 py-8 text-[var(--system-black)] shadow-xl transition-transform duration-200 dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)] lg:translate-x-0 ${
-          open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
+        className={`fixed inset-y-0 left-0 z-40 flex w-72 transform flex-col overflow-y-auto bg-[var(--system-white)] px-6 py-8 shadow-xl transition-transform duration-200 dark:bg-[var(--dark-secondary)] lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          }`}
       >
         <div className="flex items-center justify-between">
           <div>
@@ -65,10 +64,9 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
               to={to}
               onClick={onClose}
               className={({ isActive }) =>
-                `group rounded-xl border border-transparent bg-transparent px-4 py-3 transition hover:border-[var(--light-gray)] hover:bg-[var(--light-overlay)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--docker-blue)] dark:hover:border-[var(--dark-tertiary)] dark:hover:bg-[var(--dark-tertiary)] ${
-                  isActive
-                    ? 'border-[var(--docker-blue)] bg-[var(--light-overlay)] text-[var(--docker-blue)] dark:border-[var(--docker-blue)] dark:bg-[var(--dark-tertiary)]'
-                    : 'text-[var(--medium-gray)] dark:text-[var(--grey-text)]'
+                `group rounded-xl border border-transparent bg-transparent px-4 py-3 transition hover:border-[var(--light-gray)] hover:bg-[var(--light-overlay)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--docker-blue)] dark:hover:border-[var(--dark-tertiary)] dark:hover:bg-[var(--dark-tertiary)] ${isActive
+                  ? 'border-[var(--docker-blue)] bg-[var(--light-overlay)] text-[var(--docker-blue)] dark:border-[var(--docker-blue)] dark:bg-[var(--dark-tertiary)]'
+                  : 'text-[var(--medium-gray)] dark:text-[var(--grey-text)]'
                 }`
               }
             >

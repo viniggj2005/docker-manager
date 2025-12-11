@@ -132,14 +132,14 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
         <button
           onClick={() => handleInspect()}
           title="Inspecionar Container"
-          className="w-full flex items-center dark:text-[var(--system-white)] justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
+          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
         >
           <MdContentPasteSearch className="w-6 h-6" />
         </button>
         <button
           onClick={() => handleRestart()}
           title="Restart Container"
-          className="w-full flex items-center dark:text-[var(--system-white)] justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
+          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
         >
           <MdRestartAlt className="w-6 h-6" />
         </button>
@@ -149,7 +149,7 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
             setMenuModal(false);
           }}
           title="Terminal do Container"
-          className="w-full flex items-center dark:text-[var(--system-white)] justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
+          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
         >
           <span className="font-mono text-xs border border-current rounded px-1">_&gt;</span>
         </button>
@@ -160,7 +160,7 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
             setIsStatsOpen(!isStatsOpen);
           }}
           title="Verificar estatísticas do container"
-          className="w-full flex items-center dark:text-[var(--system-white)] justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
+          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
         >
           <MdOutlineQueryStats className="w-6 h-6" />
         </button>

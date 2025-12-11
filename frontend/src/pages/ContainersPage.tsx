@@ -13,7 +13,7 @@ const ContainersPage: React.FC = () => {
     <div className="max-w-7xl">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+          <h1 className="text-2xl font-semibold">
             Containers Docker
           </h1>
           <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">

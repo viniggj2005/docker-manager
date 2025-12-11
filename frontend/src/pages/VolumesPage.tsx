@@ -58,7 +58,7 @@ const VolumesPage: React.FC = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">Volumes Docker</h1>
+        <h1 className="text-2xl font-semibold">Volumes Docker</h1>
         <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
           Visualize, crie e remova volumes Docker.
         </p>
@@ -66,7 +66,7 @@ const VolumesPage: React.FC = () => {
 
       <button
         onClick={() => setOpenCreateModal(true)}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-4 py-3 text-sm font-semibold text-[var(--docker-blue)] shadow-sm transition hover:scale-[0.99] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)] sm:w-fit"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-4 py-3 text-sm font-semibold text-[var(--docker-blue)] shadow-sm transition hover:scale-[0.99] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] sm:w-fit"
       >
         <IoMdAddCircleOutline className="h-5 w-5" />
         Novo volume

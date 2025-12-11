@@ -7,7 +7,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex flex-1 flex-col h-full gap-8">
       <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+        <h1 className="text-2xl font-semibold">
           Bem-vindo ao painel Docker Manager
         </h1>
         <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
@@ -21,7 +21,7 @@ const HomePage: React.FC = () => {
             <HiOutlineViewGrid className="h-6 w-6" />
           </span>
           <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+            <h2 className="text-xl font-semibold">
               Gerencie containers
             </h2>
             <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
@@ -42,7 +42,7 @@ const HomePage: React.FC = () => {
             <HiOutlinePhotograph className="h-6 w-6" />
           </span>
           <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+            <h2 className="text-xl font-semibold">
               Gerencie imagens
             </h2>
             <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
@@ -60,7 +60,7 @@ const HomePage: React.FC = () => {
 
       <div className="flex flex-col gap-3 rounded-2xl border border-dashed border-[var(--docker-blue)] bg-[var(--light-overlay)] p-6 dark:border-[var(--docker-blue)] dark:bg-[var(--dark-tertiary)] sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+          <h2 className="text-lg font-semibold">
             Precisa conectar em um servidor?
           </h2>
           <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">

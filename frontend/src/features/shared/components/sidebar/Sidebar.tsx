@@ -17,9 +17,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
 
       <aside
         className={`
-    z-40 flex w-72 transform flex-col overflow-y-auto px-6 py-8 text-black
+    z-40 flex w-72 transform flex-col overflow-y-auto px-6 py-8
     shadow-xl transition-transform duration-200
-     dark:text-white
      bg-gradient-to-br dark:from-blue-500/20 dark:to-purple-500/20 from-blue-500/10 to-purple-500/10
 
     fixed inset-y-0 left-0          
@@ -86,7 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
                   : ''
                 } ${isActive && !collapsed
                   ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 shadow-lg shadow-blue-500/10 dark:from-blue-500/20 dark:to-purple-500/20  dark:shadow-blue-500/10 text-black dark:text-white'
-                  : isActive && collapsed ? 'text-black dark:text-white' : 'text-[var(--medium-gray)] text-black dark:text-white  hover:bg-gray-50 dark:text-[var(--grey-text)] dark:hover:bg-gray-700'
+                  : isActive && collapsed ? 'text-black dark:text-white' : 'text-[var(--medium-gray)] hover:bg-gray-50 dark:text-[var(--grey-text)] dark:hover:bg-gray-700'
                 }`
               }
             >

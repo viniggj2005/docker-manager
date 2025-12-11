@@ -37,7 +37,7 @@ const EditContainerNameModal: React.FC<EditContainerNameModalProps> = ({
         type="text"
         placeholder="Novo nome"
         className="w-full border border-[var(--medium-gray)] dark:border-[var(--dark-tertiary)]
-         dark:text-[var(--system-white)] bg-transparent rounded-lg px-2 py-1 text-sm
+         bg-transparent rounded-lg px-2 py-1 text-sm
         focus:outline-none focus:ring focus:ring-blue-200"
         value={newName}
         onChange={(event) => setNewName(event.target.value)}

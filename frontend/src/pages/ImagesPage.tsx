@@ -5,7 +5,7 @@ const ImagesPage: React.FC = () => {
   return (
     <div className="max-w-7xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+        <h1 className="text-2xl font-semibold">
           Imagens Docker
         </h1>
         <p className="text-[var(--medium-gray)] dark:text-[var(--grey-text)]">

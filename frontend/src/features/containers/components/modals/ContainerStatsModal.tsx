@@ -91,7 +91,7 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
         onClick={(e) => e.stopPropagation()}
         className="relative w-fit h-fit bg-[var(--system-white)]
          rounded-2xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] 
-         dark:bg-[var(--dark-primary)] shadow-2xl dark:text-[var(--system-white)]"
+         dark:bg-[var(--dark-primary)] shadow-2xl"
       >
         <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] px-5 py-3 dark:bg-[var(--dark-primary)]">
           <div className="flex items-center gap-2">
@@ -147,12 +147,12 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 overflow-auto">
             <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] p-3 pb-8  max-h-[280px]">
-              <div className="mb-2 text-sm dark:text-[var(--system-white)]">CPU em tempo real</div>
+              <div className="mb-2 text-sm">CPU em tempo real</div>
               <CPUChart points={cpuSeries} />
             </div>
 
             <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] p-3 pb-8 max-h-[280px]">
-              <div className="mb-2 text-sm dark:text-[var(--system-white)]">
+              <div className="mb-2 text-sm">
                 Memória em tempo real
               </div>
               <MemoryChart

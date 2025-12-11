@@ -287,7 +287,7 @@ const TerminalModal: React.FC<TerminalProps> = ({
   };
 
   const containerBase =
-    'relative shadow-2xl overflow-hidden text-[var(--system-black)] dark:text-[var(--system-white)] ';
+    'relative shadow-2xl overflow-hidden ';
 
   const modalSize =
     'w-[min(90vw,1100px)] h-[min(85vh,780px)] rounded-2xl border ' +
@@ -325,8 +325,8 @@ const TerminalModal: React.FC<TerminalProps> = ({
             top: miniPos.y,
             zIndex: 99999,
           }}
-          className="cursor-move bg-[var(--system-white)] text-[var(--system-black)] 
-                     dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)]
+          className="cursor-move bg-[var(--system-white)] 
+                     dark:bg-[var(--dark-secondary)] 
                      shadow-xl rounded-md px-3 py-2 flex items-center gap-3 select-none"
           onMouseDown={(e) => {
             dragRef.current = true;

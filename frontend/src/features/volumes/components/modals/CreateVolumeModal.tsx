@@ -29,7 +29,7 @@ const CreateVolumeModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) =
       <div
         ref={dialogRef}
         onClick={(event) => event.stopPropagation()}
-        className="relative w-full max-w-2xl bg-[var(--system-white)] rounded-2xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] shadow-2xl dark:text-[var(--system-white)]"
+        className="relative w-full max-w-2xl bg-[var(--system-white)] rounded-2xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] shadow-2xl"
       >
         <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] px-5 py-3 dark:bg-[var(--dark-primary)]">
           <div className="flex items-center gap-2">

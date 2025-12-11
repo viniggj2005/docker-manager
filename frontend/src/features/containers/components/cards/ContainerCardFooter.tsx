@@ -8,7 +8,7 @@ const CardFooter: React.FC<{ id: string }> = ({ id }) => (
     </div>
     <div className="opacity-0 transition group-hover:opacity-100">
       <button
-        className="rounded-xl flex border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] bg-[var(--system-white)] dark:bg-[var(--dark-primary)] px-3 py-1.5 text-sm text-[var(--system-black)] dark:text-[var(--system-white)] hover:scale-95"
+        className="rounded-xl flex border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] bg-[var(--system-white)] dark:bg-[var(--dark-primary)] px-3 py-1.5 text-sm hover:scale-95"
         onClick={() => navigator.clipboard.writeText(id)}
       >
         <MdContentCopy /> Copiar ID

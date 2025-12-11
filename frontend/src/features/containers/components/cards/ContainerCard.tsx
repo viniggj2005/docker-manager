@@ -40,7 +40,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="min-w-0">
           <div className="relative max-w-full pr-7">
-            <div className="truncate text-xl font-medium text-[var(--system-black)] transition hover:scale-[0.99] dark:text-[var(--system-white)]">
+            <div className="truncate text-xl font-medium transition hover:scale-[0.99]">
               {name}
             </div>
 
@@ -50,7 +50,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
                 className="absolute -top-1 right-0 rounded-full border border-[var(--medium-gray)] bg-[var(--system-white)] p-1 shadow-md opacity-0 transition group-hover:opacity-100 hover:bg-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]"
                 title="Editar nome"
               >
-                <GoPencil className="h-4 w-4 text-[var(--system-black)] dark:text-[var(--system-white)]" />
+                <GoPencil className="h-4 w-4" />
               </button>
             )}
 

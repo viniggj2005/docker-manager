@@ -44,7 +44,7 @@ const InspectModal: React.FC<InspectProps> = ({ name, data, title, onClose }) =>
       aria-modal
       role="dialog"
     >
-      <div className="relative w-[min(90vw,900px)] h-[min(80vh,650px)] rounded-2xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] bg-[var(--system-white)] dark:bg-[var(--dark-primary)] shadow-2xl text-[var(--system-black )] dark:text-[var(--system-white)] ">
+      <div className="relative w-[min(90vw,900px)] h-[min(80vh,650px)] rounded-2xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] bg-[var(--system-white)] dark:bg-[var(--dark-primary)] shadow-2xl">
         <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] px-5 py-3 dark:bg-[var(--dark-primary)]">
           <div className="flex items-center gap-2">
             <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />

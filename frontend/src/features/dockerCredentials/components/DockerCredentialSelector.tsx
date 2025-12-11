@@ -32,7 +32,7 @@ const DockerCredentialSelector: React.FC<DockerCredentialSelectorProps> = ({
   const labelClass =
     variant === 'navbar'
       ? 'sr-only'
-      : 'text-xs uppercase font-semibold tracking-wider text-black dark:text-gray-300';
+      : 'text-xs uppercase font-semibold tracking-wider dark:text-gray-300';
 
   const labelId = 'docker-credential-selector-label';
 
