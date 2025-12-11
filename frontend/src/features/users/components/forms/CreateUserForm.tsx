@@ -1,9 +1,13 @@
+import iziToast from 'izitoast';
+import { motion } from 'framer-motion';
 import React, { useState } from 'react';
+import { FaCheck } from 'react-icons/fa';
+import 'izitoast/dist/css/iziToast.min.css';
 import { useNavigate } from 'react-router-dom';
+import { LuLock, LuMail } from 'react-icons/lu';
+import { FiEye, FiEyeOff, FiUser } from 'react-icons/fi';
 import { createUserApi } from '../../services/UserService';
-import TextField from '../../../login/components/fields/TextField';
 import { CreateUserPayload } from '../../../../interfaces/UsersInterface';
-import PasswordField from '../../../login/components/fields/PasswordField';
 
 const CreateUserForm: React.FC = () => {
   const navigate = useNavigate();
@@ -11,26 +15,50 @@ const CreateUserForm: React.FC = () => {
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState<{ hasLength: boolean; hasNumber: boolean; hasSpecial: boolean; hasUpperCase: boolean; strength: number } | null>(null);
 
-  function resetFeedback() {
-    setError(null);
-    setSuccessMessage(null);
-  }
+  const getPasswordStrength = () => {
+    if (!password) return null;
+    const hasLength = password.length >= 8;
+    const hasNumber = /\d/.test(password);
+    const hasSpecial = /[!@#$%^&*]/.test(password);
+    const hasUpperCase = /[A-Z]/.test(password);
+
+    const strength = [hasLength, hasNumber, hasSpecial, hasUpperCase].filter(Boolean).length;
+    return { hasLength, hasNumber, hasSpecial, hasUpperCase, strength };
+  };
+
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    resetFeedback();
 
     if (!fullName.trim() || !email.trim() || !password) {
-      setError('Preencha todos os campos obrigatórios.');
+      iziToast.warning({
+        title: 'Atenção',
+        message: 'Preencha todos os campos obrigatórios.',
+        position: 'topRight'
+      });
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('As senhas informadas não conferem.');
+      iziToast.warning({
+        title: 'Atenção',
+        message: 'As senhas informadas não conferem.',
+        position: 'topRight'
+      });
+      return;
+    }
+    setPasswordStrength(getPasswordStrength());
+    if (!passwordStrength) {
+      iziToast.warning({
+        title: 'Senha Fraca',
+        message: 'A senha deve ter pelo menos 8 caracteres, incluindo números e caracteres especiais.',
+        position: 'topRight'
+      });
       return;
     }
 
@@ -43,89 +71,168 @@ const CreateUserForm: React.FC = () => {
     try {
       setLoading(true);
       await createUserApi(payload);
-      setSuccessMessage('Conta criada com sucesso! Você já pode fazer login.');
-      setFullName('');
-      setEmail('');
-      setPassword('');
-      setConfirmPassword('');
-      setTimeout(() => navigate('/login'), 2000);
-    } catch (createError) {
-      const message =
-        createError instanceof Error
-          ? createError.message
-          : 'Não foi possível criar a conta. Tente novamente mais tarde.';
-      setError(message);
+      iziToast.success({
+        title: 'Sucesso',
+        message: 'Conta criada com sucesso! Redirecionando...',
+        position: 'topRight',
+        onClosing: () => navigate('/login'),
+      });
+    } catch (createError: any) {
+      iziToast.error({
+        title: 'Erro',
+        message: createError.message || 'Não foi possível criar a conta.',
+        position: 'topRight',
+      });
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid w-full gap-4">
-      <div>
-        <h2 className="text-2xl font-semibold text-[var(--system-black)] ">Criar conta</h2>
-        <p className="mt-1 text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-          Informe seus dados para se cadastrar no Docker Manager.
-        </p>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <label className="block text-sm text-purple-100">
+          Nome completo
+        </label>
+        <div className="relative">
+          <FiUser className="absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
+          <input
+            type="text"
+            placeholder="Seu nome"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            className="w-full pl-12 pr-4 py-3.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all"
+            required
+          />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <label className="block text-sm text-purple-100">
+          Email
+        </label>
+        <div className="relative">
+          <LuMail className="absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
+          <input
+            type="email"
+            placeholder="seu@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full pl-12 pr-4 py-3.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all"
+            required
+          />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <label className="block text-sm text-purple-100">
+          Senha
+        </label>
+        <div className="relative">
+          <LuLock className="absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
+          <input
+            type={showPassword ? 'text' : 'password'}
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full pl-12 pr-12 py-3.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-purple-300/70 hover:text-purple-200 transition-colors"
+          >
+            {showPassword ? (
+              <FiEyeOff className="w-5 h-5" />
+            ) : (
+              <FiEye className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+
+        {passwordStrength && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            className="space-y-2 pt-2"
+          >
+            <div className="flex gap-1">
+              {[1, 2, 3, 4].map((level) => (
+                <div
+                  key={level}
+                  className={`h-1 flex-1 rounded-full transition-all ${level <= passwordStrength.strength
+                    ? passwordStrength.strength <= 2
+                      ? 'bg-red-400'
+                      : passwordStrength.strength === 3
+                        ? 'bg-yellow-400'
+                        : 'bg-green-400'
+                    : 'bg-white/20'
+                    }`}
+                />
+              ))}
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className={`flex items-center gap-1 ${passwordStrength.hasLength ? 'text-green-300' : 'text-white/50'}`}>
+                <FaCheck className="w-3 h-3" />
+                <span>8+ caracteres</span>
+              </div>
+              <div className={`flex items-center gap-1 ${passwordStrength.hasNumber ? 'text-green-300' : 'text-white/50'}`}>
+                <FaCheck className="w-3 h-3" />
+                <span>Número</span>
+              </div>
+              <div className={`flex items-center gap-1 ${passwordStrength.hasUpperCase ? 'text-green-300' : 'text-white/50'}`}>
+                <FaCheck className="w-3 h-3" />
+                <span>Maiúscula</span>
+              </div>
+              <div className={`flex items-center gap-1 ${passwordStrength.hasSpecial ? 'text-green-300' : 'text-white/50'}`}>
+                <FaCheck className="w-3 h-3" />
+                <span>Especial</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </div>
 
-      <TextField
-        label="Nome completo"
-        name="fullName"
-        value={fullName}
-        placeholder="Seu nome"
-        onChange={(event) => setFullName(event.target.value)}
-        required
-      />
-
-      <TextField
-        label="Email"
-        name="email"
-        type="email"
-        value={email}
-        placeholder="seu@email.com"
-        onChange={(event) => setEmail(event.target.value)}
-        required
-      />
-
-      <PasswordField
-        label="Senha"
-        name="password"
-        value={password}
-        placeholder="••••••••"
-        onChange={(event) => setPassword(event.target.value)}
-      />
-
-      <PasswordField
-        label="Confirmar senha"
-        name="confirmPassword"
-        value={confirmPassword}
-        placeholder="••••••••"
-        onChange={(event) => setConfirmPassword(event.target.value)}
-      />
-
-      {error ? <div className="text-sm text-[var(--exit-red)]">{error}</div> : null}
-      {successMessage ? (
-        <div className="text-sm text-[var(--success-green)]">{successMessage}</div>
-      ) : null}
-
-      <div className="flex flex-col gap-3">
-        <button
-          type="submit"
-          disabled={loading}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--docker-blue)] px-4 py-2 text-base font-semibold text-[var(--system-white)] transition hover:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {loading ? 'Criando conta...' : 'Criar conta'}
-        </button>
-
-        <button
-          type="button"
-          onClick={() => navigate('/login')}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--dark-tertiary)] px-4 py-2 text-base font-semibold text-[var(--dark-primary)] transition hover:scale-[0.99] dark:border-[var(--grey-text)]"
-        >
-          Voltar para o login
-        </button>
+      <div className="space-y-2">
+        <label className="block text-sm text-purple-100">
+          Confirmar senha
+        </label>
+        <div className="relative">
+          <LuLock className="absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
+          <input
+            type={showConfirmPassword ? 'text' : 'password'}
+            placeholder="••••••••"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="w-full pl-12 pr-12 py-3.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-purple-300/70 hover:text-purple-200 transition-colors"
+          >
+            {showConfirmPassword ? (
+              <FiEyeOff className="w-5 h-5" />
+            ) : (
+              <FiEye className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+        {confirmPassword && password !== confirmPassword && (
+          <p className="text-red-300 text-xs flex items-center gap-1">
+            <span>⚠</span> As senhas não coincidem
+          </p>
+        )}
       </div>
+      <motion.button
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        type="submit"
+        className="w-full py-3.5 bg-gradient-to-r from-purple-500 to-blue-600 text-white rounded-xl hover:shadow-lg hover:shadow-purple-500/50 transition-all relative overflow-hidden group mt-6"
+      >
+        <span className="relative z-10">Criar conta</span>
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+      </motion.button>
     </form>
   );
 };

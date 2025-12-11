@@ -17,13 +17,13 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
 
       <aside
         className={`
-    z-40 flex w-72 transform flex-col overflow-y-auto
-    bg-[var(--system-white)] px-6 py-8 text-[var(--system-black)]
+    z-40 flex w-72 transform flex-col overflow-y-auto px-6 py-8 text-black
     shadow-xl transition-transform duration-200
-    dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)]
+     dark:text-white
+     bg-gradient-to-br dark:from-blue-500/20 dark:to-purple-500/20 from-blue-500/10 to-purple-500/10
 
-    fixed inset-y-0 left-0           /* mobile: sidebar fixo */
-    lg:static lg:h-full lg:inset-auto /* desktop: participa do layout, respeita o AppFrame */
+    fixed inset-y-0 left-0          
+    lg:static lg:h-full lg:inset-auto
 
     lg:translate-x-0
     ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -81,42 +81,39 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
               onClick={onClose}
               title={label}
               className={({ isActive }) =>
-                `w-full flex items-start gap-3 p-3 rounded-lg mb-1 transition-colors ${collapsed
+                `w-full flex items-start gap-3 p-3 rounded-lg mb-1 group-hover:bg-gray-200 dark:group-hover:bg-white/10 transition-colors ${collapsed
                   ? 'lg:w-full lg:justify-center lg:px-2'
                   : ''
-                } ${isActive
-                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300'
-                  : 'text-[var(--medium-gray)] hover:bg-gray-50 dark:text-[var(--grey-text)] dark:hover:bg-gray-700'
+                } ${isActive && !collapsed
+                  ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 shadow-lg shadow-blue-500/10 dark:from-blue-500/20 dark:to-purple-500/20  dark:shadow-blue-500/10 text-black dark:text-white'
+                  : isActive && collapsed ? 'text-black dark:text-white' : 'text-[var(--medium-gray)] text-black dark:text-white  hover:bg-gray-50 dark:text-[var(--grey-text)] dark:hover:bg-gray-700'
                 }`
               }
             >
-              <Icon className="h-5 w-5" />
-              <div className={`flex flex-col ${collapsed ? 'lg:hidden' : ''}`}>
-                <span className="font-semibold text-current">{label}</span>
-                <span className="text-xs mt-0.5 text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-                  {description}
-                </span>
-              </div>
+              {({ isActive }) => (
+                <>
+                  <div className={`p-2 rounded-lg transition-all 
+                ${isActive ? 'bg-gradient-to-br dark:from-blue-500 dark:to-purple-600 from-blue-400 to-purple-500 text-white' : 'text-gray-600 dark:text-gray-300'} `}>
+                    <Icon className="h-5 w-5 " />
+                  </div>
+
+                  <div className={`flex flex-col ${collapsed ? 'lg:hidden' : ''}`}>
+                    <span className="font-semibold text-current">{label}</span>
+                    <span className="text-xs mt-0.5 text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+                      {description}
+                    </span>
+                  </div>
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
 
-        <div
-          className={`mt-6 ${collapsed
-            ? 'lg:hidden'
-            : ' dark:bg-[var(--dark-tertiary)]'
-            }`}
-        >
-          <h4
-            className={` text-[var(--system-black)] dark:text-[var(--system-white)] ${collapsed ? 'lg:hidden' : ''
-              }`}
-          >
+        <div className={`mt-6 ${collapsed ? 'lg:hidden' : ''}`}>
+          <h4 className={` text-[var(--system-black)] dark:text-[var(--system-white)] ${collapsed ? 'lg:hidden' : ''}`}>
             Credencial ativa
           </h4>
-          <p
-            className={`text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)] ${collapsed ? 'lg:hidden' : ''
-              }`}
-          >
+          <p className={`text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)] ${collapsed ? 'lg:hidden' : ''}`}>
             Escolha qual credencial Docker usar nas demais telas.
           </p>
           <div className={` ${collapsed ? 'lg:hidden' : ''}`}>

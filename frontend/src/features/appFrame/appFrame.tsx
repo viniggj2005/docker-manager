@@ -35,27 +35,24 @@ export function AppFrame() {
         h-11
         flex items-center
         px-1
-        rounded-t-lg
-        bg-[var(--system-white)]
-        dark:bg-[var(--dark-primary)]
-        border-[var(--light-gray)]
-        border-b dark:border-[var(--dark-tertiary)]
+        rounded-t-sm
+        bg-slate-900
+        border-b border-white/10
         shadow-sm
         select-none
-       
       "
       onDoubleClick={toggleMax}
     >
       <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center  pl-1 ">
+        <div className="flex items-center justify-center pl-1">
           <img
             src={appIcon}
-            className="w-6 h-6"
+            className="w-6 h-6 opacity-80"
             draggable={false}
           />
         </div>
         <div className="flex flex-col leading-tight">
-          <span className="text-xs uppercase tracking-[0.18em] text-[var(--grey-text)]">
+          <span className="text-xs uppercase tracking-[0.18em] text-blue-100/50 font-medium">
             Docker Manager
           </span>
         </div>
@@ -72,8 +69,8 @@ export function AppFrame() {
           className="
             inline-flex h-8 w-8 items-center justify-center
             rounded-full
-            dark:text-[var(--light-gray)] hover:bg-[var(--light-gray)]
-            dark:hover:bg-[var(--dark-secondary)] hover:scale-95
+            text-blue-300/70 hover:bg-white/10 hover:text-blue-200
+            hover:scale-95
             transition
           "
           aria-label="Minimizar"
@@ -86,8 +83,8 @@ export function AppFrame() {
           className="
             inline-flex h-8 w-8 items-center justify-center
             rounded-full
-            dark:text-[var(--light-gray)] hover:bg-[var(--light-gray)]
-            dark:hover:bg-[var(--dark-secondary)] hover:scale-95
+            text-blue-300/70 hover:bg-white/10 hover:text-blue-200
+            hover:scale-95
             transition
           "
           aria-label={maximized ? "Restaurar" : "Maximizar"}
@@ -100,8 +97,8 @@ export function AppFrame() {
           className="
             inline-flex h-8 w-8 items-center justify-center
             rounded-full
-            text-[var(--exit-red)]
-            hover:bg-[var(--exit-red)] hover:text-[var(--system-white)] hover:scale-95
+            text-red-400/80
+            hover:bg-red-500/20 hover:text-red-300 hover:scale-95
             transition
           "
           aria-label="Fechar"

@@ -17,14 +17,14 @@ const ToggleThemeButton: React.FC = () => {
   return (
     <button
       onClick={theme.toggleTheme}
-      className={`w-full p-1  rounded-lg border flex items-center justify-center transition-colors
-        ${theme.theme === 'dark' ? 'bg-[var(--dark-gray)] border-[var(--medium-gray)]' : 'bg-[var(--system-white)]'}`}
-    >
-      {delayedTheme === 'dark' ? (
-        <MdDarkMode className="h-8 w-8 text-[var(--system-white)]" />
-      ) : (
-        <MdLightMode className="h-8 w-8 text-var(--dark-primary)]" />
-      )}
+      className={`transition-all duration-200`}>
+      <div className={`p-2 rounded-lg transition-all bg-gradient-to-br from-yellow-400 to-orange-500 dark:from-blue-500 dark:to-purple-600`}>
+        {delayedTheme === 'dark' ? (
+          <MdDarkMode className="h-8 w-8 text-white" />
+        ) : (
+          <MdLightMode className="h-8 w-8 text-white" />
+        )}
+      </div>
     </button>
   );
 };

@@ -2,7 +2,6 @@ import {
   HiOutlineCube,
   HiOutlineHome,
   HiOutlineServer,
-  HiOutlineArchive,
   HiOutlinePhotograph,
 } from 'react-icons/hi';
 import { FiKey } from "react-icons/fi";
@@ -11,7 +10,7 @@ import { RiHardDrive3Line } from "react-icons/ri";
 export const navItems = [
   {
     label: 'Painel',
-    description: 'Visão geral dos containers',
+    description: 'Visão geral dos contêineres',
     to: '/home',
     icon: HiOutlineHome,
   },
@@ -29,7 +28,7 @@ export const navItems = [
   },
   {
     label: 'Containers',
-    description: 'Gerencie containers locais',
+    description: 'Gerencie contêineres locais',
     to: '/containers',
     icon: HiOutlineCube,
   },

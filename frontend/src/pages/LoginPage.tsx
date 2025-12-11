@@ -1,70 +1,123 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { GoContainer } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 import appIcon from '../assets/images/appicon.png';
 import LoginForm from '../features/login/LoginForm';
+import { LuLayers, LuServer } from 'react-icons/lu';
+
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <div className="relative flex h-full items-center justify-center overflow-hidden bg-gradient-to-br from-[var(--dark-primary)] via-[var(--dark-secondary)] to-[var(--system-black)] px-4 py-12">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,var(--docker-blue)_0,transparent_60%)] opacity-40" />
-      <div className="w-full max-w-6xl overflow-hidden rounded-3xl border border-[var(--dark-tertiary)] bg-[var(--system-white)]/90 shadow-2xl backdrop-blur dark:bg-[var(--dark-secondary)]/90">
-        <div className="grid gap-0 lg:grid-cols-[1.1fr,1fr]">
-          <div className="hidden flex-col justify-between bg-[var(--system-black)]/70 p-10 text-[var(--system-white)] lg:flex">
-            <div className="space-y-6 mb-4">
-              <div>
-                <div className="flex">
-                  <img src={appIcon} alt="Docker Manager" className="h-20 w-20 object-contain" />
-                  <span className="inline-flex items-center gap-2 rounded-full bg-[var(--docker-blue)]/20 px-3 py-1 text-sm font-medium uppercase tracking-wide text-[var(--docker-blue)]">
-                    Docker Manager
-                  </span>
-                </div>
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-purple-500/10 rounded-full blur-3xl" />
 
-                <h1 className="mt-6 text-4xl font-semibold leading-tight">
-                  Gerencie containers com agilidade e clareza
-                </h1>
-                <p className="mt-4 max-w-md text-base text-[var(--text-gray)]">
-                  Acompanhe métricas em tempo real, visualize logs e tenha controle total sobre os
-                  seus ambientes Docker.
+        <motion.div
+          animate={{
+            y: [0, -20, 0],
+            rotate: [0, 5, 0]
+          }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-20 left-10 text-blue-400/20"
+        >
+          <GoContainer size={80} />
+        </motion.div>
+
+        <motion.div
+          animate={{
+            y: [0, 20, 0],
+            rotate: [0, -5, 0]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-20 right-20 text-purple-400/20"
+        >
+          <LuLayers size={100} />
+        </motion.div>
+
+        <motion.div
+          animate={{
+            y: [0, -15, 0],
+            x: [0, 10, 0]
+          }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/2 right-10 text-cyan-400/20"
+        >
+          <LuServer size={60} />
+        </motion.div>
+      </div>
+
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full max-w-md"
+        >
+          <div className="text-center mb-8">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+              className="inline-flex items-center justify-center mb-6"
+            >
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl blur-lg opacity-75" />
+                <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center">
+                  <img src={appIcon} className="w-9 h-9" />
+                </div>
+              </div>
+            </motion.div>
+
+            <h1 className="text-3xl text-white mb-2">
+              Docker Manager
+            </h1>
+            <p className="text-blue-200/70">
+              Gerencie seus containers com facilidade
+            </p>
+          </div>
+
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="relative"
+          >
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20" />
+
+            <div className="relative p-8">
+              <h2 className="text-2xl text-white mb-6">
+                Bem-vindo de volta
+              </h2>
+
+              <LoginForm />
+
+
+              <div className="text-center">
+                <p className="text-blue-100/70">
+                  Não tem uma conta?{' '}
+                  <button
+                    onClick={() => navigate('/create-account')}
+                    className="text-blue-300 hover:text-blue-200 transition-colors underline-offset-4 hover:underline"
+                  >
+                    Criar conta
+                  </button>
                 </p>
               </div>
-
-              <ul className="space-y-4 text-sm text-[var(--text-gray)]">
-                <li className="flex items-start gap-3">
-                  <span className="mt-1 h-2.5 w-2.5 rounded-full bg-[var(--docker-blue)]" />
-                  Monitoramento contínuo dos containers.
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="mt-1 h-2.5 w-2.5 rounded-full bg-[var(--docker-blue)]" />
-                  Visualização clara de logs, portas expostas e status em tempo real.
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="mt-1 h-2.5 w-2.5 rounded-full bg-[var(--docker-blue)]" />
-                  Design responsivo pensado para ambientes de trabalho modernos.
-                </li>
-              </ul>
             </div>
+          </motion.div>
 
-            <div className="rounded-2xl border border-[var(--dark-tertiary)] bg-[var(--dark-tertiary)] p-6 text-sm text-[var(--system-white)]">
-              <p>
-                Precisa de uma conta?{' '}
-                <span
-                  className="text-[var(--docker-blue)] ml-1 cursor-pointer"
-                  onClick={() => {
-                    navigate('/create-account');
-                  }}
-                >
-                  criar conta
-                </span>
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col   justify-center gap-10 p-8 sm:p-12">
-            <div className="mx-auto  rounded-2xl border border-[var(--light-gray)]/70 bg-[var(--system-white)] p-8 shadow-xl dark:border-[var(--dark-tertiary)]/50 dark:bg-[var(--dark-primary)]/60">
-              <LoginForm />
-            </div>
-          </div>
-        </div>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="text-center text-blue-200/50 text-sm mt-8"
+          >
+            Plataforma segura para gerenciamento de ambientes Docker
+          </motion.p>
+        </motion.div>
       </div>
     </div>
   );
