@@ -1,0 +1,181 @@
+import iziToast from 'izitoast';
+import Convert from 'ansi-to-html';
+import { FaFolderOpen } from 'react-icons/fa';
+import React, { useEffect, useState, useRef } from 'react';
+import { GetFilePath } from '../../../../../wailsjs/go/main/App';
+import TextField from '../../../login/components/fields/TextField';
+import { EventsOn, EventsOff } from '../../../../../wailsjs/runtime';
+import { ImageCreate } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
+
+const converter = new Convert({
+    newline: true,
+    escapeXML: true,
+});
+
+interface ImageBuildFormProps {
+    clientId: number;
+    onClose: () => void;
+    onSuccess?: () => void;
+}
+const ImageBuildForm: React.FC<ImageBuildFormProps> = ({ clientId, onClose, onSuccess }) => {
+    const [name, setName] = useState('');
+    const [path, setPath] = useState('');
+    const [tag, setTag] = useState('latest');
+    const [builded, setBuilded] = useState(false);
+    const [logs, setLogs] = useState<string[]>([]);
+    const [building, setBuilding] = useState(false);
+    const logsEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [logs]);
+
+    const handleBrowseClick = async () => {
+        try {
+            const path = await GetFilePath();
+
+            if (path) {
+                setPath(path.replace("Dockerfile", ""));
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleBuild = async (event: React.FormEvent) => {
+        event.preventDefault();
+        if (!name.trim() || !tag.trim() || !path.trim()) {
+            iziToast.error({ title: 'Erro', message: 'Preencha todos os campos.', position: 'bottomRight' });
+            return;
+        }
+
+        const nameRegex = /^[a-z0-9]+(?:[._-][a-z0-9]+)*$/;
+        if (!nameRegex.test(name)) {
+            iziToast.error({
+                title: 'Nome Inválido',
+                message: 'O nome da imagem deve conter apenas letras minúsculas, números, hífens, pontos ou sublinhados, e não pode conter espaços.',
+                position: 'bottomRight'
+            });
+            return;
+        }
+
+        setBuilding(true);
+        setLogs([]);
+
+        EventsOn('image:build', (data: any) => {
+            if (data && data.log) {
+                setLogs((previousLogs) => [...previousLogs, data.log]);
+            }
+        });
+
+        try {
+            await ImageCreate(clientId, {
+                path,
+                name,
+                tag,
+            });
+            iziToast.success({ title: 'Sucesso', message: 'Imagem construída com sucesso!', position: 'bottomRight' });
+            onSuccess?.();
+            setBuilded(true);
+        } catch (error: any) {
+            setLogs((previousLogs) => [...previousLogs, `\nError: ${error.message || error}`]);
+            iziToast.error({ title: 'Erro', message: error.message || 'Falha ao construir imagem.', position: 'bottomRight' });
+            onClose?.();
+        } finally {
+            EventsOff('image:build');
+            setBuilding(false);
+        }
+    };
+
+    return (
+        <form onSubmit={handleBuild} className="grid gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <TextField
+                    label="Nome da Imagem"
+                    name="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="ex: minha_app"
+                    required
+                    disabled={building || builded}
+                />
+                <TextField
+                    label="Tag"
+                    name="tag"
+                    value={tag}
+                    onChange={(e) => setTag(e.target.value)}
+                    placeholder="ex: latest"
+                    required
+                    disabled={building || builded}
+                />
+            </div>
+
+            <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">
+                    Caminho do Dockerfile (Contexto)
+                </label>
+                <div className="flex gap-2">
+                    <div className="flex-1">
+                        <TextField
+                            label=""
+                            name="path"
+                            value={path}
+                            onChange={(e) => setPath(e.target.value)}
+                            placeholder="Selecione ou digite o caminho"
+                            required
+                            disabled={building || builded}
+                        />
+                    </div>
+                    <button
+                        type="button"
+                        onClick={handleBrowseClick}
+                        disabled={building || builded}
+                        className="mt-1 flex items-center justify-center rounded-xl bg-[var(--light-gray)] px-4 text-[var(--system-black)] hover:brightness-95 dark:bg-[var(--dark-tertiary)] dark:text-[var(--system-white)] h-[42px]"
+                        title="Selecionar Dockerfile"
+                    >
+                        <FaFolderOpen className="h-5 w-5" />
+                    </button>
+                </div>
+            </div>
+
+            <div className="mt-4">
+                <label className="mb-2 block text-sm font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">
+                    Logs de Construção
+                </label>
+                <div className="h-64 w-full overflow-y-auto rounded-xl bg-gray-900 p-4 font-mono text-xs text-green-400 shadow-inner">
+                    {logs.length === 0 ? (
+                        <span className="text-gray-500 italic">Aguardando início...</span>
+                    ) : (
+                        logs.map((log, index) => {
+                            const html = converter.toHtml(log);
+                            return (
+                                <div key={index} dangerouslySetInnerHTML={{ __html: html }} className="whitespace-pre-wrap font-mono" />
+                            );
+                        })
+                    )}
+                    <div ref={logsEndRef} />
+                </div>
+            </div>
+            {!builded && (
+                <div className="mt-4 flex justify-end gap-3">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        disabled={building}
+                        className="rounded-xl px-4 py-2 text-sm font-medium text-[var(--medium-gray)] hover:bg-[var(--light-gray)] dark:text-[var(--grey-text)] dark:hover:bg-[var(--dark-tertiary)] disabled:opacity-50"
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={building}
+                        className="rounded-xl bg-[var(--docker-blue)] px-6 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50 flex items-center gap-2"
+                    >
+                        {building ? 'Construindo...' : 'Construir'}
+                    </button>
+                </div>)}
+        </form>
+    );
+};
+
+export default ImageBuildForm;

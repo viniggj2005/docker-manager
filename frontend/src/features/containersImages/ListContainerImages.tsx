@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import Toolbar from './components/toolbar/Toolbar';
 import ImageCard from './components/cards/ImageCard';
-import ImageBuildModal from './components/ImageBuildModal';
+import ImageBuildModal from './components/modals/ImageBuildModal';
 import { useDockerClient } from '../../contexts/DockerClientContext';
 import { ViewMode } from '../../interfaces/ContainerImagesInterfaces';
 import { ParseNameAndTag } from '../shared/functions/TreatmentFunction';

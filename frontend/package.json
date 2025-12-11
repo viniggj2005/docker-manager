@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@heroui/theme": "^2.4.17",
+    "ansi-to-html": "^0.7.2",
     "chart.js": "^4.5.0",
     "chartjs-adapter-date-fns": "^3.0.0",
     "izitoast": "^1.4.0",

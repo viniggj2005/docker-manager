@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
@@ -43,4 +45,25 @@ func (a *App) SaveImage(base64Str, path string) error {
 		return err
 	}
 	return os.WriteFile(path, data, 0644)
+}
+
+func (a *App) GetFilePath() string {
+	selection, err := runtime.OpenFileDialog(a.ctx, runtime.OpenDialogOptions{
+		Title: "Selecione um arquivo",
+		Filters: []runtime.FileFilter{
+			{
+				DisplayName: "Dockerfile",
+				Pattern:     "Dockerfile",
+			},
+			{
+				DisplayName: "Todos os arquivos (*.*)",
+				Pattern:     "*.*",
+			},
+		},
+	})
+
+	if err != nil {
+		return ""
+	}
+	return selection
 }
