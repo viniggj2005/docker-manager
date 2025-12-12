@@ -161,17 +161,7 @@ const NetworkCards: React.FC<NetworkCardProps> = ({
         </div>
 
 
-        {/* <button
-          onClick={handleOpenInspect}
-          disabled={isInspectLoading}
-          title="Inspecionar rede"
-          className="flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-black transition hover:scale-95 disabled:opacity-60 sm:w-auto dark:border-white/10 dark:bg-zinc-900 dark:text-white"
-        >
-          <RiFileList2Line className="h-5 w-5" />
-          <span className="sm:hidden">
-            {isInspectLoading ? 'Carregando...' : 'Inspecionar'}
-          </span>
-        </button> */}
+
 
       </div >
 

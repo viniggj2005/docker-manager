@@ -1,7 +1,9 @@
 import React from 'react';
 import { RxMinus } from 'react-icons/rx';
+import { TbAnchor, TbAnchorOff } from "react-icons/tb";
+import { IoMdCloseCircleOutline } from 'react-icons/io';
+import { FaRegWindowRestore, FaTerminal } from 'react-icons/fa';
 import { TerminalHeaderProps } from '../../../../interfaces/TerminalInterfaces';
-import { IoMdCloseCircleOutline, IoIosExpand, IoIosContract } from 'react-icons/io';
 
 const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
   title,
@@ -14,23 +16,26 @@ const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
 }) => {
   return (
     <div
-      className="sticky h-[52px] top-0 z-10 flex items-center gap-3 border-b rounded-t-2xl
-                 border-gray-300 dark:border-white/10
-                 bg-white dark:bg-zinc-900
-                 px-5 py-3"
+      className={`flex items-center justify-between px-6 ${docked ? 'py-1' : 'py-4'}  bg-gradient-to-r from-purple-500/60 to-pink-500/10`}
     >
-      <div className="flex items-center gap-2">
-        <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-        <h2 className="text-sm font-medium">{title}</h2>
-        <span className="text-xs text-zinc-400">{docked ? 'Painel' : 'Modal'}</span>
-      </div>
+      {!docked && (
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
+            <FaTerminal className="w-5 h-5 text-white" />
+          </div>
+
+          <div>
+            <h2 className="text-white">{title}</h2>
+            <p className="text-xs text-white dark:text-purple-300/70 mt-0.5">Modal • Terminal</p>
+          </div>
+        </div>)}
 
       <div className="ml-auto flex items-center gap-3">
 
         {!maximized && (
           <button
             onClick={onMinimize}
-            className="text-zinc-400 hover:scale-95"
+            className="dark:text-zinc-400 text-white hover:scale-95"
             title="Minimizar"
             type="button"
           >
@@ -41,21 +46,21 @@ const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
         {!maximized && (
           <button
             onClick={onToggleDock}
-            className="text-zinc-400 hover:scale-95 text-xs px-2 py-1 rounded border border-transparent"
+            className="dark:text-zinc-400 text-white hover:scale-95 text-xs px-2 py-1 rounded border border-transparent"
             title={docked ? 'Desancorar (modal)' : 'Ancorar embaixo (painel)'}
             type="button"
           >
-            {docked ? 'Desancorar' : 'Ancorar'}
+            {docked ? <TbAnchorOff className="w-5 h-5" /> : <TbAnchor className="w-5 h-5" />}
           </button>
         )}
 
         <button
           onClick={onToggleMax}
-          className="text-zinc-400 hover:scale-95"
+          className="dark:text-zinc-400 text-white hover:scale-95"
           title={maximized ? 'Restaurar' : 'Tela cheia'}
           type="button"
         >
-          {maximized ? <IoIosContract className="h-5 w-5" /> : <IoIosExpand className="h-5 w-5" />}
+          {maximized ? <FaRegWindowRestore className="w-5 h-5" /> : !docked ? <FaRegWindowRestore className="w-5 h-5" /> : <></>}
         </button>
 
         <button

@@ -1,76 +1,160 @@
 import iziToast from 'izitoast';
-import React, { useEffect, useRef } from 'react';
-import { IoMdCloseCircleOutline } from 'react-icons/io';
-import CreateNetworkForm from '../forms/CreateNetworkForm';
+import React, { useState } from 'react';
+import { Network } from 'lucide-react';
 import { ModalProps } from '../../../../interfaces/TerminalInterfaces';
+import { Modal } from '../../../shared/components/modals/Modal';
+import { ModalButton } from '../../../shared/components/modals/ModalButton';
+import { NetworkService } from '../../services/NetworkService';
+import { useDockerClient } from '../../../../contexts/DockerClientContext';
+import { network } from '../../../../../wailsjs/go/models';
 
 const CreateNetworkModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) => {
-  const dialogRef = useRef<HTMLDivElement>(null);
+  const { selectedCredentialId } = useDockerClient();
+  const [formData, setFormData] = useState({
+    name: '',
+    driver: 'bridge',
+    internal: false,
+    attachable: false
+  });
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
 
-  if (!open) return null;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!selectedCredentialId) return;
+
+    try {
+      const options = new network.CreateOptions({
+        Driver: formData.driver,
+        Scope: "local",
+        Internal: formData.internal,
+        Attachable: formData.attachable,
+        Ingress: false,
+        ConfigOnly: false,
+        Options: {},
+        Labels: {},
+      });
+
+      await NetworkService.createNetwork(selectedCredentialId, formData.name, options);
+
+      iziToast.success({
+        title: 'Criado com sucesso',
+        message: 'A network foi criada.',
+        position: 'bottomRight',
+        timeout: 3000,
+      });
+
+      onClose();
+      onCreated?.();
+      setFormData({
+        name: '',
+        driver: 'bridge',
+        internal: false,
+        attachable: false
+      });
+    } catch (err) {
+      console.error(err);
+      iziToast.error({
+        title: 'Erro',
+        message: 'Erro ao criar network',
+        position: 'bottomRight'
+      });
+    }
+  };
+
+  const inputClass = `w-full px-4 py-3 rounded-xl border backdrop-blur-sm transition-all outline-none
+    bg-white/80 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
+    dark:bg-white/10 dark:border-white/20 dark:text-white dark:placeholder:text-white/40 dark:focus:border-blue-500/50 dark:focus:ring-blue-500/20`;
+
+  const labelClass = `block text-sm mb-2 text-gray-700 dark:text-gray-200`;
 
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center
-      bg-white/60 dark:bg-black/60 backdrop-blur-sm"
-      aria-modal
-      role="dialog"
-      aria-labelledby="network-modal-title"
+    <Modal
+      isOpen={open}
+      onClose={onClose}
+      title="Nova Network Docker"
+      description="preencha os dados"
+      icon={<Network className="w-5 h-5 text-blue-500" />}
+      footer={
+        <>
+          <ModalButton variant="secondary" onClick={onClose}>
+            Cancelar
+          </ModalButton>
+          <ModalButton variant="primary" onClick={handleSubmit}>
+            Criar Network
+          </ModalButton>
+        </>
+      }
     >
-      <div
-        ref={dialogRef}
-        onClick={(event) => event.stopPropagation()}
-        className="relative w-full max-w-2xl bg-white
-          rounded-2xl border border-gray-300 dark:border-white/10
-          dark:bg-zinc-900 shadow-2xl text-black dark:text-white"
-      >
-        <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b
-         border-gray-300 dark:border-white/10 px-5 py-3
-         bg-white dark:bg-zinc-900">
-          <div className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 rounded-full bg-blue-600" />
-            <h2 id="network-modal-title" className="text-sm font-medium text-black dark:text-white">
-              Nova Network Docker
-            </h2>
-            <span className="text-xs text-gray-500 dark:text-zinc-400">preencha os dados</span>
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <p className="text-sm mb-4 text-gray-600 dark:text-gray-400">
+          Preencha os dados para criar uma nova rede Docker.
+        </p>
 
-          <button
-            onClick={onClose}
-            className="ml-auto text-rose-400 hover:scale-95"
-            title="Fechar"
-            aria-label="Fechar modal"
-          >
-            <IoMdCloseCircleOutline className="h-5 w-5" />
-          </button>
-        </div>
-
-        <div className="max-h-[80vh] overflow-auto p-5">
-          <CreateNetworkForm
-            onSuccess={() => {
-              iziToast.success({
-                title: 'Criado com sucesso',
-                message: 'A network foi criada.',
-                position: 'bottomRight',
-                timeout: 3000,
-              });
-              onClose();
-              onCreated?.();
-            }}
+        <div>
+          <label className={labelClass}>
+            Nome <span className="text-red-400">*</span>
+          </label>
+          <input
+            type="text"
+            placeholder="ex: minha-rede"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className={inputClass}
+            required
           />
         </div>
-      </div>
-    </div>
+
+        <div>
+          <label className={labelClass}>
+            Driver
+          </label>
+          <select
+            value={formData.driver}
+            onChange={(e) => setFormData({ ...formData, driver: e.target.value })}
+            className={inputClass}
+          >
+            <option value="bridge" className="dark:bg-zinc-800">bridge</option>
+            <option value="host" className="dark:bg-zinc-800">host</option>
+            <option value="overlay" className="dark:bg-zinc-800">overlay</option>
+            <option value="macvlan" className="dark:bg-zinc-800">macvlan</option>
+            <option value="none" className="dark:bg-zinc-800">none</option>
+          </select>
+        </div>
+
+        <div className="space-y-3">
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={formData.internal}
+              onChange={(e) => setFormData({ ...formData, internal: e.target.checked })}
+              className="w-5 h-5 rounded border-2 bg-white/10 border-gray-300 dark:border-white/20 checked:bg-blue-500 checked:border-blue-500 transition-all dark:bg-white/10"
+            />
+            <div>
+              <span className="text-gray-900 dark:text-gray-200">Internal</span>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Restringir acesso externo à rede
+              </p>
+            </div>
+          </label>
+
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={formData.attachable}
+              onChange={(e) => setFormData({ ...formData, attachable: e.target.checked })}
+              className="w-5 h-5 rounded border-2 bg-white/10 border-gray-300 dark:border-white/20 checked:bg-blue-500 checked:border-blue-500 transition-all dark:bg-white/10"
+            />
+            <div>
+              <span className="text-gray-900 dark:text-gray-200">Attachable</span>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Permitir containers standalone se conectarem
+              </p>
+            </div>
+          </label>
+        </div>
+      </form>
+    </Modal>
   );
 };
 

@@ -1,13 +1,11 @@
 import iziToast from "izitoast";
 import React, { useState } from "react";
+import { Shield } from "lucide-react";
 import { FileUploader } from "react-drag-drop-files";
-import TextField from "../../../login/components/fields/TextField";
 import { DockerCredentialService } from "../../services/DockerCredentialService";
 import { CreateDockerCredentialModalProps } from "../../../../interfaces/DockerCredentialInterfaces";
-
-type FileInput = File | File[];
-const fileTypes = ["PEM", "TXT"];
-type FileSetter = React.Dispatch<React.SetStateAction<string>>;
+import { Modal } from "../../../shared/components/modals/Modal";
+import { ModalButton } from "../../../shared/components/modals/ModalButton";
 
 export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalProps> = ({
   open,
@@ -16,8 +14,7 @@ export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalPr
   refresh,
   onClose,
 }) => {
-  if (!open) return null;
-
+  const fileTypes = ["PEM", "TXT"];
   const [ca, setCa] = useState<string>("");
   const [url, setUrl] = useState<string>("");
   const [key, setKey] = useState<string>("");
@@ -26,13 +23,13 @@ export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalPr
   const [description, setDescription] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  const handleFileUpload = async (file: FileInput, setter: FileSetter): Promise<void> => {
+  const handleFileUpload = async (file: File | File[], setter: React.Dispatch<React.SetStateAction<string>>) => {
     const selectedFile = Array.isArray(file) ? file[0] : file;
     const content = await selectedFile.text();
     setter(content);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
@@ -55,6 +52,12 @@ export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalPr
 
       onClose();
       refresh();
+      setCa("");
+      setUrl("");
+      setKey("");
+      setCert("");
+      setAlias("");
+      setDescription("");
     } catch (err) {
       iziToast.error({
         title: "Erro",
@@ -66,93 +69,111 @@ export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalPr
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/60 dark:bg-black/60 backdrop-blur-sm">
-      <div className="w-[450px] relative rounded-2xl border border-gray-300 dark:border-white/10 bg-white dark:bg-zinc-900 p-6 shadow-2xl dark:text-white">
+  const inputClass = `w-full px-4 py-3 rounded-xl border backdrop-blur-sm transition-all outline-none
+    bg-white/80 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
+    dark:bg-white/10 dark:border-white/20 dark:text-white dark:placeholder:text-white/40 dark:focus:border-blue-500/50 dark:focus:ring-blue-500/20`;
 
-        <h2 className="text-xl font-semibold mb-4">Nova Credencial Docker</h2>
+  const labelClass = `block text-sm mb-2 text-gray-700 dark:text-gray-200`;
 
-        <form className="grid gap-4" onSubmit={handleSubmit}>
-          <TextField
-            label="Alias"
-            value={alias}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAlias(e.target.value)}
-            required
-          />
-          <TextField
-            label="Descrição"
-            value={description}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
-            required
-          />
-
-          <TextField
-            label="URL"
-            value={url}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
-            required
-          />
-
+  const renderFileField = (
+    label: string,
+    value: string,
+    setter: React.Dispatch<React.SetStateAction<string>>,
+    placeholder: string
+  ) => (
+    <div className="space-y-2">
+      <div className="flex justify-between items-center">
+        <label className={labelClass}>{label}</label>
+        <div className="w-fit">
           <FileUploader
             types={fileTypes}
-            handleChange={(f: FileInput) => handleFileUpload(f, setCa)}
+            handleChange={(f: File | File[]) => handleFileUpload(f, setter)}
+            name="file"
           >
-            <span className="px-2 py-1 bg-gray-200 rounded cursor-pointer">Enviar CA</span>
+            <span className="text-xs font-semibold text-blue-600 hover:text-blue-500 cursor-pointer transition-colors">
+              Importar arquivo
+            </span>
           </FileUploader>
-
-          <textarea
-            value={ca}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCa(e.target.value)}
-            className="border rounded p-2"
-            required
-          />
-
-          <FileUploader
-            types={fileTypes}
-            handleChange={(f: FileInput) => handleFileUpload(f, setCert)}
-          >
-            <span className="px-2 py-1 bg-gray-200 rounded cursor-pointer">Enviar Cert</span>
-          </FileUploader>
-
-          <textarea
-            value={cert}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCert(e.target.value)}
-            className="border rounded p-2"
-            required
-          />
-
-          <FileUploader
-            types={fileTypes}
-            handleChange={(f: FileInput) => handleFileUpload(f, setKey)}
-          >
-            <span className="px-2 py-1 bg-gray-200 rounded cursor-pointer">Enviar Key</span>
-          </FileUploader>
-
-          <textarea
-            value={key}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setKey(e.target.value)}
-            className="border rounded p-2"
-            required
-          />
-
-          <div className="flex gap-2 mt-4">
-            <button
-              className="flex-1 bg-gray-300 rounded py-2"
-              type="button"
-              onClick={onClose}
-            >
-              Cancelar
-            </button>
-
-            <button
-              className="flex-1 bg-blue-600 text-white rounded py-2"
-              disabled={submitting}
-            >
-              {submitting ? "Salvando..." : "Salvar"}
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
+      <textarea
+        value={value}
+        onChange={(e) => setter(e.target.value)}
+        className={`${inputClass} min-h-[100px] font-mono text-xs`}
+        placeholder={placeholder}
+        required
+      />
     </div>
+  );
+
+  return (
+    <Modal
+      isOpen={open}
+      onClose={onClose}
+      title="Nova Credencial Docker"
+      description="configuração de acesso seguro"
+      icon={<Shield className="w-5 h-5 text-blue-600" />}
+      footer={
+        <>
+          <ModalButton variant="secondary" onClick={onClose} disabled={submitting}>
+            Cancelar
+          </ModalButton>
+          <ModalButton variant="primary" onClick={handleSubmit} disabled={submitting} isLoading={submitting}>
+            Salvar
+          </ModalButton>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <p className="text-sm mb-4 text-gray-600 dark:text-gray-400">
+          Preencha as informações de conexão segura (TLS) para o novo ambiente Docker.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className={labelClass}>Alias</label>
+            <input
+              type="text"
+              value={alias}
+              onChange={(e) => setAlias(e.target.value)}
+              className={inputClass}
+              placeholder="ex: Produção AWS"
+              required
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Descrição</label>
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className={inputClass}
+              placeholder="ex: Servidor principal"
+              required
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className={labelClass}>URL do Host</label>
+            <input
+              type="text"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              className={inputClass}
+              placeholder="tcp://192.168.1.100:2376"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="space-y-4 pt-2 border-t border-gray-100 dark:border-white/10">
+          <h3 className="text-sm font-medium text-gray-900 dark:text-white">Certificados TLS</h3>
+
+          {renderFileField("CA Certificate", ca, setCa, "-----BEGIN CERTIFICATE-----\n...")}
+          {renderFileField("Client Certificate", cert, setCert, "-----BEGIN CERTIFICATE-----\n...")}
+          {renderFileField("Client Key", key, setKey, "-----BEGIN RSA PRIVATE KEY-----\n...")}
+        </div>
+      </form>
+    </Modal>
   );
 };

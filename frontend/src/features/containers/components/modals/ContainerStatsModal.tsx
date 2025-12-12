@@ -1,6 +1,6 @@
 import { CPUChart } from '../charts/CpuChart';
+import { Modal } from '../../../shared/components/modals/Modal';
 import { MemoryChart } from '../charts/MemoryChart';
-import { IoMdCloseCircleOutline } from 'react-icons/io';
 import { EventsOn } from '../../../../../wailsjs/runtime/runtime';
 import { BytesToMB } from '../../../shared/functions/TreatmentFunction';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -81,102 +81,75 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
   }
 
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-white/60  dark:bg-black/60 backdrop-blur-sm"
-      aria-modal
-      role="dialog"
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      title="Métricas do contêiner"
+      description={name}
+      icon={<span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />}
+      size="lg"
+      className="h-fit min-h-[600px]"
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-fit h-fit bg-white
-         rounded-2xl border border-gray-300 dark:border-white/10 
-         dark:bg-zinc-900 shadow-2xl"
-      >
-        <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-gray-300 dark:border-white/10 px-5 py-3 dark:bg-zinc-900">
-          <div className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-            <h2 className="text-sm font-medium">Métricas do contêiner</h2>
-            <span className="text-xs text-zinc-400 ">#{name}</span>
+      <div className="grid grid-rows-[auto,1fr] h-full gap-4">
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          {header ? (
+            <>
+              <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
+                <div className="font-medium">CPU</div>
+                <div className="text-2xl">{header.cpu}%</div>
+              </div>
+              <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
+                <div className="font-medium">Memória</div>
+                <div className="text-2xl">
+                  {header.memoryUsage} / {header.memoryLimit} MB ({header.memoryPercentage}%)
+                </div>
+              </div>
+              <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
+                <div className="font-medium">Rede</div>
+                <div>
+                  RX {header.rx} MB · TX {header.tx} MB
+                </div>
+              </div>
+              <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
+                <div className="font-medium">PIDs</div>
+                <div>{header.pids}</div>
+              </div>
+            </>
+          ) : (
+            <div className="col-span-2 text-gray-500">Coletando métricas…</div>
+          )}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-auto">
+          <div className="rounded-xl border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3 pb-8 max-h-[280px]">
+            <div className="mb-2 text-sm">CPU em tempo real</div>
+            <CPUChart points={cpuSeries} />
           </div>
-          <div className="ml-auto flex items-center gap-2">
-            <button
-              onClick={() => onClose()}
-              className="
-                                    inline-flex h-6 w-6 items-center justify-center
-                                    rounded-full
-                                    text-red-600
-                                    hover:bg-red-600 hover:text-white hover:scale-95
-                                    transition
-                                  "
-              aria-label="Fechar"
-            >
-              <IoMdCloseCircleOutline className="w-5 h-5" />
-            </button>
+
+          <div className="rounded-xl border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3 pb-8 max-h-[280px]">
+            <div className="mb-2 text-sm">
+              Memória em tempo real
+            </div>
+            <MemoryChart
+              percentPoints={memoryPercentageSeries}
+              usageMBPoints={memoryUsageMBSeries}
+              limitMB={memoryLimitMBRef.current ?? undefined}
+            />
           </div>
         </div>
-
-        <div className="grid grid-rows-[auto,1fr] h-full">
-          <div className="grid grid-cols-2 gap-4 p-4 text-sm">
-            {header ? (
-              <>
-                <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
-                  <div className="font-medium">CPU</div>
-                  <div className="text-2xl">{header.cpu}%</div>
-                </div>
-                <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
-                  <div className="font-medium">Memória</div>
-                  <div className="text-2xl">
-                    {header.memoryUsage} / {header.memoryLimit} MB ({header.memoryPercentage}%)
-                  </div>
-                </div>
-                <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
-                  <div className="font-medium">Rede</div>
-                  <div>
-                    RX {header.rx} MB · TX {header.tx} MB
-                  </div>
-                </div>
-                <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
-                  <div className="font-medium">PIDs</div>
-                  <div>{header.pids}</div>
-                </div>
-              </>
-            ) : (
-              <div className="col-span-2">Coletando métricas…</div>
-            )}
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 overflow-auto">
-            <div className="rounded-xl border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3 pb-8  max-h-[280px]">
-              <div className="mb-2 text-sm">CPU em tempo real</div>
-              <CPUChart points={cpuSeries} />
-            </div>
-
-            <div className="rounded-xl border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3 pb-8 max-h-[280px]">
-              <div className="mb-2 text-sm">
-                Memória em tempo real
-              </div>
-              <MemoryChart
-                percentPoints={memoryPercentageSeries}
-                usageMBPoints={memoryUsageMBSeries}
-                limitMB={memoryLimitMBRef.current ?? undefined}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 place-items-center">
-            <div className="rounded-xl border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3 w-fit h-fit">
-              {header
-                ? new Date(header.t).toLocaleTimeString('pt-BR', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                  hour12: false,
-                })
-                : 'aguardando primeiras amostras'}
-            </div>
+        <div className="grid grid-cols-1 place-items-center mt-2">
+          <div className="rounded-xl border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-2 px-4 w-fit h-fit text-xs text-gray-500">
+            {header
+              ? new Date(header.t).toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+              })
+              : 'aguardando primeiras amostras'}
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useTheme } from '../../../../hooks/use-theme';
-import { IoMdCloseCircleOutline } from 'react-icons/io';
-import ArrowTip from '../../../shared/components/ArrowTip';
+import { Edit } from 'lucide-react';
+import { Modal } from '../../../shared/components/modals/Modal';
+import { ModalButton } from '../../../shared/components/modals/ModalButton';
 import { EditContainerNameModalProps } from '../../../../interfaces/ContainerInterfaces';
 
 const EditContainerNameModal: React.FC<EditContainerNameModalProps> = ({
@@ -10,47 +10,68 @@ const EditContainerNameModal: React.FC<EditContainerNameModalProps> = ({
   handleRename,
   setEditNameModal,
 }) => {
-  const theme = useTheme();
   const [newName, setNewName] = useState(name);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newName.trim() || newName === name) {
+      setEditNameModal(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      await handleRename(newName, id);
+      setEditNameModal(false);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const inputClass = `w-full px-4 py-3 rounded-xl border backdrop-blur-sm transition-all outline-none
+    bg-white/80 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
+    dark:bg-white/10 dark:border-white/20 dark:text-white dark:placeholder:text-white/40 dark:focus:border-blue-500/50 dark:focus:ring-blue-500/20`;
 
   return (
-    <div
-      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-20
-      dark:border-white/10 dark:bg-zinc-900
-      bg-white border border-gray-300 rounded-xl shadow-lg p-3
-      w-48 flex flex-col items-center gap-2 animate-fade-in"
+    <Modal
+      isOpen={true}
+      onClose={() => setEditNameModal(false)}
+      title="Renomear Container"
+      description={`Original: ${name}`}
+      icon={<Edit className="w-5 h-5 text-blue-500" />}
+      footer={
+        <>
+          <ModalButton variant="secondary" onClick={() => setEditNameModal(false)} disabled={isLoading}>
+            Cancelar
+          </ModalButton>
+          <ModalButton variant="primary" onClick={handleSubmit} isLoading={isLoading}>
+            Salvar
+          </ModalButton>
+        </>
+      }
     >
-      <ArrowTip
-        position="bottom"
-        size={8}
-        color={`${theme.theme === 'dark' ? '#27272a' : '#ffffff'} `}
-        offset={14}
-      />
-      <button
-        onClick={() => setEditNameModal(false)}
-        className="absolute  cursor-pointer -top-2 -right-2 text-red-600 hover:bg-red-600 hover:text-white hover:scale-95 rounded-full "
-        title="Fechar"
-      >
-        <IoMdCloseCircleOutline className="w-5 h-5" />
-      </button>
-      <input
-        type="text"
-        placeholder="Novo nome"
-        className="w-full border border-gray-500 dark:border-white/10
-         bg-transparent rounded-lg px-2 py-1 text-sm
-        focus:outline-none focus:ring focus:ring-blue-200"
-        value={newName}
-        onChange={(event) => setNewName(event.target.value)}
-      />
-
-      <button
-        onClick={() => handleRename(newName, id)}
-        className="bg-blue-600 text-white  text-xs px-3 py-1 rounded-lg hover:bg-blue-700"
-      >
-        Enviar
-      </button>
-    </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          Informe o novo nome para o container.
+        </p>
+        <div>
+          <input
+            type="text"
+            placeholder="Novo nome"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            className={inputClass}
+            autoFocus
+            required
+          />
+        </div>
+      </form>
+    </Modal>
   );
 };
+
 
 export default EditContainerNameModal;

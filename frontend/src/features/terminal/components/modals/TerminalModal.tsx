@@ -115,8 +115,12 @@ const TerminalModal: React.FC<TerminalProps> = ({
       fontFamily: 'Courier New',
       cursorInactiveStyle: 'none',
       theme: {
-        background: '#5e2750',
-        foreground: '#a1a1d1',
+        background: '#0e172a',
+        foreground: '#d1d5db',
+        cursor: '#734fa6',
+
+        green: '#4ade80',
+        brightGreen: '#4ade80',
       },
     });
 
@@ -290,14 +294,14 @@ const TerminalModal: React.FC<TerminalProps> = ({
     'relative shadow-2xl overflow-hidden ';
 
   const modalSize =
-    'w-[min(90vw,1100px)] h-[min(85vh,780px)] rounded-2xl border ' +
-    'border-gray-300 dark:border-white/10 bg-white dark:bg-zinc-900 dark:text-white';
+    'w-[min(90vw,1100px)] h-[min(85vh,780px)] rounded-2xl ' +
+    ' dark:text-white';
 
   const fullscreenSize = 'w-screen h-screen appframe-drag cursor-grab active:cursor-grabbing rounded-none border-0';
 
   const dockedSize =
     'w-screen rounded-t-2xl  ' +
-    'border-gray-300 dark:border-white/10';
+    '';
 
   const containerClasses =
     containerBase + (maximized ? fullscreenSize : docked ? dockedSize : modalSize);
@@ -307,13 +311,8 @@ const TerminalModal: React.FC<TerminalProps> = ({
   };
 
   const backdropBase = 'fixed inset-0 z-50';
-  const backdropVisible =
-    'flex ' +
-    (docked
-      ? 'items-end justify-center pointer-events-none'
-      : 'items-center justify-center bg-white/60 dark:bg-black/60 backdrop-blur-sm');
 
-  const backdropHidden = 'pointer-events-none opacity-0 hidden';
+  const backdropClasses = minimized ? 'hidden' : `flex ${docked ? 'items-end justify-center pointer-events-none' : 'items-center justify-center backdrop-blur-sm'}`;
 
   return (
     <>
@@ -325,9 +324,9 @@ const TerminalModal: React.FC<TerminalProps> = ({
             top: miniPos.y,
             zIndex: 99999,
           }}
-          className="cursor-move bg-white 
-                     dark:bg-zinc-900 border border-gray-300 dark:border-white/10 text-black dark:text-white 
-                     shadow-xl rounded-md px-3 py-2 flex items-center gap-3 select-none"
+          className="cursor-move
+                       text-black dark:text-white 
+                     shadow-xl rounded-md px-3 py-2 flex items-center gap-3 select-none bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700"
           onMouseDown={(e) => {
             dragRef.current = true;
             dragStartRef.current = { x: e.clientX - miniPos.x, y: e.clientY - miniPos.y };
@@ -348,11 +347,10 @@ const TerminalModal: React.FC<TerminalProps> = ({
 
       <div
         onClick={closeOnBackdrop}
-        className={
-          backdropBase + ' ' + (minimized ? backdropHidden : backdropVisible)
-        }
+        className={`${backdropBase} ${backdropClasses}`}
         aria-modal
         role="dialog"
+        style={{ display: minimized ? 'none' : 'flex' }}
       >
         <div
           style={containerStyle}
@@ -377,7 +375,7 @@ const TerminalModal: React.FC<TerminalProps> = ({
             onMinimize={() => setMinimized(true)}
           />
 
-          <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg pl-2 pt-1 bg-terminal-purple">
+          <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg pl-2 pt-1 bg-[#0e172a]">
             <div ref={hostRef} className="flex-1 min-h-0 w-full" />
           </div>
         </div>

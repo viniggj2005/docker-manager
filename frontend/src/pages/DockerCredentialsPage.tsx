@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { IoMdAddCircleOutline } from 'react-icons/io';
 import DockerCredentialsList from '../features/dockerCredentials/components/list/DockerCredentialsList';
-import DockerCredentialCreateForm from '../features/dockerCredentials/components/forms/DockerCredentialCreateForm';
+import { CreateDockerCredentialModal } from '../features/dockerCredentials/components/modals/CreateDockerCredentialModal';
+import { useAuth } from '../contexts/AuthContext';
+import { useDockerClient } from '../contexts/DockerClientContext';
 
 const DockerCredentialsPage: React.FC = () => {
   const [showNewCredentialForm, setShowNewCredentialForm] = useState(false);
+  const { user, token } = useAuth();
+  const { refresh } = useDockerClient();
 
   return (
     <div className="max-w-6xl">
@@ -18,16 +22,20 @@ const DockerCredentialsPage: React.FC = () => {
       </div>
       <div className="mb-6">
         <button
-          onClick={() => setShowNewCredentialForm(!showNewCredentialForm)}
+          onClick={() => setShowNewCredentialForm(true)}
           className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-blue-600 shadow-sm transition hover:scale-[0.99] hover:shadow-md sm:w-fit"
         >
           <IoMdAddCircleOutline className="h-5 w-5" />
           Nova conexão
         </button>
       </div>
-      {showNewCredentialForm && (
-        <DockerCredentialCreateForm onSuccess={() => setShowNewCredentialForm(false)} />
-      )}
+      <CreateDockerCredentialModal
+        open={showNewCredentialForm}
+        onClose={() => setShowNewCredentialForm(false)}
+        token={token || ''}
+        userId={user?.id || 0}
+        refresh={refresh}
+      />
 
       <div className="space-y-4">
         <DockerCredentialsList />

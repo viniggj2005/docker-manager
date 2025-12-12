@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { IoMdCloseCircleOutline } from 'react-icons/io';
 import { InspectProps } from '../../../../interfaces/SharedInterfaces';
+import { Modal } from './Modal';
 
 const InspectModal: React.FC<InspectProps> = ({ name, data, title, onClose }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -38,45 +38,22 @@ const InspectModal: React.FC<InspectProps> = ({ name, data, title, onClose }) =>
   };
 
   return (
-    <div
-      onClick={closeOnBackdrop}
-      className="fixed inset-0 z-50 flex items-center dark:text-white justify-center bg-white/60 dark:bg-black/60  backdrop-blur-sm"
-      aria-modal
-      role="dialog"
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      title={title || 'Detalhes'}
+      description={name}
+      icon={<span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />}
+      size="lg"
+      className="h-[min(80vh,650px)]"
     >
-      <div className="relative w-[min(90vw,900px)] h-[min(80vh,650px)] rounded-2xl border border-gray-300 dark:border-white/10 bg-white dark:bg-zinc-900 shadow-2xl">
-        <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-gray-300 dark:border-white/10 px-5 py-3 dark:bg-zinc-900">
-          <div className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-            <h2 className="text-sm font-medium">{title}</h2>
-            <span className="text-xs text-zinc-400">{name}</span>
-          </div>
-
-          <div className="ml-auto flex items-center gap-2">
-            <button
-              onClick={() => onClose()}
-              className="
-                        inline-flex h-6 w-6 items-center justify-center
-                        rounded-full
-                        text-red-600
-                        hover:bg-red-600 hover:text-white hover:scale-95
-                        transition
-                      "
-              aria-label="Fechar"
-            >
-              <IoMdCloseCircleOutline className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-
-        <div
-          ref={scrollRef}
-          className="h-[calc(100%-52px)] overflow-y-auto px-5 py-4 font-mono text-sm whitespace-pre-wrap"
-        >
-          {data ? <div>{highlightQuotedStrings(String(data))}</div> : 'Sem dados disponíveis'}
-        </div>
+      <div
+        ref={scrollRef}
+        className="h-full font-mono text-sm whitespace-pre-wrap dark:text-gray-300"
+      >
+        {data ? <div>{highlightQuotedStrings(String(data))}</div> : 'Sem dados disponíveis'}
       </div>
-    </div>
+    </Modal>
   );
 };
 

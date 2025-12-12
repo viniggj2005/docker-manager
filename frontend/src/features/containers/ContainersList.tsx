@@ -155,12 +155,9 @@ const ContainersListView = forwardRef<ContainersListFetchRef>((_, ref) => {
               }}
             />
           );
-        })} {
-        /*
-          Removed inline logic for loading/error/empty states
-          as requested by user (replaced by Toasts).
-        */
-      }
+
+
+        })}
 
       <footer className="mt-6 text-xs text-gray-500 dark:text-zinc-400">
         Atualiza a cada 2s. Clique em “Atualizar” para forçar agora.

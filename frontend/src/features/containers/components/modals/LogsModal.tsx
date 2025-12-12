@@ -1,8 +1,8 @@
 import iziToast from 'izitoast';
 import { FiSearch } from 'react-icons/fi';
 import 'izitoast/dist/css/iziToast.min.css';
-import { IoMdCloseCircleOutline } from 'react-icons/io';
 import React, { useEffect, useRef, useState } from 'react';
+import { Modal } from '../../../shared/components/modals/Modal';
 import { LogsProps } from '../../../../interfaces/ContainerInterfaces';
 import { useDockerClient } from '../../../../contexts/DockerClientContext';
 import { ContainerLogs } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
@@ -71,53 +71,36 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
   };
 
   return (
-    <div
-      onClick={closeOnBackdrop}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-white/60  dark:bg-black/60 backdrop-blur-sm"
-      aria-modal
-      role="dialog"
+    <Modal
+      isOpen={true}
+      onClose={() => setLogsModal(false)}
+      title="Logs do contêiner"
+      description={id.slice(0, 12)}
+      icon={<span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />}
+      size="lg"
+      className="h-[min(80vh,650px)]"
     >
-      <div className="relative w-[min(90vw,900px)] h-[min(80vh,650px)] rounded-2xl border border-gray-300 bg-white dark:border-white/10 dark:bg-zinc-900 shadow-2xl">
-        <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-gray-300 dark:border-white/10 px-5 py-3 dark:bg-zinc-900">
-          <div className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-            <h2 className="text-sm font-medium">Logs do contêiner</h2>
-            <span className="text-xs text-zinc-400">#{id.slice(0, 12)}</span>
-          </div>
-
-          <div className="ml-auto flex items-center gap-2">
-            <div className="relative">
-              <FiSearch className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-xs opacity-70" />
-              <input
-                value={filter}
-                onChange={(event) => setFilter(event.target.value)}
-                placeholder="Filtrar"
-                className="pl-7 pr-3 py-1.5 text-sm dark:bg-zinc-800 border border-gray-300 dark:border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/60"
-              />
-            </div>
-            <button
-              onClick={() => setLogsModal(false)}
-              className="
-                                    inline-flex h-6 w-6 items-center justify-center
-                                    rounded-full
-                                    text-red-600
-                                    hover:bg-red-600 hover:text-white hover:scale-95
-                                    transition
-                                  "
-              aria-label="Fechar"
-            >
-              <IoMdCloseCircleOutline className="w-5 h-5" />
-            </button>
+      <div className="flex flex-col h-full">
+        <div className="flex items-center gap-2 mb-4 px-1">
+          <div className="relative w-full">
+            <FiSearch className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              value={filter}
+              onChange={(event) => setFilter(event.target.value)}
+              placeholder="Filtrar logs..."
+              className="w-full pl-10 pr-4 py-3 rounded-xl border backdrop-blur-sm transition-all outline-none bg-white/80 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:bg-white/10 dark:border-white/20 dark:text-white dark:placeholder:text-white/40 dark:focus:border-blue-500/50 dark:focus:ring-blue-500/20"
+              autoFocus
+            />
           </div>
         </div>
 
         <div
           ref={scrollRef}
-          className="h-[calc(100%-52px)] overflow-y-auto px-5 py-4 font-mono text-xs"
+          className="flex-1 overflow-y-auto p-4 rounded-xl bg-gray-50 dark:bg-zinc-950 font-mono text-xs border border-gray-200 dark:border-white/5 text-gray-700 dark:text-gray-300"
           dangerouslySetInnerHTML={{ __html: display }}
         />
       </div>
-    </div>
+    </Modal>
   );
 };
 
