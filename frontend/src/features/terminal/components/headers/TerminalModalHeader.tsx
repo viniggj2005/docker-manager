@@ -31,6 +31,16 @@ const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
         </div>)}
 
       <div className="ml-auto flex items-center gap-3">
+        {!maximized && (
+          <button
+            onClick={onToggleDock}
+            className="dark:text-zinc-400 text-white hover:scale-95 text-xs px-2 py-1 rounded border border-transparent"
+            title={docked ? 'Desancorar (modal)' : 'Ancorar embaixo (painel)'}
+            type="button"
+          >
+            {docked ? <TbAnchorOff className="w-5 h-5" /> : <TbAnchor className="w-5 h-5" />}
+          </button>
+        )}
 
         {!maximized && (
           <button
@@ -40,17 +50,6 @@ const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
             type="button"
           >
             <RxMinus className="w-5 h-5" />
-          </button>
-        )}
-
-        {!maximized && (
-          <button
-            onClick={onToggleDock}
-            className="dark:text-zinc-400 text-white hover:scale-95 text-xs px-2 py-1 rounded border border-transparent"
-            title={docked ? 'Desancorar (modal)' : 'Ancorar embaixo (painel)'}
-            type="button"
-          >
-            {docked ? <TbAnchorOff className="w-5 h-5" /> : <TbAnchor className="w-5 h-5" />}
           </button>
         )}
 

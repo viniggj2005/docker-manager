@@ -375,8 +375,8 @@ const TerminalModal: React.FC<TerminalProps> = ({
             onMinimize={() => setMinimized(true)}
           />
 
-          <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg pl-2 pt-1 bg-[#0e172a]">
-            <div ref={hostRef} className="flex-1 min-h-0 w-full" />
+          <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg  mb-5 pb-5 bg-[#0e172a]">
+            <div ref={hostRef} className="flex-1 min-h-0 w-full " />
           </div>
         </div>
       </div>
