@@ -9,12 +9,12 @@ import {
   CreateSshConnectionInterface,
 } from '../../../../interfaces/TerminalInterfaces';
 
-const labelBase = 'text-xs font-medium text-[var(--grey-text)]';
+const labelBase = 'text-xs font-medium text-zinc-400';
 
 const inputBase =
-  'w-full rounded-lg border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] ' +
-  'bg-[var(--system-white)] dark:bg-[var(--dark-secondary)] px-3 py-2 outline-none ' +
-  'focus:ring-2 focus:ring-emerald-500 dark:text-[var(--system-white)]';
+  'w-full rounded-lg border border-gray-300 dark:border-white/10 ' +
+  'bg-white dark:bg-zinc-800 px-3 py-2 outline-none ' +
+  'focus:ring-2 focus:ring-emerald-500 dark:text-white';
 
 const EditSshConnectionForm: React.FC<EditSshConnectionFormProps> = ({
   id,
@@ -133,7 +133,7 @@ const EditSshConnectionForm: React.FC<EditSshConnectionFormProps> = ({
 
         <div className="md:col-span-2 grid gap-2">
           <label className={labelBase}>Arquivo da chave (.pem, .txt)</label>
-          <div className="rounded-lg border border-dashed border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] p-4">
+          <div className="rounded-lg border border-dashed border-gray-300 dark:border-white/10 p-4">
             <FileUploader handleChange={handleFileChange} name="key" types={fileTypes}>
               <div className="flex cursor-pointer items-center justify-between">
                 <span className="text-sm">
@@ -152,14 +152,14 @@ const EditSshConnectionForm: React.FC<EditSshConnectionFormProps> = ({
         <button
           type="button"
           onClick={onSuccess}
-          className="rounded-lg border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] px-4 py-2 text-sm hover:scale-[0.98]"
+          className="rounded-lg border border-gray-300 dark:border-white/10 px-4 py-2 text-sm hover:scale-[0.98]"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm text-[var(--system-white)] hover:opacity-90 disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:opacity-90 disabled:opacity-60"
         >
           {submitting ? 'Salvando…' : 'Salvar alterações'}
         </button>

@@ -106,7 +106,7 @@ const CreateVolumeForm: React.FC<CreateVolumeFormProps> = ({ onSuccess }) => {
           value={name}
           required
           onChange={(event) => setName(event.target.value)}
-          className="w-full rounded-md border px-3 py-2 dark:bg-[var(--dark-secondary)]"
+          className="w-full rounded-md border px-3 py-2 dark:bg-zinc-800"
           placeholder="meu-volume"
         />
       </div>
@@ -116,7 +116,7 @@ const CreateVolumeForm: React.FC<CreateVolumeFormProps> = ({ onSuccess }) => {
         <select
           value={driver}
           onChange={(event) => setDriver(event.target.value)}
-          className="w-full rounded-md border px-3 py-2 dark:bg-[var(--dark-secondary)]"
+          className="w-full rounded-md border px-3 py-2 dark:bg-zinc-800"
         >
           <option value="local">local</option>
           <option value="nfs">nfs</option>
@@ -130,7 +130,7 @@ const CreateVolumeForm: React.FC<CreateVolumeFormProps> = ({ onSuccess }) => {
           <button
             type="button"
             onClick={() => handleAddEntry('driver')}
-            className="text-xs font-semibold text-[var(--docker-blue)] hover:underline"
+            className="text-xs font-semibold text-blue-600 hover:underline"
           >
             + Adicionar opção
           </button>
@@ -142,14 +142,14 @@ const CreateVolumeForm: React.FC<CreateVolumeFormProps> = ({ onSuccess }) => {
               value={entry.key}
               onChange={(event) => handleChangeEntry(index, 'driver', 'key', event.target.value)}
               placeholder="chave"
-              className="w-full rounded-md border px-3 py-2 dark:bg-[var(--dark-secondary)]"
+              className="w-full rounded-md border px-3 py-2 dark:bg-zinc-800"
             />
             <input
               type="text"
               value={entry.value}
               onChange={(event) => handleChangeEntry(index, 'driver', 'value', event.target.value)}
               placeholder="valor"
-              className="w-full rounded-md border px-3 py-2 dark:bg-[var(--dark-secondary)]"
+              className="w-full rounded-md border px-3 py-2 dark:bg-zinc-800"
             />
           </div>
         ))}
@@ -161,7 +161,7 @@ const CreateVolumeForm: React.FC<CreateVolumeFormProps> = ({ onSuccess }) => {
           <button
             type="button"
             onClick={() => handleAddEntry('label')}
-            className="text-xs font-semibold text-[var(--docker-blue)] hover:underline"
+            className="text-xs font-semibold text-blue-600 hover:underline"
           >
             + Adicionar label
           </button>
@@ -173,20 +173,20 @@ const CreateVolumeForm: React.FC<CreateVolumeFormProps> = ({ onSuccess }) => {
               value={entry.key}
               onChange={(event) => handleChangeEntry(index, 'label', 'key', event.target.value)}
               placeholder="chave"
-              className="w-full rounded-md border px-3 py-2 dark:bg-[var(--dark-secondary)]"
+              className="w-full rounded-md border px-3 py-2 dark:bg-zinc-800"
             />
             <input
               type="text"
               value={entry.value}
               onChange={(event) => handleChangeEntry(index, 'label', 'value', event.target.value)}
               placeholder="valor"
-              className="w-full rounded-md border px-3 py-2 dark:bg-[var(--dark-secondary)]"
+              className="w-full rounded-md border px-3 py-2 dark:bg-zinc-800"
             />
           </div>
         ))}
       </div>
 
-      {error && <div className="text-sm text-[var(--exit-red)]">{error}</div>}
+      {error && <div className="text-sm text-red-600">{error}</div>}
 
       <button
         type="submit"

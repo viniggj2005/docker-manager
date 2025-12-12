@@ -12,7 +12,7 @@ const GoBackButton: React.FC<{ onGoBack?: () => void }> = ({ onGoBack }) => {
     <>
       <button
         onClick={goBack}
-        className="inline-flex items-center gap-2 rounded-lg border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] px-3 py-2 text-sm hover:scale-[0.98]"
+        className="inline-flex items-center gap-2 rounded-lg border border-gray-300 dark:border-white/10 px-3 py-2 text-sm hover:scale-[0.98]"
         aria-label="Voltar"
       >
         <IoMdArrowBack className="h-5 w-5" />

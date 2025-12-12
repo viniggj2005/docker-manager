@@ -83,21 +83,21 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--light-overlay)]  dark:bg-[var(--dark-overlay)] backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-white/60  dark:bg-black/60 backdrop-blur-sm"
       aria-modal
       role="dialog"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-fit h-fit bg-[var(--system-white)]
-         rounded-2xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] 
-         dark:bg-[var(--dark-primary)] shadow-2xl"
+        className="relative w-fit h-fit bg-white
+         rounded-2xl border border-gray-300 dark:border-white/10 
+         dark:bg-zinc-900 shadow-2xl"
       >
-        <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] px-5 py-3 dark:bg-[var(--dark-primary)]">
+        <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-gray-300 dark:border-white/10 px-5 py-3 dark:bg-zinc-900">
           <div className="flex items-center gap-2">
             <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
             <h2 className="text-sm font-medium">Métricas do contêiner</h2>
-            <span className="text-xs text-[var(--grey-text)] ">#{name}</span>
+            <span className="text-xs text-zinc-400 ">#{name}</span>
           </div>
           <div className="ml-auto flex items-center gap-2">
             <button
@@ -105,8 +105,8 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
               className="
                                     inline-flex h-6 w-6 items-center justify-center
                                     rounded-full
-                                    text-[var(--exit-red)]
-                                    hover:bg-[var(--exit-red)] hover:text-[var(--system-white)] hover:scale-95
+                                    text-red-600
+                                    hover:bg-red-600 hover:text-white hover:scale-95
                                     transition
                                   "
               aria-label="Fechar"
@@ -120,23 +120,23 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
           <div className="grid grid-cols-2 gap-4 p-4 text-sm">
             {header ? (
               <>
-                <div className="rounded-lg border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] p-3">
+                <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
                   <div className="font-medium">CPU</div>
                   <div className="text-2xl">{header.cpu}%</div>
                 </div>
-                <div className="rounded-lg border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] p-3">
+                <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
                   <div className="font-medium">Memória</div>
                   <div className="text-2xl">
                     {header.memoryUsage} / {header.memoryLimit} MB ({header.memoryPercentage}%)
                   </div>
                 </div>
-                <div className="rounded-lg border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] p-3">
+                <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
                   <div className="font-medium">Rede</div>
                   <div>
                     RX {header.rx} MB · TX {header.tx} MB
                   </div>
                 </div>
-                <div className="rounded-lg border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] p-3">
+                <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
                   <div className="font-medium">PIDs</div>
                   <div>{header.pids}</div>
                 </div>
@@ -146,12 +146,12 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
             )}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 overflow-auto">
-            <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] p-3 pb-8  max-h-[280px]">
+            <div className="rounded-xl border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3 pb-8  max-h-[280px]">
               <div className="mb-2 text-sm">CPU em tempo real</div>
               <CPUChart points={cpuSeries} />
             </div>
 
-            <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] p-3 pb-8 max-h-[280px]">
+            <div className="rounded-xl border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3 pb-8 max-h-[280px]">
               <div className="mb-2 text-sm">
                 Memória em tempo real
               </div>
@@ -163,7 +163,7 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
             </div>
           </div>
           <div className="grid grid-cols-1 place-items-center">
-            <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] p-3 w-fit h-fit">
+            <div className="rounded-xl border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3 w-fit h-fit">
               {header
                 ? new Date(header.t).toLocaleTimeString('pt-BR', {
                   hour: '2-digit',

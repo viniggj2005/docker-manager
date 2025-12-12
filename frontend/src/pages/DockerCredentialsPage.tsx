@@ -12,14 +12,14 @@ const DockerCredentialsPage: React.FC = () => {
         <h1 className="text-2xl font-semibold">
           Credenciais Docker
         </h1>
-        <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+        <p className="text-sm text-gray-500 dark:text-zinc-400">
           Gerencie conexões TLS do Docker para acessar servidores remotos.
         </p>
       </div>
       <div className="mb-6">
         <button
           onClick={() => setShowNewCredentialForm(!showNewCredentialForm)}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-4 py-3 text-sm font-semibold text-[var(--docker-blue)] shadow-sm transition hover:scale-[0.99] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] sm:w-fit"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-blue-600 shadow-sm transition hover:scale-[0.99] hover:shadow-md sm:w-fit"
         >
           <IoMdAddCircleOutline className="h-5 w-5" />
           Nova conexão

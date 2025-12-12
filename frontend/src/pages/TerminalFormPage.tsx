@@ -12,14 +12,14 @@ const TerminalFormPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex flex-1 flex-col gap-6">
-        <div className="mx-auto max-w-4xl animate-pulse text-[var(--grey-text)]">Carregando…</div>
+        <div className="mx-auto max-w-4xl animate-pulse text-zinc-400">Carregando…</div>
       </div>
     );
   }
   if (!isAuthenticated || !token) {
     return (
       <div className="flex flex-1 flex-col">
-        <div className="mx-auto max-w-2xl rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-6 text-sm text-[var(--medium-gray)] shadow-sm dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)]">
+        <div className="mx-auto max-w-2xl rounded-2xl border border-gray-300 bg-white p-6 text-sm text-gray-500 shadow-sm dark:border-white/10 dark:bg-zinc-800 dark:text-white">
           Sessão inválida. Faça login.
         </div>
       </div>
@@ -32,7 +32,7 @@ const TerminalFormPage: React.FC = () => {
           <h1 className="text-2xl font-semibold">
             Conexões SSH
           </h1>
-          <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+          <p className="text-sm text-gray-500 dark:text-zinc-400">
             Gerencie acessos remotos e ative novos terminais.
           </p>
         </div>
@@ -40,15 +40,15 @@ const TerminalFormPage: React.FC = () => {
 
       <button
         onClick={() => setOpen(true)}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-4 py-3 text-sm font-semibold text-[var(--docker-blue)] shadow-sm transition hover:scale-[0.99] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] sm:w-fit"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-blue-600 shadow-sm transition hover:scale-[0.99] hover:shadow-md sm:w-fit"
       >
         <IoMdAddCircleOutline className="h-5 w-5" />
         Nova conexão
       </button>
 
-      <div>
-        <SshConnectionList key={reloadFlag} token={token} />
-      </div>
+
+      <SshConnectionList key={reloadFlag} token={token} />
+
 
       <SshConnectionModal
         onCreated={() => setReloadFlag((previous) => previous + 1)}

@@ -1,7 +1,6 @@
-import { FiEdit2 } from "react-icons/fi";
-import { LuMonitor } from "react-icons/lu";
-import { FaRegTrashAlt } from 'react-icons/fa';
+import iziToast from 'izitoast';
 import { useTerminalStore } from '../../TerminalStore';
+import SshConnectionCard from "../cards/SshConnectionCard";
 import { useAuth } from '../../../../contexts/AuthContext';
 import React, { useCallback, useEffect, useState } from 'react';
 import { SshDto } from '../../../../interfaces/TerminalInterfaces';
@@ -72,90 +71,31 @@ const SshConnectionList: React.FC<{ token: string }> = ({ token }) => {
     loadConnections();
   }, [token]);
 
-  if (loading) {
-    return (
-      <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] p-6 dark:bg-[var(--dark-secondary)]">
-        <div className="animate-pulse text-sm text-[var(--grey-text)]">Carregando conexões…</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="rounded-xl border border-red-300 dark:border-red-800 p-6 dark:bg-[var(--dark-secondary)]">
-        <div className="text-sm text-red-600 dark:text-red-400">Erro: {error}</div>
-        <button
-          onClick={loadConnections}
-          className="mt-3 rounded-lg border px-3 py-2 text-sm hover:scale-[0.98]"
-        >
-          Tentar novamente
-        </button>
-      </div>
-    );
-  }
-
-  if (!connectionsList.length) {
-    return (
-      <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] p-6 dark:bg-[var(--dark-secondary)]">
-        <div className="text-sm text-[var(--grey-text)]">
-          Nenhuma conexão listada. Clique em <span className="font-medium">Nova conexão</span> para
-          criar.
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (loading) {
+      iziToast.info({ title: 'Carregando', message: 'Carregando conexões...', position: 'bottomRight' });
+    } else if (error) {
+      iziToast.error({ title: 'Erro', message: error, position: 'bottomRight' });
+    } else if (!connectionsList.length) {
+      iziToast.info({ title: 'Vazio', message: 'Nenhuma conexão listada.', position: 'bottomRight' });
+    }
+  }, [loading, error, connectionsList.length]);
 
   return (
     <>
-      <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] p-2 dark:bg-[var(--dark-secondary)]">
-        <ul className="divide-y divide-[var(--light-gray)] dark:divide-[var(--dark-tertiary)]">
-          {connectionsList.map((connection) => {
-            return (
-              <li key={connection.id} className="flex items-center gap-4 p-4">
-                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <LuMonitor className="w-5 h-5 text-gray-600" />
-                </div>
-                <div>
-                  <h3 className="mb-1">{connection.alias || `${connection.systemUser}@${connection.host}`}</h3>
-                  <div className="text-gray-500 text-sm">
-                    {connection.systemUser}@{connection.host}:{connection.port}
-                  </div>
-                </div>
-
-                <div className="ml-auto flex items-center">
-                  <button
-                    onClick={() => handleConnect(connection.id)}
-                    title="Conectar ao terminal"
-                    className=" p-2 hover:bg-gray-100 hover:scale-90 rounded-lg transition-colors"
-                  >
-                    <LuMonitor className="h-5 w-5" />
-                  </button>
-
-                  <button
-                    onClick={() => handleEdit(connection)}
-                    title="Editar conexão"
-                    className="p-2 hover:bg-gray-100 hover:scale-90 rounded-lg transition-colors"
-                  >
-                    <FiEdit2 className="text-[var(--docker-blue)] w-5 h-5" />
-                  </button>
-
-                  <button
-                    onClick={() => handleRemove(
-                      connection.id,
-                      connection.alias || `${connection.systemUser}@${connection.host}`
-                    )}
-                    title="Excluir Conexão"
-                    className="p-2 hover:bg-gray-100 hover:scale-90 rounded-lg transition-colors"
-                  >
-                    <FaRegTrashAlt className="text-red-600 h-5 w-5" />
-                  </button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+      <div className="divide-y divide-gray-300 dark:divide-white/10">
+        {connectionsList.map((connection) => {
+          return (
+            <SshConnectionCard
+              key={connection.id}
+              connection={connection}
+              handleConnect={handleConnect}
+              handleEdit={handleEdit}
+              handleRemove={handleRemove}
+            />
+          );
+        })}
       </div>
-
       {editingConnection && (
         <EditSshConnectionModal
           open={editModalOpen}

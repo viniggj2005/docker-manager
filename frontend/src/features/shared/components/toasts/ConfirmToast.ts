@@ -16,8 +16,8 @@ export function useConfirmToast() {
     getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
   return (options: ConfirmOpts) => {
-    const bg = getVar(theme === 'dark' ? '--dark-secondary' : '--system-white');
-    const fg = getVar(theme === 'dark' ? '--system-white' : '--dark-primary');
+    const bg = theme === 'dark' ? '#27272a' : '#ffffff';
+    const fg = theme === 'dark' ? '#ffffff' : '#18181b';
     const cls = theme === 'dark' ? 'confirm-toast--dark' : 'confirm-toast--light';
     iziToast.question({
       close: false,
@@ -33,7 +33,7 @@ export function useConfirmToast() {
       class: `confirm-toast ${cls}`,
       buttons: [
         [
-          '<button type="button" class="px-3 py-1 !bg-[var(--accent-green)] !border-none hover:scale-95"><span class="text-[var(--system-white)] font-bold">Sim</span></button>',
+          '<button type="button" class="px-3 py-1 !bg-emerald-500 !border-none hover:scale-95"><span class="text-white font-bold">Sim</span></button>',
           async (instance, toast) => {
             try {
               await options.onConfirm();
@@ -51,7 +51,7 @@ export function useConfirmToast() {
           false,
         ],
         [
-          '<button type="button" class="px-3 py-1 !bg-[var(--exit-red)] hover:scale-95"><span class="text-[var(--system-white)] font-bold">Não</span></button>',
+          '<button type="button" class="px-3 py-1 !bg-red-600 hover:scale-95"><span class="text-white font-bold">Não</span></button>',
           (instance, toast) => {
             instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
             options.onCancel?.();

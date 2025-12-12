@@ -108,24 +108,24 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   return (
     <div
       ref={modalRef}
-      className="absolute left-full  -top-14 z-20 w-fit-translate-y-1/2 border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] rounded-xl shadow-lg"
+      className="absolute left-full  -top-14 z-20 w-fit-translate-y-1/2 border border-gray-300 dark:border-white/10 rounded-xl shadow-lg"
       role="dialog"
       aria-label="Menu do container"
     >
       <ArrowTip
         position="left"
         size={8}
-        color={`${theme.theme === 'dark' ? 'var(--dark-secondary)' : 'var(--system-white)'} `}
+        color={`${theme.theme === 'dark' ? '#27272a' : '#ffffff'} `}
         offset={0}
       />
       <div
-        className="bg-[var(--system-white)] dark:bg-[var(--dark-primary)] rounded-xl shadow-lg p-3 flex flex-col items-stretch gap-2"
+        className="bg-white dark:bg-zinc-900 rounded-xl shadow-lg p-3 flex flex-col items-stretch gap-2"
         style={{ transformOrigin: 'center left' }}
       >
         <button
           onClick={handleDelete}
           title="Excluir"
-          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 text-[var(--exit-red)] py-2 px-2 rounded-md"
+          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 text-red-600 py-2 px-2 rounded-md"
         >
           <FaTrashCan className="w-5 h-5" />
         </button>

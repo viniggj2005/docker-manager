@@ -2,7 +2,7 @@ import React from 'react';
 import { SelectOption, SelectProps, SelectVariant } from '../../../../interfaces/SharedInterfaces';
 
 const buttonBaseClass =
-  'relative flex w-full items-center justify-between rounded-xl border border-[var(--light-gray)] bg-gradient-to-br from-[var(--system-white)] via-[var(--system-white)] to-[#f3f6ff] shadow-[0_14px_40px_-18px_rgba(0,63,123,0.45)] transition hover:border-[var(--docker-blue)] hover:shadow-[0_18px_45px_-16px_rgba(0,63,123,0.5)] focus:outline-none focus:ring-2 focus:ring-[var(--docker-blue)] disabled:cursor-not-allowed disabled:opacity-60 dark:border-[var(--dark-tertiary)] dark:from-[var(--dark-secondary)] dark:via-[var(--dark-secondary)] dark:to-[var(--dark-secondary)] dark:shadow-[0_14px_40px_-18px_rgba(24,34,56,0.85)] dark:hover:border-[var(--docker-blue)] dark:hover:shadow-[0_18px_45px_-18px_rgba(24,34,56,0.9)]';
+  'relative flex w-full items-center justify-between rounded-xl border border-gray-300 bg-gradient-to-br from-white via-white to-[#f3f6ff] shadow-[0_14px_40px_-18px_rgba(0,63,123,0.45)] transition hover:border-blue-600 hover:shadow-[0_18px_45px_-16px_rgba(0,63,123,0.5)] focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-800 dark:shadow-[0_14px_40px_-18px_rgba(24,34,56,0.85)] dark:hover:border-blue-600 dark:hover:shadow-[0_18px_45px_-18px_rgba(24,34,56,0.9)]';
 
 const buttonVariantClass: Record<SelectVariant, string> = {
   default: 'min-h-[48px] px-4 py-3 text-sm font-mediuM',
@@ -10,16 +10,16 @@ const buttonVariantClass: Record<SelectVariant, string> = {
 };
 
 const listboxBaseClass =
-  'absolute left-0 right-0 z-50 mt-2 overflow-hidden rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] shadow-2xl dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]';
+  'absolute left-0 right-0 z-50 mt-2 overflow-hidden rounded-xl border border-gray-300 bg-white shadow-2xl dark:border-white/10 dark:bg-zinc-800';
 
 const optionBaseClass =
-  'flex w-full cursor-pointer items-center justify-between gap-3 px-4 py-2 text-sm transition hover:bg-[var(--docker-blue)]/10 focus:bg-[var(--docker-blue)]/15 focus:outline-none dark:hover:bg-[var(--docker-blue)]/20 dark:focus:bg-[var(--docker-blue)]/25';
+  'flex w-full cursor-pointer items-center justify-between gap-3 px-4 py-2 text-sm transition hover:bg-blue-600/10 focus:bg-blue-600/15 focus:outline-none dark:hover:bg-blue-600/20 dark:focus:bg-blue-600/25';
 
 const optionDisabledClass =
   'cursor-not-allowed opacity-60 hover:bg-transparent focus:bg-transparent';
 
 const caretClass =
-  'ml-3 flex h-4 w-4 items-center justify-center text-[var(--medium-gray)] transition-transform';
+  'ml-3 flex h-4 w-4 items-center justify-center text-gray-500 transition-transform';
 
 const overlayClass = 'fixed inset-0 z-40 bg-transparent';
 
@@ -232,19 +232,19 @@ const Select: React.FC<SelectProps> = ({
         }}
         onClick={() => handleOptionClick(option)}
         onKeyDown={(event) => handleOptionKeyDown(event, index)}
-        className={`${optionBaseClass} ${isDisabled ? optionDisabledClass : ''} ${isSelected ? 'bg-[var(--docker-blue)]/10 dark:bg-[var(--docker-blue)]/20' : ''
+        className={`${optionBaseClass} ${isDisabled ? optionDisabledClass : ''} ${isSelected ? 'bg-blue-600/10 dark:bg-blue-600/20' : ''
           }`}
       >
         <span className="flex flex-col items-start text-left">
           <span className="font-medium">{option.label}</span>
           {option.description ? (
-            <span className="text-xs text-[var(--medium-gray)]">
+            <span className="text-xs text-gray-500">
               {option.description}
             </span>
           ) : null}
         </span>
         {isSelected ? (
-          <span className="text-[var(--docker-blue)]">
+          <span className="text-blue-600">
             <svg
               width="16"
               height="16"
@@ -266,7 +266,7 @@ const Select: React.FC<SelectProps> = ({
 
   const selectedLabelClass = selectedOption
     ? ''
-    : 'text-[var(--medium-gray)]';
+    : 'text-gray-500';
 
   const combinedButtonClass = [buttonBaseClass, buttonVariantClass[variant], className]
     .filter(Boolean)
@@ -295,7 +295,7 @@ const Select: React.FC<SelectProps> = ({
         <span className={`flex flex-col text-left ${selectedLabelClass}`}>
           <span>{selectedOption ? selectedOption.label : placeholder}</span>
           {selectedOption && selectedOption.description ? (
-            <span className="text-xs font-normal text-[var(--medium-gray)]">
+            <span className="text-xs font-normal text-gray-500">
               {selectedOption.description}
             </span>
           ) : null}
@@ -330,7 +330,7 @@ const Select: React.FC<SelectProps> = ({
           className={listboxBaseClass}
         >
           {options.length === 0 ? (
-            <div className="px-4 py-3 text-sm text-[var(--medium-gray)]">
+            <div className="px-4 py-3 text-sm text-gray-500">
               {noOptionsMessage}
             </div>
           ) : (

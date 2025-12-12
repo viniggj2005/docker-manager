@@ -116,7 +116,7 @@ const TerminalModal: React.FC<TerminalProps> = ({
       cursorInactiveStyle: 'none',
       theme: {
         background: '#5e2750',
-        foreground: 'var(--grey-text)',
+        foreground: '#a1a1d1',
       },
     });
 
@@ -291,13 +291,13 @@ const TerminalModal: React.FC<TerminalProps> = ({
 
   const modalSize =
     'w-[min(90vw,1100px)] h-[min(85vh,780px)] rounded-2xl border ' +
-    'border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]';
+    'border-gray-300 dark:border-white/10 bg-white dark:bg-zinc-900 dark:text-white';
 
   const fullscreenSize = 'w-screen h-screen appframe-drag cursor-grab active:cursor-grabbing rounded-none border-0';
 
   const dockedSize =
     'w-screen rounded-t-2xl  ' +
-    'border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]';
+    'border-gray-300 dark:border-white/10';
 
   const containerClasses =
     containerBase + (maximized ? fullscreenSize : docked ? dockedSize : modalSize);
@@ -311,7 +311,7 @@ const TerminalModal: React.FC<TerminalProps> = ({
     'flex ' +
     (docked
       ? 'items-end justify-center pointer-events-none'
-      : 'items-center justify-center bg-[var(--light-overlay)] dark:bg-[var(--dark-overlay)] backdrop-blur-sm');
+      : 'items-center justify-center bg-white/60 dark:bg-black/60 backdrop-blur-sm');
 
   const backdropHidden = 'pointer-events-none opacity-0 hidden';
 
@@ -325,8 +325,8 @@ const TerminalModal: React.FC<TerminalProps> = ({
             top: miniPos.y,
             zIndex: 99999,
           }}
-          className="cursor-move bg-[var(--system-white)] 
-                     dark:bg-[var(--dark-secondary)] 
+          className="cursor-move bg-white 
+                     dark:bg-zinc-900 border border-gray-300 dark:border-white/10 text-black dark:text-white 
                      shadow-xl rounded-md px-3 py-2 flex items-center gap-3 select-none"
           onMouseDown={(e) => {
             dragRef.current = true;
@@ -336,8 +336,8 @@ const TerminalModal: React.FC<TerminalProps> = ({
           <span className="font-semibold">{title}</span>
 
           <button
-            className="px-2 py-1 bg-[var(--accent)] hover:scale-95 text-[var(--system-black)] 
-                       dark:text-[var(--system-white)] rounded"
+            className="px-2 py-1 bg-emerald-500 hover:scale-95 text-black 
+                       dark:text-white rounded"
             onMouseDown={(e) => e.stopPropagation()}
             onClick={() => setMinimized(false)}
           >
@@ -377,7 +377,7 @@ const TerminalModal: React.FC<TerminalProps> = ({
             onMinimize={() => setMinimized(true)}
           />
 
-          <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg pl-2 pt-1 bg-[var(--terminal-background)]">
+          <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg pl-2 pt-1 bg-terminal-purple">
             <div ref={hostRef} className="flex-1 min-h-0 w-full" />
           </div>
         </div>

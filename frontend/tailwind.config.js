@@ -6,7 +6,7 @@ export default {
     'text-emerald-400',
     'text-cyan-400',
     'text-amber-300',
-    'bg-[var(--accent-green)]',
+
     'text-yellow-300',
     'text-rose-400',
     'text-red-500',
@@ -15,14 +15,11 @@ export default {
     'text-sky-400',
   ],
   theme: {
-    // extend: {
-    //   colors: {
-    //     "red": {
-    //       DEFAULT: '#e7000b',
-    //       light: "#e7000b"
-    //     }
-    //   }
-    // },
+    extend: {
+      colors: {
+        "terminal-purple": "#5e2750",
+      }
+    },
   },
   plugins: [],
 };

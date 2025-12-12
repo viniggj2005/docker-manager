@@ -36,7 +36,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className="group flex flex-col gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-5 shadow-sm transition hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]">
+    <div className="group flex flex-col gap-4 rounded-2xl border border-gray-300 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-white/10 dark:bg-zinc-900">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="min-w-0">
           <div className="relative max-w-full pr-7">
@@ -47,7 +47,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
             {!isEditing && (
               <button
                 onClick={onOpenEdit}
-                className="absolute -top-1 right-0 rounded-full border border-[var(--medium-gray)] bg-[var(--system-white)] p-1 shadow-md opacity-0 transition group-hover:opacity-100 hover:bg-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]"
+                className="absolute -top-1 right-0 rounded-full border border-gray-500 bg-white p-1 shadow-md opacity-0 transition group-hover:opacity-100 hover:bg-gray-100 dark:border-white/10 dark:bg-zinc-900"
                 title="Editar nome"
               >
                 <GoPencil className="h-4 w-4" />
@@ -68,7 +68,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
 
           <div
             title="Imagem Docker"
-            className="mt-1 truncate text-md text-[var(--medium-gray)]"
+            className="mt-1 truncate text-md text-gray-500"
           >
             {container.Image}
           </div>
@@ -82,7 +82,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
           <button
             onClick={onOpenLogs}
             title="Logs"
-            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm font-medium text-[var(--exit-red)] transition hover:scale-95 sm:w-auto dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)]"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-red-600 transition hover:scale-95 sm:w-auto dark:border-white/10 dark:bg-zinc-900"
           >
             <RiFileList2Line className="h-5 w-5" />
             <span className="sm:hidden">Logs</span>
@@ -100,13 +100,13 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
                 setLoading(false);
               }
             }}
-            className={`flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm font-medium transition hover:scale-95 sm:w-auto dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] ${container.State === 'running'
-              ? 'text-[var(--exit-red)]'
-              : 'text-[var(--success-green)]'
+            className={`flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium transition hover:scale-95 sm:w-auto dark:border-white/10 dark:bg-zinc-900 ${container.State === 'running'
+              ? 'text-red-600'
+              : 'text-emerald-500'
               }`}
           >
             {loading ? (
-              <CgSpinner className="h-5 w-5 animate-spin text-[var(--system-black)] dark:text-[var(--system-white)]" />
+              <CgSpinner className="h-5 w-5 animate-spin text-black dark:text-white" />
             ) : container.State === 'running' ? (
               <CiStop1 className="h-5 w-5" />
             ) : (
@@ -120,7 +120,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
           <button
             title={container.State === 'paused' ? 'Despausar container' : 'Pausar Container'}
             onClick={() => onTogglePause(container.Id, container.State)}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm font-medium text-[var(--system-black)] transition hover:scale-95 sm:w-auto dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-black transition hover:scale-95 sm:w-auto dark:border-white/10 dark:bg-zinc-900 dark:text-white"
           >
             {container.State === 'paused' ? (
               <CiPlay1 className="h-5 w-5" />
@@ -136,7 +136,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
             <button
               title="menu"
               onClick={() => (isOpened ? onCloseMenu() : onOpenMenu())}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-1.5 text-sm font-medium text-[var(--system-black)] transition hover:scale-95 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-black transition hover:scale-95 dark:border-white/10 dark:bg-zinc-900 dark:text-white"
             >
               <HiOutlineDotsVertical className="h-5 w-5" />
               <span className="sm:hidden">Ações</span>

@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
+import iziToast from 'izitoast';
 import { FiKey } from "react-icons/fi";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useAuth } from "../../../../contexts/AuthContext";
@@ -30,19 +31,33 @@ const DockerCredentialsList: React.FC = () => {
             },
         });
     };
+
+    useEffect(() => {
+        if (sortedCredentials.length === 0) {
+            iziToast.info({
+                title: 'Vazio',
+                message: 'Nenhuma credencial cadastrada até o momento.',
+                position: 'bottomRight',
+            });
+        }
+        if (connecting) {
+            iziToast.info({
+                title: 'Conectando',
+                message: 'Estabelecendo conexão segura com o Docker remoto...',
+                position: 'bottomRight',
+            });
+        }
+    }, [sortedCredentials.length, connecting]);
+
     return (
         <div>
-            {sortedCredentials.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-[var(--light-gray)] p-6 text-sm text-[var(--medium-gray)] dark:border-[var(--dark-tertiary)] dark:text-[var(--grey-text)]">
-                    Nenhuma credencial cadastrada até o momento.
-                </div>
-            ) : (
+            {sortedCredentials.length > 0 && (
                 <div className="space-y-4">
                     {sortedCredentials.map((credential) => {
                         return (
                             <div
                                 key={credential.id}
-                                className="border border-gray-200 rounded-xl p-6 bg-white flex items-center justify-between"
+                                className="border border-gray-200 rounded-xl p-6 text-black bg-white flex items-center justify-between"
                             >
                                 <div className="flex items-start gap-4">
                                     <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
@@ -50,7 +65,7 @@ const DockerCredentialsList: React.FC = () => {
                                     </div>
                                     <div>
                                         <h3 className="text-sm font-semibold">{credential.alias}</h3>
-                                        <p className="text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+                                        <p className="text-xs text-gray-500 dark:text-zinc-400">
                                             {credential.description ? credential.description : "N/A"}
                                         </p>
                                         {credential.createdAt && (
@@ -73,19 +88,12 @@ const DockerCredentialsList: React.FC = () => {
                                     </button>
                                 </div>
                             </div>
-                        );
+                        )
                     })}
                 </div>
             )}
-            {
-                connecting ? (
-                    <div className="mt-4 rounded-xl border border-[var(--light-gray)] bg-[var(--light-overlay)] p-3 text-xs text-[var(--medium-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-tertiary)] dark:text-[var(--grey-text)]">
-                        Estabelecendo conexão segura com o Docker remoto…
-                    </div>
-                ) : null
-            }
-        </div >
+        </div>
     );
-};
+}
 export default DockerCredentialsList;
 

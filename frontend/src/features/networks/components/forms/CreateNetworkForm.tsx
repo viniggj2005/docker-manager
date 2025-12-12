@@ -16,29 +16,29 @@ const CreateNetworkForm: React.FC<Props> = ({ onSuccess }) => {
   const [attachable, setAttachable] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!selectedCredentialId) return;
+    if (!selectedCredentialId) return;
 
-  try {
-    const options = new network.CreateOptions({
-      Driver: driver,
-      Scope: "local",
-      Internal: internal,
-      Attachable: attachable,
-      Ingress: false,
-      ConfigOnly: false,
-      Options: {},
-      Labels: {},
-    });
+    try {
+      const options = new network.CreateOptions({
+        Driver: driver,
+        Scope: "local",
+        Internal: internal,
+        Attachable: attachable,
+        Ingress: false,
+        ConfigOnly: false,
+        Options: {},
+        Labels: {},
+      });
 
-    await NetworkService.createNetwork(selectedCredentialId, name, options);
+      await NetworkService.createNetwork(selectedCredentialId, name, options);
 
-    onSuccess();
-  } catch (err) {
-    console.error(err);
-  }
-};
+      onSuccess();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
 
   return (
@@ -51,7 +51,7 @@ const CreateNetworkForm: React.FC<Props> = ({ onSuccess }) => {
           value={name}
           required
           onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-md border px-3 py-2 dark:bg-[var(--dark-secondary)]"
+          className="w-full rounded-md border px-3 py-2 dark:bg-zinc-800"
         />
       </div>
 
@@ -60,7 +60,7 @@ const CreateNetworkForm: React.FC<Props> = ({ onSuccess }) => {
         <select
           value={driver}
           onChange={(e) => setDriver(e.target.value)}
-          className="w-full rounded-md border px-3 py-2 dark:bg-[var(--dark-secondary)]"
+          className="w-full rounded-md border px-3 py-2 dark:bg-zinc-800"
         >
           <option value="bridge">bridge</option>
           <option value="overlay">overlay</option>

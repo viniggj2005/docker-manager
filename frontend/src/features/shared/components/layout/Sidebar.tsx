@@ -34,23 +34,23 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
     <>
       <div
         onClick={onClose}
-        className={`fixed inset-0 z-30 bg-[var(--dark-overlay)] transition-opacity duration-200 lg:hidden ${open ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+        className={`fixed inset-0 z-30 bg-black/60 transition-opacity duration-200 lg:hidden ${open ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
       />
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-72 transform flex-col overflow-y-auto bg-[var(--system-white)] px-6 py-8 shadow-xl transition-transform duration-200 dark:bg-[var(--dark-secondary)] lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        className={`fixed inset-y-0 left-0 z-40 flex w-72 transform flex-col overflow-y-auto bg-white px-6 py-8 shadow-xl transition-transform duration-200 dark:bg-zinc-800 lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
           }`}
       >
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-xs uppercase tracking-[0.3em] text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+            <span className="text-xs uppercase tracking-[0.3em] text-gray-500 dark:text-zinc-400">
               Docker Manager
             </span>
             <h1 className="mt-2 text-2xl font-semibold">Painel</h1>
           </div>
           <button
             onClick={onClose}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--light-gray)] text-[var(--medium-gray)] transition hover:bg-[var(--light-overlay)] dark:border-[var(--dark-tertiary)] dark:text-[var(--system-white)] lg:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition hover:bg-white/60 dark:border-white/10 dark:text-white lg:hidden"
             aria-label="Fechar menu"
           >
             <HiOutlineX className="h-5 w-5" />
@@ -64,19 +64,19 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
               to={to}
               onClick={onClose}
               className={({ isActive }) =>
-                `group rounded-xl border border-transparent bg-transparent px-4 py-3 transition hover:border-[var(--light-gray)] hover:bg-[var(--light-overlay)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--docker-blue)] dark:hover:border-[var(--dark-tertiary)] dark:hover:bg-[var(--dark-tertiary)] ${isActive
-                  ? 'border-[var(--docker-blue)] bg-[var(--light-overlay)] text-[var(--docker-blue)] dark:border-[var(--docker-blue)] dark:bg-[var(--dark-tertiary)]'
-                  : 'text-[var(--medium-gray)] dark:text-[var(--grey-text)]'
+                `group rounded-xl border border-transparent bg-transparent px-4 py-3 transition hover:border-gray-300 hover:bg-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:hover:border-white/10 dark:hover:bg-white/10 ${isActive
+                  ? 'border-blue-600 bg-blue-50 text-blue-600 dark:border-blue-600 dark:bg-white/10'
+                  : 'text-gray-500 dark:text-zinc-400'
                 }`
               }
             >
               <div className="flex items-start gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--light-gray)] text-lg transition group-hover:border-[var(--docker-blue)] group-hover:text-[var(--docker-blue)] dark:border-[var(--dark-tertiary)]">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-300 text-lg transition group-hover:border-blue-600 group-hover:text-blue-600 dark:border-white/10">
                   <Icon className="h-5 w-5" />
                 </span>
                 <div className="flex flex-col">
                   <span className="font-semibold text-current">{label}</span>
-                  <span className="text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+                  <span className="text-xs text-gray-500 dark:text-zinc-400">
                     {description}
                   </span>
                 </div>
@@ -85,11 +85,11 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
           ))}
         </nav>
 
-        <div className="mt-6 rounded-xl border border-[var(--light-gray)] bg-[var(--light-overlay)] p-4 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-tertiary)]">
-          <h2 className="text-sm font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+        <div className="mt-6 rounded-xl border border-gray-300 bg-white/60 p-4 dark:border-white/10 dark:bg-white/10">
+          <h2 className="text-sm font-semibold text-black dark:text-white">
             Tema
           </h2>
-          <p className="mt-1 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+          <p className="mt-1 text-xs text-gray-500 dark:text-zinc-400">
             Alterne entre os modos claro e escuro para personalizar sua experiência.
           </p>
           <div className="mt-3">

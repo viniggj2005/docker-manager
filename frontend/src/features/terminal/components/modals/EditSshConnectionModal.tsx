@@ -42,7 +42,7 @@ const EditSshConnectionModal: React.FC<EditSshConnectionModalProps> = ({
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--light-overlay)] dark:bg-[var(--dark-overlay)] backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-white/60 dark:bg-black/60 backdrop-blur-sm"
       aria-modal
       role="dialog"
       aria-labelledby="edit-ssh-modal-title"
@@ -50,21 +50,23 @@ const EditSshConnectionModal: React.FC<EditSshConnectionModalProps> = ({
       <div
         ref={dialogRef}
         onClick={(event) => event.stopPropagation()}
-        className="relative w-full max-w-2xl bg-[var(--system-white)]
-          rounded-2xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]
-          dark:bg-[var(--dark-primary)] shadow-2xl dark:text-[var(--system-white)]"
+        className="relative w-full max-w-2xl bg-white
+          rounded-2xl border border-gray-300 dark:border-white/10
+          dark:bg-zinc-900 shadow-2xl dark:text-white"
       >
-        <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] px-5 py-3 dark:bg-[var(--dark-primary)]">
+        <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b border-gray-300 dark:border-white/10 px-5 py-3 dark:bg-zinc-900">
           <div className="flex items-center gap-2">
             <span className="inline-block h-2 w-2 rounded-full bg-blue-500" />
             <h2 id="edit-ssh-modal-title" className="text-sm font-medium">
               Editar conexão SSH
             </h2>
-            <span className="text-xs text-[var(--grey-text)]">modifique os dados necessários</span>
+            <span className="text-xs text-zinc-400">modifique os dados necessários</span>
           </div>
           <button
             onClick={onClose}
-            className="ml-auto text-[var(--light-red)] hover:scale-95"
+            className="inline-flex h-6 w-6 items-center justify-center
+                       rounded-full text-red-600
+                       hover:bg-red-600 hover:text-white hover:scale-95 transition"
             title="Fechar"
             aria-label="Fechar modal"
           >

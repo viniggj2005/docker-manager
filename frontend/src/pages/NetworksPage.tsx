@@ -42,8 +42,8 @@ const NetworksPage: React.FC = () => {
   const showStatusMessage = (message: string, isError = false) => (
     <div
       className={`rounded-xl border px-4 py-3 text-sm shadow-sm ${isError
-        ? 'border-[var(--exit-red)] text-[var(--exit-red)]'
-        : 'border-[var(--light-gray)] text-[var(--medium-gray)] dark:border-[var(--dark-tertiary)] dark:text-[var(--grey-text)]'
+        ? 'border-red-600 text-red-600'
+        : 'border-gray-300 text-gray-500 dark:border-white/10 dark:text-zinc-400'
         }`}
     >
       {message}
@@ -56,7 +56,7 @@ const NetworksPage: React.FC = () => {
         <h1 className="text-2xl font-semibold">
           Redes Docker
         </h1>
-        <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+        <p className="text-sm text-gray-500 dark:text-zinc-400">
           Gerencie suas redes Docker, crie novas e acompanhe detalhes das existentes.
         </p>
       </header>
@@ -65,7 +65,7 @@ const NetworksPage: React.FC = () => {
 
         <button
           onClick={() => setOpenCreateModal(true)}
-          className="inline-flex w-full items-center mb-3 justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-4 py-3 text-sm font-semibold text-[var(--docker-blue)] shadow-sm transition hover:scale-[0.99] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] sm:w-fit"
+          className="inline-flex w-full items-center mb-3 justify-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-blue-600 shadow-sm transition hover:scale-[0.99] hover:shadow-md sm:w-fit"
         >
           <IoMdAddCircleOutline className="h-5 w-5" />
           Nova rede

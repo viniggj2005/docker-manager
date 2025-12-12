@@ -1,4 +1,5 @@
 import ContainerCard from './components/cards/ContainerCard';
+import iziToast from 'izitoast';
 import { FmtName } from '../shared/functions/TreatmentFunction';
 import { ContainerItem } from '../../interfaces/ContainerInterfaces';
 import { useDockerClient } from '../../contexts/DockerClientContext';
@@ -72,6 +73,40 @@ const ContainersListView = forwardRef<ContainersListFetchRef>((_, ref) => {
     };
   }, [fetchContainers, selectedCredentialId]);
 
+  useEffect(() => {
+    if (credentialsLoading) {
+      iziToast.info({
+        title: 'Carregando',
+        message: 'Carregando credenciais...',
+        position: 'bottomRight',
+      });
+    } else if (selectedCredentialId == null) {
+      iziToast.warning({
+        title: 'Atenção',
+        message: 'Selecione uma credencial Docker para visualizar os containers.',
+        position: 'bottomRight',
+      });
+    } else if (connecting) {
+      iziToast.info({
+        title: 'Conectando',
+        message: 'Conectando ao daemon Docker remoto...',
+        position: 'bottomRight',
+      });
+    } else if (!containers) {
+      iziToast.info({
+        title: 'Buscando',
+        message: 'Buscando contêineres...',
+        position: 'bottomRight',
+      });
+    } else if (containers.length === 0) {
+      iziToast.info({
+        title: 'Vazio',
+        message: 'Nenhum container encontrado.',
+        position: 'bottomRight',
+      });
+    }
+  }, [credentialsLoading, selectedCredentialId, connecting, containers]);
+
   const handleStart = async (id: string) => {
     if (selectedCredentialId == null) return;
     await startContainer(selectedCredentialId, id);
@@ -86,23 +121,8 @@ const ContainersListView = forwardRef<ContainersListFetchRef>((_, ref) => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      {credentialsLoading ? (
-        <p>Carregando credenciais…</p>
-      ) : selectedCredentialId == null ? (
-        <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-          Cadastre ou selecione uma credencial Docker para visualizar os containers.
-        </div>
-      ) : connecting ? (
-        <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-          Conectando ao daemon Docker remoto…
-        </div>
-      ) : !containers ? (
-        <p>Buscando contêineres…</p>
-      ) : containers.length === 0 ? (
-        <div className="rounded-xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] bg-[var(--system-white)] p-8 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-          Nenhum container encontrado.
-        </div>
-      ) : (
+      {containers &&
+        containers.length > 0 &&
         containers.map((container) => {
           const name = FmtName(container.Names);
           const isSeeing = LogsModalId === container.Id;
@@ -135,10 +155,14 @@ const ContainersListView = forwardRef<ContainersListFetchRef>((_, ref) => {
               }}
             />
           );
-        })
-      )}
+        })} {
+        /*
+          Removed inline logic for loading/error/empty states
+          as requested by user (replaced by Toasts).
+        */
+      }
 
-      <footer className="mt-6 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+      <footer className="mt-6 text-xs text-gray-500 dark:text-zinc-400">
         Atualiza a cada 2s. Clique em “Atualizar” para forçar agora.
       </footer>
     </div>

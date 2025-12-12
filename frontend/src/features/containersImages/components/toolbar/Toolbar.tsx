@@ -45,7 +45,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
         <button
           onClick={onBuildImage}
           disabled={disabled}
-          className="px-4 py-2 rounded-lg bg-[var(--docker-blue)] text-white font-medium hover:opacity-90 disabled:opacity-50 text-sm transition-colors whitespace-nowrap"
+          className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:opacity-90 disabled:opacity-50 text-sm transition-colors whitespace-nowrap"
         >
           Construir Imagem
         </button>

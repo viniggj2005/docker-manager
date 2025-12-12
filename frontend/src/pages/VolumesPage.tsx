@@ -59,14 +59,14 @@ const VolumesPage: React.FC = () => {
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-semibold">Volumes Docker</h1>
-        <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+        <p className="text-sm text-gray-500 dark:text-zinc-400">
           Visualize, crie e remova volumes Docker.
         </p>
       </div>
 
       <button
         onClick={() => setOpenCreateModal(true)}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-4 py-3 text-sm font-semibold text-[var(--docker-blue)] shadow-sm transition hover:scale-[0.99] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] sm:w-fit"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-blue-600 shadow-sm transition hover:scale-[0.99] hover:shadow-md  sm:w-fit"
       >
         <IoMdAddCircleOutline className="h-5 w-5" />
         Novo volume
@@ -84,10 +84,10 @@ const VolumesPage: React.FC = () => {
       )}
 
       {loading && <div>Carregando volumes...</div>}
-      {error && <div className="text-[var(--exit-red)] text-sm">{error}</div>}
+      {error && <div className="text-red-600 text-sm">{error}</div>}
 
       {!loading && safeVolumes.length === 0 && !error && (
-        <div className="text-sm text-[var(--medium-gray)]">Nenhum volume encontrado.</div>
+        <div className="text-sm text-gray-500">Nenhum volume encontrado.</div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

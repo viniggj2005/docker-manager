@@ -10,66 +10,66 @@ const HomePage: React.FC = () => {
         <h1 className="text-2xl font-semibold">
           Bem-vindo ao painel Docker Manager
         </h1>
-        <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+        <p className="text-sm text-gray-500 dark:text-zinc-400">
           Acompanhe o status dos seus containers e imagens em um só lugar.
         </p>
       </header>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <article className="flex flex-col gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-6 shadow-sm transition hover:border-[var(--docker-blue)] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--light-overlay)] text-[var(--docker-blue)] dark:bg-[var(--dark-tertiary)]">
+        <article className="flex flex-col gap-4 rounded-2xl border border-gray-300 bg-white p-6 shadow-sm transition hover:border-blue-600 hover:shadow-md dark:border-white/10 dark:bg-zinc-800">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/60 text-blue-600 dark:bg-white/10">
             <HiOutlineViewGrid className="h-6 w-6" />
           </span>
           <div className="flex flex-col gap-2">
             <h2 className="text-xl font-semibold">
               Gerencie containers
             </h2>
-            <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+            <p className="text-sm text-gray-500 dark:text-zinc-400">
               Acesse o painel completo para iniciar, pausar ou renomear containers a qualquer
               momento.
             </p>
           </div>
           <button
             onClick={() => navigate('/containers')}
-            className="mt-auto inline-flex items-center justify-center gap-2 self-start rounded-xl bg-[var(--docker-blue)] px-5 py-3 text-sm font-semibold text-[var(--system-white)] shadow transition hover:scale-[0.99] hover:shadow-md"
+            className="mt-auto inline-flex items-center justify-center gap-2 self-start rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow transition hover:scale-[0.99] hover:shadow-md"
           >
             Acessar containers
           </button>
         </article>
 
-        <article className="flex flex-col gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-6 shadow-sm transition hover:border-[var(--docker-blue)] hover:shadow-md dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--light-overlay)] text-[var(--docker-blue)] dark:bg-[var(--dark-tertiary)]">
+        <article className="flex flex-col gap-4 rounded-2xl border border-gray-300 bg-white p-6 shadow-sm transition hover:border-blue-600 hover:shadow-md dark:border-white/10 dark:bg-zinc-800">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/60 text-blue-600 dark:bg-white/10">
             <HiOutlinePhotograph className="h-6 w-6" />
           </span>
           <div className="flex flex-col gap-2">
             <h2 className="text-xl font-semibold">
               Gerencie imagens
             </h2>
-            <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+            <p className="text-sm text-gray-500 dark:text-zinc-400">
               Filtre e exclua imagens rapidamente para manter seu ambiente organizado.
             </p>
           </div>
           <button
             onClick={() => navigate('/images')}
-            className="mt-auto inline-flex items-center justify-center gap-2 self-start rounded-xl bg-[var(--docker-blue)] px-5 py-3 text-sm font-semibold text-[var(--system-white)] shadow transition hover:scale-[0.99] hover:shadow-md"
+            className="mt-auto inline-flex items-center justify-center gap-2 self-start rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow transition hover:scale-[0.99] hover:shadow-md"
           >
             Acessar imagens
           </button>
         </article>
       </div>
 
-      <div className="flex flex-col gap-3 rounded-2xl border border-dashed border-[var(--docker-blue)] bg-[var(--light-overlay)] p-6 dark:border-[var(--docker-blue)] dark:bg-[var(--dark-tertiary)] sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-2xl border border-dashed border-blue-600 bg-white/60 p-6 dark:border-blue-600 dark:bg-white/10 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-lg font-semibold">
             Precisa conectar em um servidor?
           </h2>
-          <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+          <p className="text-sm text-gray-500 dark:text-zinc-400">
             Crie uma nova conexão SSH e gerencie seus terminais com rapidez.
           </p>
         </div>
         <button
           onClick={() => navigate('/createConnectionForm')}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--docker-blue)] px-5 py-3 text-sm font-semibold text-[var(--system-white)] shadow transition hover:scale-[0.99] hover:shadow-md"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow transition hover:scale-[0.99] hover:shadow-md"
         >
           <HiOutlinePlus className="h-5 w-5" />
           Criar conexão SSH

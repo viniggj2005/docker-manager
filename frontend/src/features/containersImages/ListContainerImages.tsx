@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
+import iziToast from 'izitoast';
 import Toolbar from './components/toolbar/Toolbar';
 import ImageCard from './components/cards/ImageCard';
 import ImageBuildModal from './components/modals/ImageBuildModal';
@@ -45,6 +46,16 @@ const ListContainersImages: React.FC = () => {
     fetchImages();
   };
 
+  useEffect(() => {
+    if (credentialsLoading) {
+      iziToast.info({ title: 'Carregando', message: 'Carregando credenciais...', position: 'bottomRight' });
+    } else if (selectedCredentialId == null) {
+      iziToast.warning({ title: 'Atenção', message: 'Selecione uma credencial Docker.', position: 'bottomRight' });
+    } else if (connecting) {
+      iziToast.info({ title: 'Conectando', message: 'Conectando ao daemon Docker...', position: 'bottomRight' });
+    }
+  }, [credentialsLoading, selectedCredentialId, connecting, loading, filteredSorted.length]);
+
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
       <Toolbar
@@ -57,19 +68,7 @@ const ListContainersImages: React.FC = () => {
         disabled={selectedCredentialId == null || connecting || credentialsLoading}
       />
 
-      {credentialsLoading ? (
-        <div className="mt-10 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-          Carregando credenciais…
-        </div>
-      ) : selectedCredentialId == null ? (
-        <div className="mt-10 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-          Cadastre ou selecione uma credencial Docker para visualizar as imagens.
-        </div>
-      ) : connecting ? (
-        <div className="mt-10 text-center text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-          Conectando ao daemon Docker…
-        </div>
-      ) : view === 'grid' ? (
+      {view === 'grid' ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 ">
           {filteredSorted.map((image) => (
             <ImageCard
@@ -88,12 +87,6 @@ const ListContainersImages: React.FC = () => {
               onDeleted={handleDeleted}
             />
           ))}
-        </div>
-      )}
-
-      {!loading && selectedCredentialId != null && filteredSorted.length === 0 && (
-        <div className="mt-10 text-center">
-          Nenhuma imagem encontrada.
         </div>
       )}
 

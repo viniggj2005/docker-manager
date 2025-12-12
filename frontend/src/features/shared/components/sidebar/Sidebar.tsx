@@ -12,7 +12,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
     <>
       <div
         onClick={onClose}
-        className={`fixed inset-0 z-30 bg-[var(--dark-overlay)] transition-opacity duration-200 lg:hidden ${open ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+        className={`fixed inset-0 z-30 bg-black/60 transition-opacity duration-200 lg:hidden ${open ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
       />
 
       <aside
@@ -34,13 +34,13 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div
-              className={`hidden h-12 w-12 items-center justify-center rounded-2xl  text-lg font-semibold text-[var(--docker-blue)] dark:border-[var(--dark-tertiary)] dark:text-[var(--docker-blue)] lg:flex ${collapsed ? '' : 'lg:hidden'
+              className={`hidden h-12 w-12 items-center justify-center rounded-2xl  text-lg font-semibold text-blue-600 dark:border-white/10 dark:text-blue-600 lg:flex ${collapsed ? '' : 'lg:hidden'
                 }`}
             >
               <img src={appIcon} alt="Docker Manager" className="h-16 w-16 object-contain" />
             </div>
             <div className={`${collapsed ? 'lg:hidden' : ''}`}>
-              <span className="text-xs uppercase tracking-[0.3em] text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+              <span className="text-xs uppercase tracking-[0.3em] text-gray-500 dark:text-zinc-400">
                 Docker Manager
               </span>
               <h1 className="mt-2 text-2xl font-semibold">Painel</h1>
@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
 
           <button
             onClick={onClose}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--light-gray)] text-[var(--medium-gray)] transition hover:bg-[var(--light-overlay)] dark:border-[var(--dark-tertiary)] dark:text-[var(--system-white)] lg:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition hover:bg-white/60 dark:border-white/10 dark:text-white lg:hidden"
             aria-label="Fechar menu"
           >
             <HiOutlineX className="h-5 w-5" />
@@ -57,7 +57,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
 
           <button
             onClick={onToggleCollapse}
-            className="hidden h-9 w-9 items-center justify-center rounded-full border border-[var(--light-gray)] text-[var(--medium-gray)] transition hover:bg-[var(--light-overlay)] dark:border-[var(--dark-tertiary)] dark:text-[var(--system-white)] lg:inline-flex"
+            className="hidden h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition hover:bg-white/60 dark:border-white/10 dark:text-white lg:inline-flex"
             aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
             title={collapsed ? 'Expandir menu' : 'Recolher menu'}
           >
@@ -85,7 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
                   : ''
                 } ${isActive && !collapsed
                   ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 shadow-lg shadow-blue-500/10 dark:from-blue-500/20 dark:to-purple-500/20  dark:shadow-blue-500/10 text-black dark:text-white'
-                  : isActive && collapsed ? 'text-black dark:text-white' : 'text-[var(--medium-gray)] hover:bg-gray-50 dark:text-[var(--grey-text)] dark:hover:bg-gray-700'
+                  : isActive && collapsed ? 'text-black dark:text-white' : 'text-gray-500 hover:bg-gray-50 dark:text-zinc-400 dark:hover:bg-gray-700'
                 }`
               }
             >
@@ -98,7 +98,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
 
                   <div className={`flex flex-col ${collapsed ? 'lg:hidden' : ''}`}>
                     <span className="font-semibold text-current">{label}</span>
-                    <span className="text-xs mt-0.5 text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+                    <span className="text-xs mt-0.5 text-gray-500 dark:text-zinc-400">
                       {description}
                     </span>
                   </div>
@@ -109,10 +109,10 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
         </nav>
 
         <div className={`mt-6 ${collapsed ? 'lg:hidden' : ''}`}>
-          <h4 className={` text-[var(--system-black)] dark:text-[var(--system-white)] ${collapsed ? 'lg:hidden' : ''}`}>
+          <h4 className={` text-black dark:text-white ${collapsed ? 'lg:hidden' : ''}`}>
             Credencial ativa
           </h4>
-          <p className={`text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)] ${collapsed ? 'lg:hidden' : ''}`}>
+          <p className={`text-xs text-gray-500 dark:text-zinc-400 ${collapsed ? 'lg:hidden' : ''}`}>
             Escolha qual credencial Docker usar nas demais telas.
           </p>
           <div className={` ${collapsed ? 'lg:hidden' : ''}`}>
@@ -127,13 +127,13 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
             }`}
         >
           <h2
-            className={`text-sm font-semibold text-[var(--system-black)] dark:text-[var(--system-white)] ${collapsed ? 'lg:hidden' : ''
+            className={`text-sm font-semibold text-black dark:text-white ${collapsed ? 'lg:hidden' : ''
               }`}
           >
             Tema
           </h2>
           <p
-            className={`mt-1 text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)] ${collapsed ? 'lg:hidden' : ''
+            className={`mt-1 text-xs text-gray-500 dark:text-zinc-400 ${collapsed ? 'lg:hidden' : ''
               }`}
           >
             Alterne entre os modos claro e escuro para personalizar sua experiência.

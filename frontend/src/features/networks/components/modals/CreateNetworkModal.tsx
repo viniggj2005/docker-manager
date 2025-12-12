@@ -22,7 +22,7 @@ const CreateNetworkModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) 
     <div
       onClick={onClose}
       className="fixed inset-0 z-50 flex items-center justify-center
-      bg-[var(--light-overlay)] dark:bg-[var(--dark-overlay)] backdrop-blur-sm"
+      bg-white/60 dark:bg-black/60 backdrop-blur-sm"
       aria-modal
       role="dialog"
       aria-labelledby="network-modal-title"
@@ -30,24 +30,24 @@ const CreateNetworkModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) 
       <div
         ref={dialogRef}
         onClick={(event) => event.stopPropagation()}
-        className="relative w-full max-w-2xl bg-[var(--system-white)]
-          rounded-2xl border border-[var(--light-gray)] dark:border-[var(--dark-tertiary)]
-          dark:bg-[var(--dark-primary)] shadow-2xl text-[var(--system-black)] dark:text-[var(--system-white)]"
+        className="relative w-full max-w-2xl bg-white
+          rounded-2xl border border-gray-300 dark:border-white/10
+          dark:bg-zinc-900 shadow-2xl text-black dark:text-white"
       >
         <div className="sticky top-0 z-10 flex items-center rounded-t-2xl gap-3 border-b
-         border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] px-5 py-3
-         bg-[var(--system-white)] dark:bg-[var(--dark-primary)]">
+         border-gray-300 dark:border-white/10 px-5 py-3
+         bg-white dark:bg-zinc-900">
           <div className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 rounded-full bg-[var(--docker-blue)]" />
-            <h2 id="network-modal-title" className="text-sm font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">
+            <span className="inline-block h-2 w-2 rounded-full bg-blue-600" />
+            <h2 id="network-modal-title" className="text-sm font-medium text-black dark:text-white">
               Nova Network Docker
             </h2>
-            <span className="text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)]">preencha os dados</span>
+            <span className="text-xs text-gray-500 dark:text-zinc-400">preencha os dados</span>
           </div>
 
           <button
             onClick={onClose}
-            className="ml-auto text-[var(--light-red)] hover:scale-95"
+            className="ml-auto text-rose-400 hover:scale-95"
             title="Fechar"
             aria-label="Fechar modal"
           >

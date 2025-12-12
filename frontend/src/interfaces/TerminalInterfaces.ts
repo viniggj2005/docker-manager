@@ -87,3 +87,11 @@ export interface TerminalStateProps {
   openForContainer: (id: string, name: string) => void;
   requirePassword: (config: SSHConnectionDto) => void;
 }
+
+
+export interface SshConnectionCardProps {
+  connection: SshDto;
+  handleConnect: (id: number) => void;
+  handleEdit: (connection: SshDto) => void;
+  handleRemove: (id: number, alias: string) => void;
+}

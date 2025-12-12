@@ -23,11 +23,11 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
   CreatedAt,
   Mountpoint,
 }) => {
+  const confirmToast = useConfirmToast();
   const [isInspectOpen, setIsInspectOpen] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [isInspectLoading, setIsInspectLoading] = useState(false);
   const [inspectData, setInspectData] = useState<string | null>(null);
-  const confirmToast = useConfirmToast();
 
   const handleOpenInspect = useCallback(async () => {
     try {
@@ -73,60 +73,57 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
 
   return (
     <>
-      <div className="group flex flex-col gap-4 rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-5 shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
+      <div className="group flex flex-col text-black gap-4 rounded-2xl border border-gray-300 bg-white p-5 shadow-sm transition hover:shadow-md ">
 
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-3 flex-1 min-w-0">
             <div className="w-10 h-10 bg-orange-50 dark:bg-orange-900/20 rounded-lg flex items-center justify-center flex-shrink-0">
-              <FaHardDrive className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+              <FaHardDrive className="w-5 h-5 text-orange-600 " />
             </div>
-            <div className="truncate text-xl font-medium text-[var(--system-black)] flex-1 hover:scale-[0.99] dark:text-gray-100">
+            <div className="truncate text-xl font-medium  flex-1 hover:scale-[0.99] ">
               <h3 className="mb-1 truncate">{Name}</h3>
             </div>
           </div>
 
           <div className="flex gap-1">
             <button onClick={handleOpenInspect}
-              disabled={isInspectLoading} className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
-              <FiInfo className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+              disabled={isInspectLoading} className="p-1.5 hover:bg-gray-100  rounded transition-colors">
+              <FiInfo className="w-4 h-4 text-gray-600 " />
             </button>
             <button onClick={handleDelete}
               disabled={deleteLoading}
-              className="p-1.5 hover:bg-red-50 dark:hover:bg-red-900/30 rounded transition-colors">
-              <FaRegTrashAlt className="w-4 h-4 text-red-600 dark:text-red-400" />
+              className="p-1.5 hover:bg-red-50 rounded transition-colors">
+              <FaRegTrashAlt className="w-4 h-4 text-red-600 " />
             </button>
-            {/* <button className="p-1.5 hover:bg-gray-100 rounded transition-colors">
-                <MoreVertical className="w-4 h-4 text-gray-600" />
-              </button> */}
           </div>
         </div>
         <div className="space-y-3 text-sm">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Driver</p>
-              <p className="text-sm dark:text-gray-200">{Driver ?? '—'}</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Driver</p>
+              <p className="text-sm ">{Driver ?? '—'}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Scope</p>
-              <p className="text-sm dark:text-gray-200">{Scope ?? '—'}</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Scope</p>
+              <p className="text-sm ">{Scope ?? '—'}</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-100 dark:border-gray-700">
+          <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-100">
             <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Tamanho</p>
-              <p className="text-sm dark:text-gray-200">{UsageData?.Size ? FormatBytes(UsageData.Size) : '—'}
+              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Tamanho</p>
+              <p className="text-sm">{UsageData?.Size ? FormatBytes(UsageData.Size) : '—'}
                 {UsageData?.RefCount !== undefined ? ` • ${UsageData.RefCount} refs` : ''}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Criado</p>
-              <p className="text-sm dark:text-gray-200">{createdLabel}</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Criado</p>
+              <p className="text-sm">{createdLabel}</p>
             </div>
           </div>
 
-          <div className="pt-3 border-t border-gray-100 dark:border-gray-700">
-            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Mountpoint</p>
-            <p className="text-xs text-gray-700 dark:text-gray-300 font-mono break-all">{Mountpoint ?? '—'}</p>
+          <div className="pt-3 border-t border-gray-100">
+            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Mountpoint</p>
+            <p className="text-xs text-gray-700 font-mono break-all">{Mountpoint ?? '—'}</p>
           </div>
         </div>
       </div>

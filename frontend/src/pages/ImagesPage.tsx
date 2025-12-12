@@ -8,7 +8,7 @@ const ImagesPage: React.FC = () => {
         <h1 className="text-2xl font-semibold">
           Imagens Docker
         </h1>
-        <p className="text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+        <p className="text-gray-500 dark:text-zinc-400">
           Pesquise, organize e remova imagens quando necessário.
         </p>
       </div>

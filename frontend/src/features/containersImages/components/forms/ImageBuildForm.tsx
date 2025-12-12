@@ -111,7 +111,7 @@ const ImageBuildForm: React.FC<ImageBuildFormProps> = ({ clientId, onClose, onSu
             </div>
 
             <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">
+                <label className="text-sm font-medium text-black dark:text-white">
                     Caminho do Dockerfile (Contexto)
                 </label>
                 <div className="flex gap-2">
@@ -130,7 +130,7 @@ const ImageBuildForm: React.FC<ImageBuildFormProps> = ({ clientId, onClose, onSu
                         type="button"
                         onClick={handleBrowseClick}
                         disabled={building || builded}
-                        className="mt-1 flex items-center justify-center rounded-xl bg-[var(--light-gray)] px-4 text-[var(--system-black)] hover:brightness-95 dark:bg-[var(--dark-tertiary)] dark:text-[var(--system-white)] h-[42px]"
+                        className="mt-1 flex items-center justify-center rounded-xl bg-gray-100 px-4 text-black hover:brightness-95 dark:bg-white/10 dark:text-white h-[42px]"
                         title="Selecionar Dockerfile"
                     >
                         <FaFolderOpen className="h-5 w-5" />
@@ -139,7 +139,7 @@ const ImageBuildForm: React.FC<ImageBuildFormProps> = ({ clientId, onClose, onSu
             </div>
 
             <div className="mt-4">
-                <label className="mb-2 block text-sm font-medium text-[var(--system-black)] dark:text-[var(--system-white)]">
+                <label className="mb-2 block text-sm font-medium text-black dark:text-white">
                     Logs de Construção
                 </label>
                 <div className="h-64 w-full overflow-y-auto rounded-xl bg-gray-900 p-4 font-mono text-xs text-green-400 shadow-inner">
@@ -162,14 +162,14 @@ const ImageBuildForm: React.FC<ImageBuildFormProps> = ({ clientId, onClose, onSu
                         type="button"
                         onClick={onClose}
                         disabled={building}
-                        className="rounded-xl px-4 py-2 text-sm font-medium text-[var(--medium-gray)] hover:bg-[var(--light-gray)] dark:text-[var(--grey-text)] dark:hover:bg-[var(--dark-tertiary)] disabled:opacity-50"
+                        className="rounded-xl px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 dark:text-zinc-400 dark:hover:bg-white/10 disabled:opacity-50"
                     >
                         Cancelar
                     </button>
                     <button
                         type="submit"
                         disabled={building}
-                        className="rounded-xl bg-[var(--docker-blue)] px-6 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50 flex items-center gap-2"
+                        className="rounded-xl bg-blue-600 px-6 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50 flex items-center gap-2"
                     >
                         {building ? 'Construindo...' : 'Construir'}
                     </button>

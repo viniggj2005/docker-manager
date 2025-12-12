@@ -55,7 +55,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="w-screen h-screen flex flex-col overflow-hidden bg-white dark:bg-[var(--dark-primary)]">
+    <div className="w-screen h-screen flex flex-col overflow-hidden bg-white dark:bg-zinc-900">
       {!isFullscreen && <AppFrame />}
 
       <GlobalTerminalHost />

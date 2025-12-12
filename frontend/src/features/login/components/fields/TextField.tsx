@@ -7,9 +7,9 @@ const TextField: React.FC<TextFieldProps> = ({ label, error, ...rest }) => {
       <div className="text-sm mb-1">{label}</div>
       <input
         {...rest}
-        className="w-full pl-2 py-1 pr-3 border text-[var(--dark-primary)]  rounded-xl outline-none "
+        className="w-full pl-2 py-1 pr-3 border text-zinc-900  rounded-xl outline-none "
       />
-      {error ? <div className="text-sm text-[var(--exit-red)] mt-1">{error}</div> : null}
+      {error ? <div className="text-sm text-red-600 mt-1">{error}</div> : null}
     </label>
   );
 };

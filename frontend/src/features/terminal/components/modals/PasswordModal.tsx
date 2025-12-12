@@ -17,20 +17,21 @@ const PasswordModal: React.FC<PasswordModalProps> = ({ open, onClose, onSubmit }
     <div
       onClick={() => onClose()}
       className="fixed inset-0 z-50 flex items-center justify-center 
-                 bg-[var(--light-overlay)] dark:bg-[var(--dark-overlay)] backdrop-blur-sm"
+                 bg-white/60 dark:bg-black/60 backdrop-blur-sm"
       aria-modal
       role="dialog"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-[360px] bg-[var(--system-white)] 
-                   dark:bg-[var(--dark-primary)] rounded-2xl border 
-                   border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] 
-                   shadow-2xl text-[var(--dark-text)] dark:text-[var(--system-white)]"
+        className="relative w-[360px] bg-white 
+                   dark:bg-zinc-900 rounded-2xl border 
+                   border-gray-300 dark:border-white/10 
+                   shadow-2xl text-zinc-900 dark:text-white"
       >
         <div
           className="flex items-center justify-between gap-3 border-b 
-                        border-[var(--light-gray)] dark:border-[var(--dark-tertiary)] 
+                        border-gray-300 dark:border-white/10 
+                         dark:bg-zinc-900
                         px-5 py-3 rounded-t-2xl"
         >
           <div className="flex items-center gap-2">
@@ -39,7 +40,9 @@ const PasswordModal: React.FC<PasswordModalProps> = ({ open, onClose, onSubmit }
           </div>
           <button
             onClick={onClose}
-            className="ml-1 text-[var(--light-red)] hover:scale-95 transition-transform"
+            className="inline-flex h-6 w-6 items-center justify-center
+                       rounded-full text-red-600
+                       hover:bg-red-600 hover:text-white hover:scale-95 transition"
             title="Fechar"
           >
             <IoMdCloseCircleOutline className="h-5 w-5" />
@@ -54,8 +57,8 @@ const PasswordModal: React.FC<PasswordModalProps> = ({ open, onClose, onSubmit }
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="********"
-              className="rounded-lg border border-[var(--light-gray)] 
-                         dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] 
+              className="rounded-lg border border-gray-300 
+                         dark:border-white/10 dark:bg-zinc-800 
                          px-3 py-2 text-sm outline-none focus:border-blue-500 
                          dark:focus:border-blue-400 transition-colors"
               required
@@ -66,9 +69,9 @@ const PasswordModal: React.FC<PasswordModalProps> = ({ open, onClose, onSubmit }
             <button
               type="button"
               onClick={() => onClose()}
-              className="rounded-lg border border-[var(--light-gray)] 
-                         dark:border-[var(--dark-tertiary)] px-4 py-1.5 text-sm 
-                         hover:bg-[var(--light-gray)] dark:hover:bg-[var(--dark-secondary)] 
+              className="rounded-lg border border-gray-300 
+                         dark:border-white/10 px-4 py-1.5 text-sm 
+                         hover:bg-gray-300 dark:hover:bg-zinc-800 
                          transition-colors"
             >
               Cancelar

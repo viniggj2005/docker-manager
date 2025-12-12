@@ -16,8 +16,8 @@ const ContainersPage: React.FC = () => {
           <h1 className="text-2xl font-semibold">
             Containers Docker
           </h1>
-          <p className="text-sm text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
-            Monitore e administre seus containers em tempo real.
+          <p className="text-sm text-gray-500 dark:text-zinc-400">
+            Monitore e administre seus contêineres em tempo real.
           </p>
         </div>
         <button

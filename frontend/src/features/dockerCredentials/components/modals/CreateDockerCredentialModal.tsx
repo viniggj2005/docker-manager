@@ -67,8 +67,8 @@ export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalPr
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="w-[450px] rounded-xl bg-white dark:bg-[var(--dark-secondary)] p-6 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/60 dark:bg-black/60 backdrop-blur-sm">
+      <div className="w-[450px] relative rounded-2xl border border-gray-300 dark:border-white/10 bg-white dark:bg-zinc-900 p-6 shadow-2xl dark:text-white">
 
         <h2 className="text-xl font-semibold mb-4">Nova Credencial Docker</h2>
 
@@ -145,7 +145,7 @@ export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalPr
             </button>
 
             <button
-              className="flex-1 bg-[var(--docker-blue)] text-white rounded py-2"
+              className="flex-1 bg-blue-600 text-white rounded py-2"
               disabled={submitting}
             >
               {submitting ? "Salvando..." : "Salvar"}

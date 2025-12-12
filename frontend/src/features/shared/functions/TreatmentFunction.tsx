@@ -57,8 +57,8 @@ export function classState(state: string) {
   const status = state?.toLowerCase();
   if (status === 'paused') return 'bg-amber-100 text-amber-700';
   if (status === 'running') return 'bg-emerald-100 text-emerald-700';
-  if (status === 'exited') return 'bg-rose-100 text-[var(--exit-red)]';
-  return 'bg-[var(--light-gray)]text-[var(--system-black)]';
+  if (status === 'exited') return 'bg-rose-100 text-red-600';
+  return 'bg-gray-100 text-black';
 }
 
 export function BytesToMB(numberOfBytes: number) {

@@ -53,7 +53,7 @@ const DockerCredentialCreateForm: React.FC<{ onSuccess?: () => void }> = ({ onSu
     if (authLoading) {
         return (
             <div className="flex flex-1 flex-col">
-                <div className="mx-auto max-w-3xl text-sm text-[var(--grey-text)]">Carregando…</div>
+                <div className="mx-auto max-w-3xl text-sm text-zinc-400">Carregando…</div>
             </div>
         );
     }
@@ -61,7 +61,7 @@ const DockerCredentialCreateForm: React.FC<{ onSuccess?: () => void }> = ({ onSu
     if (!isAuthenticated || !token || !user) {
         return (
             <div className="flex flex-1 flex-col">
-                <div className="mx-auto max-w-2xl rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-6 text-sm text-[var(--medium-gray)] shadow-sm dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)] dark:text-[var(--system-white)]">
+                <div className="mx-auto max-w-2xl rounded-2xl border border-gray-300 bg-white p-6 text-sm text-gray-500 shadow-sm dark:border-white/10 dark:bg-zinc-800 dark:text-white">
                     Sessão inválida. Faça login para gerenciar suas credenciais Docker.
                 </div>
             </div>
@@ -114,13 +114,13 @@ const DockerCredentialCreateForm: React.FC<{ onSuccess?: () => void }> = ({ onSu
     };
 
     return (
-        <div className="rounded-2xl border border-[var(--light-gray)] bg-[var(--system-white)] p-6 shadow-sm dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-secondary)]">
+        <div className="rounded-2xl border border-gray-300 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-zinc-800">
             <header className="mb-4 flex items-center justify-between">
                 <div>
-                    <h2 className="text-lg font-semibold text-[var(--system-black)] dark:text-[var(--system-white)]">
+                    <h2 className="text-lg font-semibold text-black dark:text-white">
                         Nova credencial
                     </h2>
-                    <p className="text-xs text-[var(--medium-gray)] dark:text-[var(--grey-text)]">
+                    <p className="text-xs text-gray-500 dark:text-zinc-400">
                         Informe o host e as chaves TLS geradas para o daemon Docker remoto.
                     </p>
                 </div>
@@ -159,15 +159,15 @@ const DockerCredentialCreateForm: React.FC<{ onSuccess?: () => void }> = ({ onSu
                     <div className="grid gap-2 sm:col-span-1">
                         <div>
                             <label
-                                className="mb-1 block text-sm font-medium text-[var(--system-black)] dark:text-[var(--system-white)]"
+                                className="mb-1 block text-sm font-medium text-black dark:text-white"
                                 htmlFor="ca"
                             >
                                 CA (PEM)
                             </label>
                             <div
-                                className={`rounded-xl border border-dashed border-[var(--light-gray)] p-4 text-sm transition dark:border-[var(--dark-tertiary)] ${disableForm
+                                className={`rounded-xl border border-dashed border-gray-300 p-4 text-sm transition dark:border-white/10 ${disableForm
                                     ? 'cursor-not-allowed opacity-60'
-                                    : 'cursor-pointer hover:border-[var(--docker-blue)]'
+                                    : 'cursor-pointer hover:border-blue-600'
                                     }`}
                             >
                                 <FileUploader
@@ -192,7 +192,7 @@ const DockerCredentialCreateForm: React.FC<{ onSuccess?: () => void }> = ({ onSu
                             value={ca}
                             onChange={(event) => setCa(event.target.value)}
                             placeholder="-----BEGIN CERTIFICATE-----\n..."
-                            className="h-28 w-full rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-2 text-sm text-[var(--system-black)] transition focus:outline-none focus:ring-2 focus:ring-[var(--docker-blue)] disabled:cursor-not-allowed disabled:opacity-60 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]"
+                            className="h-28 w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm text-black transition focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-zinc-900 dark:text-white"
                             disabled={disableForm}
                             required
                         />
@@ -201,15 +201,15 @@ const DockerCredentialCreateForm: React.FC<{ onSuccess?: () => void }> = ({ onSu
                     <div className="grid gap-2 sm:col-span-1">
                         <div>
                             <label
-                                className="mb-1 block text-sm font-medium text-[var(--system-black)] dark:text-[var(--system-white)]"
+                                className="mb-1 block text-sm font-medium text-black dark:text-white"
                                 htmlFor="cert"
                             >
                                 Cert (PEM)
                             </label>
                             <div
-                                className={`rounded-xl border border-dashed border-[var(--light-gray)] p-4 text-sm transition dark:border-[var(--dark-tertiary)] ${disableForm
+                                className={`rounded-xl border border-dashed border-gray-300 p-4 text-sm transition dark:border-white/10 ${disableForm
                                     ? 'cursor-not-allowed opacity-60'
-                                    : 'cursor-pointer hover:border-[var(--docker-blue)]'
+                                    : 'cursor-pointer hover:border-blue-600'
                                     }`}
                             >
                                 <FileUploader
@@ -234,7 +234,7 @@ const DockerCredentialCreateForm: React.FC<{ onSuccess?: () => void }> = ({ onSu
                             value={cert}
                             onChange={(event) => setCert(event.target.value)}
                             placeholder="-----BEGIN CERTIFICATE-----\n..."
-                            className="h-28 w-full rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-2 text-sm text-[var(--system-black)] transition focus:outline-none focus:ring-2 focus:ring-[var(--docker-blue)] disabled:cursor-not-allowed disabled:opacity-60 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]"
+                            className="h-28 w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm text-black transition focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-zinc-900 dark:text-white"
                             disabled={disableForm}
                             required
                         />
@@ -243,15 +243,15 @@ const DockerCredentialCreateForm: React.FC<{ onSuccess?: () => void }> = ({ onSu
                     <div className="grid gap-2 sm:col-span-1">
                         <div>
                             <label
-                                className="mb-1 block text-sm font-medium text-[var(--system-black)] dark:text-[var(--system-white)]"
+                                className="mb-1 block text-sm font-medium text-black dark:text-white"
                                 htmlFor="key"
                             >
                                 Key (PEM)
                             </label>
                             <div
-                                className={`rounded-xl border border-dashed border-[var(--light-gray)] p-4 text-sm transition dark:border-[var(--dark-tertiary)] ${disableForm
+                                className={`rounded-xl border border-dashed border-gray-300 p-4 text-sm transition dark:border-white/10 ${disableForm
                                     ? 'cursor-not-allowed opacity-60'
-                                    : 'cursor-pointer hover:border-[var(--docker-blue)]'
+                                    : 'cursor-pointer hover:border-blue-600'
                                     }`}
                             >
                                 <FileUploader
@@ -276,7 +276,7 @@ const DockerCredentialCreateForm: React.FC<{ onSuccess?: () => void }> = ({ onSu
                             value={key}
                             onChange={(event) => setKey(event.target.value)}
                             placeholder="-----BEGIN PRIVATE KEY-----\n..."
-                            className="h-28 w-full rounded-xl border border-[var(--light-gray)] bg-[var(--system-white)] px-3 py-2 text-sm text-[var(--system-black)] transition focus:outline-none focus:ring-2 focus:ring-[var(--docker-blue)] disabled:cursor-not-allowed disabled:opacity-60 dark:border-[var(--dark-tertiary)] dark:bg-[var(--dark-primary)] dark:text-[var(--system-white)]"
+                            className="h-28 w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm text-black transition focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-zinc-900 dark:text-white"
                             disabled={disableForm}
                             required
                         />
@@ -284,13 +284,13 @@ const DockerCredentialCreateForm: React.FC<{ onSuccess?: () => void }> = ({ onSu
                 </div>
 
                 {formError ? (
-                    <div className="text-sm text-[var(--exit-red)]">{formError}</div>
+                    <div className="text-sm text-red-600">{formError}</div>
                 ) : null}
 
                 <button
                     type="submit"
                     disabled={disableForm}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--docker-blue)] px-4 py-2 text-base font-semibold text-[var(--system-white)] transition hover:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-base font-semibold text-white transition hover:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     {submitting ? 'Salvando…' : 'Salvar credencial'}
                 </button>
