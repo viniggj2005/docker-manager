@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { FiSearch, FiGrid, FiList } from 'react-icons/fi';
+import { HiOutlineWrenchScrewdriver } from "react-icons/hi2";
 import { useDockerClient } from '../../../../contexts/DockerClientContext';
 import { ToolbarProps } from '../../../../interfaces/ContainerImagesInterfaces';
 import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
@@ -37,7 +38,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
           placeholder="Buscar por nome, tag, ID ou label"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full pl-10 pr-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
@@ -47,7 +48,8 @@ const Toolbar: React.FC<ToolbarProps> = ({
           disabled={disabled}
           className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:opacity-90 disabled:opacity-50 text-sm transition-colors whitespace-nowrap"
         >
-          Construir Imagem
+          <p className='flex items-center gap-2'><HiOutlineWrenchScrewdriver className='h-5 w-5' />
+            Construir Imagem</p>
         </button>
 
         <button
@@ -75,10 +77,10 @@ const Toolbar: React.FC<ToolbarProps> = ({
         <button
           onClick={handleDelete}
           disabled={disabled}
-          className={`p-2 hover:bg-red-50 hover:scale-90 rounded-lg transition-colors`}
+          className={`p-2  hover:scale-90 rounded-lg items-center justify-center text-gray-400 transition-all hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"`}
           title="Tabela"
         >
-          <FaRegTrashAlt className="text-red-600 h-5 w-5" />
+          <FaRegTrashAlt className="h-5 w-5" />
         </button>
       </div>
     </div>

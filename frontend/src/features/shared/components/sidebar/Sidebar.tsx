@@ -12,14 +12,15 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
     <>
       <div
         onClick={onClose}
-        className={`fixed inset-0 z-30 bg-black/60 transition-opacity duration-200 lg:hidden ${open ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+        className={`fixed inset-0 z-30  transition-opacity duration-200 lg:hidden  ${open ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
       />
 
       <aside
         className={`
     z-40 flex w-72 transform flex-col overflow-y-auto px-6 py-8
-    shadow-xl transition-transform duration-200
-     bg-gradient-to-br dark:from-blue-500/20 dark:to-purple-500/20 from-blue-500/10 to-purple-500/10
+    shadow-sm transition-transform duration-200
+    
+     bg-gradient-to-br dark:from-slate-900 dark:via-blue-900 dark:to-slate-700 from-gray-50 via-blue-50 to-purple-50
 
     fixed inset-y-0 left-0          
     lg:static lg:h-full lg:inset-auto
@@ -31,7 +32,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
   `}
       >
 
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between  gap-4">
           <div className="flex items-center gap-3">
             <div
               className={`hidden h-12 w-12 items-center justify-center rounded-2xl  text-lg font-semibold text-blue-600 dark:border-white/10 dark:text-blue-600 lg:flex ${collapsed ? '' : 'lg:hidden'
@@ -46,7 +47,6 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
               <h1 className="mt-2 text-2xl font-semibold">Painel</h1>
             </div>
           </div>
-
           <button
             onClick={onClose}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition hover:bg-white/60 dark:border-white/10 dark:text-white lg:hidden"
@@ -70,7 +70,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
         </div>
 
         <nav
-          className={`flex-1 overflow-y-auto px-3 ${collapsed ? 'lg:items-center lg:gap-3' : ''}`}
+          className={`flex-1 overflow-y-auto px-3   ${collapsed ? 'lg:items-center lg:gap-3' : ''}`}
           aria-label="Menu principal"
         >
           {navItems.map(({ label, description, to, icon: Icon }) => (
@@ -85,7 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
                   : ''
                 } ${isActive && !collapsed
                   ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 shadow-lg shadow-blue-500/10 dark:from-blue-500/20 dark:to-purple-500/20  dark:shadow-blue-500/10 text-black dark:text-white'
-                  : isActive && collapsed ? 'text-black dark:text-white' : 'text-gray-500 hover:bg-gray-50 dark:text-zinc-400 dark:hover:bg-gray-700'
+                  : isActive && collapsed ? 'text-black dark:text-white' : 'text-gray-500 hover:bg-gray-50 dark:text-white dark:hover:bg-white/10'
                 }`
               }
             >

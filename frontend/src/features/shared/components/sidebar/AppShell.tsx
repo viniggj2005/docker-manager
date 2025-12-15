@@ -16,7 +16,9 @@ const AppShell: React.FC<AppShellProps> = ({ children }) => {
       />
 
 
-      <main className=" flex-1 min-h-0 flex flex-col px-4 pb-6 pt-0 sm:px-6 sm:pt-0 lg:px-8 lg:pt-6 xl:px-10 overflow-auto bg-gradient-to-br dark:from-blue-500/20 dark:to-purple-500/20 from-blue-500/10 to-purple-500/10 transition-colors duration-200 dark:bg-zinc-900">
+      <main className=" flex-1 min-h-0 flex flex-col px-4 pb-6 pt-0 sm:px-6 sm:pt-0 lg:px-8 lg:pt-6 xl:px-10 overflow-auto 
+      bg-gradient-to-br dark:from-slate-900 dark:via-blue-900 dark:to-slate-900 from-gray-50 via-blue-50  to-purple-50
+      transition-colors duration-200 ">
         {children}
       </main>
     </div>

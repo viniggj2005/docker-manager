@@ -2,7 +2,7 @@ import React from 'react';
 import { SelectOption, SelectProps, SelectVariant } from '../../../../interfaces/SharedInterfaces';
 
 const buttonBaseClass =
-  'relative flex w-full items-center justify-between rounded-xl border border-gray-300 bg-gradient-to-br from-white via-white to-[#f3f6ff] shadow-[0_14px_40px_-18px_rgba(0,63,123,0.45)] transition hover:border-blue-600 hover:shadow-[0_18px_45px_-16px_rgba(0,63,123,0.5)] focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-800 dark:shadow-[0_14px_40px_-18px_rgba(24,34,56,0.85)] dark:hover:border-blue-600 dark:hover:shadow-[0_18px_45px_-18px_rgba(24,34,56,0.9)]';
+  'relative flex w-full items-center justify-between rounded-xl border border-gray-300   transition hover:border-blue-600 hover:shadow-[0_18px_45px_-16px_rgba(0,63,123,0.5)] focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-60  dark:shadow-[0_14px_40px_-18px_rgba(24,34,56,0.85)] dark:hover:border-blue-600 dark:hover:shadow-[0_18px_45px_-18px_rgba(24,34,56,0.9)]';
 
 const buttonVariantClass: Record<SelectVariant, string> = {
   default: 'min-h-[48px] px-4 py-3 text-sm font-mediuM',
@@ -10,7 +10,7 @@ const buttonVariantClass: Record<SelectVariant, string> = {
 };
 
 const listboxBaseClass =
-  'absolute left-0 right-0 z-50 mt-2 overflow-hidden rounded-xl border border-gray-300 bg-white shadow-2xl dark:border-white/10 dark:bg-zinc-800';
+  'absolute left-0 right-0 z-50 mt-2 overflow-hidden rounded-xl border border-gray-300 bg-white/10 shadow-2xl dark:bg-zinc-800';
 
 const optionBaseClass =
   'flex w-full cursor-pointer items-center justify-between gap-3 px-4 py-2 text-sm transition hover:bg-blue-600/10 focus:bg-blue-600/15 focus:outline-none dark:hover:bg-blue-600/20 dark:focus:bg-blue-600/25';

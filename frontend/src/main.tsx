@@ -6,7 +6,8 @@ import { ThemeProvider } from './hooks/use-theme';
 import { RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { DockerClientProvider } from './contexts/DockerClientContext';
-import { WindowFullscreen, WindowIsFullscreen, WindowUnfullscreen, WindowReload, WindowReloadApp } from "../wailsjs/runtime/runtime";
+import { WindowReload, WindowReloadApp } from "../wailsjs/runtime/runtime";
+import React from 'react';
 
 const container = document.getElementById('root');
 document.addEventListener('keydown', (e) => {
@@ -16,18 +17,18 @@ document.addEventListener('keydown', (e) => {
     WindowReloadApp()
   }
 });
-console.log(WindowIsFullscreen())
+
 const root = createRoot(container!);
 
 
 root.render(
-  // <React.StrictMode>
-  <AuthProvider>
-    <DockerClientProvider>
-      <ThemeProvider>
-        <RouterProvider router={router} />
-      </ThemeProvider>
-    </DockerClientProvider>
-  </AuthProvider>
-  // </React.StrictMode>
+  <React.StrictMode>
+    <AuthProvider>
+      <DockerClientProvider>
+        <ThemeProvider>
+          <RouterProvider router={router} />
+        </ThemeProvider>
+      </DockerClientProvider>
+    </AuthProvider>
+  </React.StrictMode>
 );

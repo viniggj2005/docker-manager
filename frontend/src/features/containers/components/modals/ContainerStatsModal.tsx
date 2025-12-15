@@ -94,23 +94,23 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
         <div className="grid grid-cols-2 gap-4 text-sm">
           {header ? (
             <>
-              <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
+              <div className="rounded-lg border border-gray-300 dark:bg-[#0f172a]/95 dark:backdrop-blur-2xl p-3">
                 <div className="font-medium">CPU</div>
                 <div className="text-2xl">{header.cpu}%</div>
               </div>
-              <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
+              <div className="rounded-lg border border-gray-300 dark:bg-[#0f172a]/95 dark:backdrop-blur-2xl p-3">
                 <div className="font-medium">Memória</div>
                 <div className="text-2xl">
                   {header.memoryUsage} / {header.memoryLimit} MB ({header.memoryPercentage}%)
                 </div>
               </div>
-              <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
+              <div className="rounded-lg border border-gray-300 dark:bg-[#0f172a]/95 dark:backdrop-blur-2xl p-3">
                 <div className="font-medium">Rede</div>
                 <div>
                   RX {header.rx} MB · TX {header.tx} MB
                 </div>
               </div>
-              <div className="rounded-lg border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3">
+              <div className="rounded-lg border border-gray-300 dark:bg-[#0f172a]/95 dark:backdrop-blur-2xl p-3">
                 <div className="font-medium">PIDs</div>
                 <div>{header.pids}</div>
               </div>
@@ -120,12 +120,12 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
           )}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-auto">
-          <div className="rounded-xl border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3 pb-8 max-h-[280px]">
+          <div className="rounded-xl border border-gray-300 dark:bg-[#0f172a]/95 dark:backdrop-blur-2xl p-3 pb-8 max-h-[280px]">
             <div className="mb-2 text-sm">CPU em tempo real</div>
             <CPUChart points={cpuSeries} />
           </div>
 
-          <div className="rounded-xl border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-3 pb-8 max-h-[280px]">
+          <div className="rounded-xl border border-gray-300 dark:bg-[#0f172a]/95 dark:backdrop-blur-2xl p-3 pb-8 max-h-[280px]">
             <div className="mb-2 text-sm">
               Memória em tempo real
             </div>
@@ -137,7 +137,7 @@ const ContainerStatsModal: React.FC<ContainerStatsProps> = ({ id, name, onClose 
           </div>
         </div>
         <div className="grid grid-cols-1 place-items-center mt-2">
-          <div className="rounded-xl border border-gray-300 dark:border-white/10 dark:bg-zinc-800 p-2 px-4 w-fit h-fit text-xs text-gray-500">
+          <div className="rounded-xl border border-gray-300 dark:bg-[#0f172a]/95 dark:backdrop-blur-2xl p-2 px-4 w-fit h-fit text-xs text-black dark:text-white">
             {header
               ? new Date(header.t).toLocaleTimeString('pt-BR', {
                 hour: '2-digit',

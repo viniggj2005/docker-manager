@@ -30,6 +30,8 @@ const LoginForm: React.FC = () => {
           <LuMail className="absolute left-4 z-10 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300" />
           <input
             type="email"
+            name="email"
+            autoComplete="email"
             placeholder="seu@email.com"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
@@ -46,6 +48,8 @@ const LoginForm: React.FC = () => {
           <LuLock className="absolute left-4 top-1/2 z-10 -translate-y-1/2 w-5 h-5 text-blue-300" />
           <input
             type={showPassword ? 'text' : 'password'}
+            name="password"
+            autoComplete="current-password"
             placeholder="••••••••"
             value={password}
             onChange={(event) => setPassword(event.target.value)}

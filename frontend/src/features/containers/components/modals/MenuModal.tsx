@@ -3,7 +3,6 @@ import { FaTrashCan } from 'react-icons/fa6';
 import { RiFileList2Line } from 'react-icons/ri';
 import { useTheme } from '../../../../hooks/use-theme';
 import ContainerStatsModal from './ContainerStatsModal';
-import ArrowTip from '../../../shared/components/ArrowTip';
 import React, { useEffect, useRef, useState } from 'react';
 import { FmtName } from '../../../shared/functions/TreatmentFunction';
 import InspectModal from '../../../shared/components/modals/InspectModal';
@@ -11,6 +10,7 @@ import { useDockerClient } from '../../../../contexts/DockerClientContext';
 import { ContainerProps } from '../../../../interfaces/ContainerInterfaces';
 import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
 import { MdContentPasteSearch, MdOutlineQueryStats, MdRestartAlt } from 'react-icons/md';
+import { GoTerminal } from 'react-icons/go';
 import {
   ContainerRemove,
   ContainerInspect,
@@ -26,7 +26,6 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   setMenuModal,
   onOpenTerminal,
 }) => {
-  const theme = useTheme();
   const confirmToast = useConfirmToast();
   const { selectedCredentialId } = useDockerClient();
   const modalRef = useRef<HTMLDivElement | null>(null);
@@ -51,7 +50,6 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
       const clientId = ensureClient();
       if (clientId == null) return;
       const inspectContent = await ContainerInspect(clientId, id);
-      setInspectContent(inspectContent);
       setInspectContent(
         typeof inspectContent === 'string'
           ? inspectContent
@@ -59,7 +57,7 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
       );
       iziToast.success({
         title: 'Sucesso!',
-        message: 'Os dados da imagem foram Retornados!',
+        message: 'Dados inspecionados com sucesso!',
         position: 'bottomRight',
       });
       setIsInspectOpen(true);
@@ -67,11 +65,14 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
       iziToast.error({ title: 'Erro', message: String(error), position: 'bottomRight' });
     }
   };
+
   const handleRestart = async () => {
     try {
       const clientId = ensureClient();
       if (clientId == null) return;
       await ContainerRestart(clientId, id);
+      iziToast.success({ title: 'Reiniciado', message: `Container ${name} reiniciado!`, position: 'bottomRight' });
+      setMenuModal?.(false);
     } catch (error: any) {
       iziToast.error({ title: 'Erro', message: String(error), position: 'bottomRight' });
     }
@@ -93,8 +94,8 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
     if (clientId == null) return;
     confirmToast({
       id,
-      title: `Imagem ${name} deletada!`,
-      message: `Deseja deletar a imagem: ${name} ?`,
+      title: `Excluir container?`,
+      message: `Tem certeza que deseja remover ${name}? Esta ação não pode ser desfeita.`,
       onConfirm: async () => {
         const clientId = ensureClient();
         if (clientId == null) return;
@@ -107,74 +108,69 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
 
   if (!isOpen) return null;
 
-  return (
-    <div
-      ref={modalRef}
-      className="absolute left-full  -top-14 z-20 w-fit-translate-y-1/2 border border-gray-300  rounded-xl shadow-lg"
-      role="dialog"
-      aria-label="Menu do container"
+  const MenuItem = ({
+    icon: Icon,
+    label,
+    onClick,
+    danger = false
+  }: { icon: any, label: string, onClick: () => void, danger?: boolean }) => (
+    <button
+      onClick={onClick}
+      className={`group flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium transition-all
+        ${danger
+          ? 'text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10'
+          : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white'
+        }`}
     >
-      <ArrowTip
-        position="left"
-        size={8}
-        color={`#ffffff`}
-        offset={0}
-      />
+      <Icon className={`h-4 w-4 ${danger ? 'opacity-100' : 'text-gray-400 group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-gray-300'}`} />
+      <span>{label}</span>
+    </button>
+  );
+
+  return (
+    <>
       <div
-        className="bg-white  rounded-xl shadow-lg p-3 flex flex-col items-stretch gap-2"
-        style={{ transformOrigin: 'center left' }}
+        ref={modalRef}
+        className="absolute bottom-full right-0 mb-2 min-w-[200px] origin-bottom-right rounded-xl border border-gray-100 bg-white/90 p-1.5 shadow-xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200 dark:border-white/5 dark:bg-[#1e293b]/90 z-50"
       >
-        <button
-          onClick={onOpenLogs}
-          title="Logs"
-          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 text-red-600 py-2 px-2 rounded-md"
-        >
-          <RiFileList2Line className="h-5 w-5" />
-          <span className="sm:hidden">Logs</span>
-        </button>
-        <button
-          onClick={handleDelete}
-          title="Excluir"
-          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 text-red-600 py-2 px-2 rounded-md"
-        >
-          <FaTrashCan className="w-5 h-5" />
-        </button>
-        <button
-          onClick={() => handleInspect()}
-          title="Inspecionar Container"
-          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
-        >
-          <MdContentPasteSearch className="w-6 h-6" />
-        </button>
-        <button
-          onClick={() => handleRestart()}
-          title="Restart Container"
-          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
-        >
-          <MdRestartAlt className="w-6 h-6" />
-        </button>
-        <button
-          onClick={() => {
-            onOpenTerminal();
-            setMenuModal(false);
-          }}
-          title="Terminal do Container"
-          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
-        >
-          <span className="font-mono text-xs border border-current rounded px-1">_&gt;</span>
-        </button>
-        <button
-          onClick={() => {
-            const clientId = ensureClient();
-            if (clientId == null) return;
-            setIsStatsOpen(!isStatsOpen);
-          }}
-          title="Verificar estatísticas do container"
-          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 py-2 px-2 rounded-md"
-        >
-          <MdOutlineQueryStats className="w-6 h-6" />
-        </button>
+        <div className="flex flex-col gap-0.5">
+          <MenuItem
+            icon={GoTerminal}
+            label="Terminal"
+            onClick={() => { onOpenTerminal(); setMenuModal(false); }}
+          />
+          <MenuItem
+            icon={RiFileList2Line}
+            label="Ver Logs"
+            onClick={onOpenLogs}
+          />
+          <MenuItem
+            icon={MdOutlineQueryStats}
+            label="Estatísticas"
+            onClick={() => setIsStatsOpen(true)}
+          />
+          <MenuItem
+            icon={MdContentPasteSearch}
+            label="Inspecionar"
+            onClick={handleInspect}
+          />
+
+          <div className="my-1 h-px bg-gray-100 dark:bg-white/5" />
+
+          <MenuItem
+            icon={MdRestartAlt}
+            label="Reiniciar"
+            onClick={handleRestart}
+          />
+          <MenuItem
+            icon={FaTrashCan}
+            label="Excluir"
+            onClick={handleDelete}
+            danger
+          />
+        </div>
       </div>
+
       {isInspectOpen && (
         <InspectModal
           title="Inspect do container"
@@ -183,10 +179,11 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
           onClose={() => setIsInspectOpen(false)}
         />
       )}
+
       {isStatsOpen && (
         <ContainerStatsModal id={id} name={name} onClose={() => setIsStatsOpen(false)} />
       )}
-    </div>
+    </>
   );
 };
 

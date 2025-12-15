@@ -7,6 +7,8 @@ import (
 	"net"
 	"sync"
 
+	"docker-manager-go/src/dtos"
+
 	"github.com/docker/docker/client"
 )
 
@@ -139,4 +141,31 @@ func (handlerStruct *DockerSdkHandlerStruct) Startup(ctx context.Context) {
 	for id := range handlerStruct.clients {
 		handlerStruct.contexts[id] = ctx
 	}
+}
+
+func (handlerStruct *DockerSdkHandlerStruct) GetInfo(clientId int) (dtos.SystemInfoDto, error) {
+
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return dtos.SystemInfoDto{}, err
+	}
+	info, err := cli.Info(ctx)
+	if err != nil {
+		return dtos.SystemInfoDto{}, err
+	}
+	return dtos.SystemInfoDto{
+		ID:                info.ID,
+		Name:              info.Name,
+		NCPU:              info.NCPU,
+		Images:            info.Images,
+		MemTotal:          info.MemTotal,
+		SystemTime:        info.SystemTime,
+		Containers:        info.Containers,
+		Architecture:      info.Architecture,
+		ServerVersion:     info.ServerVersion,
+		OperatingSystem:   info.OperatingSystem,
+		ContainersPaused:  info.ContainersPaused,
+		ContainersRunning: info.ContainersRunning,
+		ContainersStopped: info.ContainersStopped,
+	}, nil
 }

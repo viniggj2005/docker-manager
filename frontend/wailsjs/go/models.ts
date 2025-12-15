@@ -349,6 +349,42 @@ export namespace dtos {
 	        this.userId = source["userId"];
 	    }
 	}
+	export class SystemInfoDto {
+	    ID: string;
+	    Name: string;
+	    NCPU: number;
+	    Images: number;
+	    MemTotal: number;
+	    SystemTime: string;
+	    Containers: number;
+	    Architecture: string;
+	    ServerVersion: string;
+	    OperatingSystem: string;
+	    ContainersPaused: number;
+	    ContainersStopped: number;
+	    ContainersRunning: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new SystemInfoDto(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.ID = source["ID"];
+	        this.Name = source["Name"];
+	        this.NCPU = source["NCPU"];
+	        this.Images = source["Images"];
+	        this.MemTotal = source["MemTotal"];
+	        this.SystemTime = source["SystemTime"];
+	        this.Containers = source["Containers"];
+	        this.Architecture = source["Architecture"];
+	        this.ServerVersion = source["ServerVersion"];
+	        this.OperatingSystem = source["OperatingSystem"];
+	        this.ContainersPaused = source["ContainersPaused"];
+	        this.ContainersStopped = source["ContainersStopped"];
+	        this.ContainersRunning = source["ContainersRunning"];
+	    }
+	}
 	export class UpdateUserInputDto {
 	    nome?: string;
 	    email?: string;

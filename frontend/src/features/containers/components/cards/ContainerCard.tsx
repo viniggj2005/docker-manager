@@ -35,52 +35,93 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className="group flex flex-col gap-4 rounded-2xl border border-gray-300 bg-white p-5 shadow-sm transition hover:shadow-md text-black  ">
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div className="min-w-0">
-          <div className="relative max-w-full pr-7">
-            <div className="truncate text-xl font-medium transition hover:scale-[0.99]">
+    <div className="group relative flex flex-col gap-5 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 dark:border-white/5 dark:bg-[#0f172a]/80 dark:backdrop-blur-xl">
+      {/* Header Section */}
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <div className="mb-2 flex items-center gap-2">
+            <h3 className="truncate text-lg font-semibold tracking-tight text-gray-900 dark:text-white" title={name}>
               {name}
-            </div>
+            </h3>
 
             {!isEditing && (
               <button
                 onClick={onOpenEdit}
-                className="absolute -top-1 right-0 rounded-full border border-gray-500 bg-white p-1 shadow-md opacity-0 transition group-hover:opacity-100 hover:bg-gray-100"
-                title="Editar nome"
+                className="opacity-0 transition-opacity group-hover:opacity-100 text-gray-400 hover:text-blue-500"
+                title="Renomear container"
               >
-                <GoPencil className="h-4 w-4" />
+                <GoPencil className="h-3.5 w-3.5" />
               </button>
             )}
-
-            {isEditing && (
-              <EditContainerNameModal
-                name={name}
-                id={container.Id}
-                handleRename={onRename}
-                setEditNameModal={onCloseEdit}
-              />
-            )}
-
-            {isSeeing && <LogsModal id={container.Id} setLogsModal={onCloseLogs} />}
           </div>
 
-          <div
-            title="Imagem Docker"
-            className="mt-1 truncate text-md text-gray-500"
-          >
-            {container.Image}
+          <div className="flex items-center gap-2">
+            <span
+              className="inline-flex max-w-full items-center gap-1 rounded-md border border-gray-100 bg-gray-50 px-2 py-1 text-[10px] font-medium text-gray-600 dark:border-white/5 dark:bg-white/5 dark:text-gray-400"
+              title={container.Image}
+            >
+              <span className="truncate">{container.Image}</span>
+            </span>
           </div>
+
+          {/* Editing Overlay */}
+          {isEditing && (
+            <div className="absolute left-0 top-0 z-10 w-full p-2">
+              <div className="rounded-lg bg-white p-4 shadow-xl ring-1 ring-black/5 dark:bg-slate-800 dark:ring-white/10">
+                <EditContainerNameModal
+                  name={name}
+                  id={container.Id}
+                  handleRename={onRename}
+                  setEditNameModal={onCloseEdit}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="flex flex-wrap items-center justify-end gap-2">
-          <div className="flex-shrink-0">
-            <StatusBadge state={container.State} title={container.Status || container.State} />
-          </div>
+        <div className="flex-shrink-0">
+          <StatusBadge state={container.State} title={container.Status || container.State} />
+        </div>
+      </div>
 
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-2 gap-4 py-2">
+        <div className="space-y-1">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Criado</p>
+          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{FmtAgo(container.Created)}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Status</p>
+          <p className="truncate text-sm font-medium text-gray-700 dark:text-gray-300" title={container.Status}>{container.Status || '—'}</p>
+        </div>
+      </div>
+
+      {/* Ports Section */}
+      {container?.Ports && container.Ports.length > 0 && (
+        <div className="space-y-2 border-t border-gray-100 pt-3 dark:border-white/5">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Portas</p>
+          <div className="flex flex-wrap gap-2">
+            {container.Ports.map((port) => (
+              <div
+                key={`${port.IP}-${port.PrivatePort}-${port.Type ?? ''}`}
+                className="flex items-center gap-1.5 rounded border border-gray-200 bg-gray-50 px-2 py-1 text-[10px] font-mono text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-gray-400"
+              >
+                <span className="opacity-75">{port.PrivatePort}</span>
+                <FaLongArrowAltRight className="text-gray-400" />
+                <span className="font-semibold text-blue-600 dark:text-blue-400">{port.PublicPort}</span>
+                <span className="text-[9px] uppercase opacity-50">/{port.Type}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Footer / Actions */}
+      <div className="mt-auto flex items-center justify-between border-t border-gray-100 pt-4 dark:border-white/5">
+
+        <div className="flex gap-1">
           <button
             disabled={loading}
-            title={container.State === 'running' ? 'Parar Container' : 'Iniciar Container'}
             onClick={async () => {
               setLoading(true);
               try {
@@ -90,95 +131,55 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
                 setLoading(false);
               }
             }}
-            className={` p-1.5 rounded transition-colors scale-95 ${container.State === 'running'
-              ? 'text-red-600 hover:bg-red-200'
-              : 'text-emerald-500 hover:bg-emerald-200'
+            className={`group/btn flex h-8 w-8 items-center justify-center rounded-lg transition-all hover:scale-105 active:scale-95 ${container.State === 'running'
+              ? 'bg-rose-50 text-rose-600 hover:bg-rose-100 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20'
+              : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500/20'
               }`}
+            title={container.State === 'running' ? 'Parar' : 'Iniciar'}
           >
-            {loading ? (
-              <CgSpinner className="h-4 w-4 animate-spin text-black dark:text-white" />
-            ) : container.State === 'running' ? (
-              <CiStop1 className="h-4 w-4" />
-            ) : (
-              <CiPlay1 className="h-4 w-4" />
-            )}
-            <span className="sm:hidden">
-              {loading ? 'Carregando' : container.State === 'running' ? 'Parar' : 'Iniciar'}
-            </span>
-          </button>
-          <button
-            className="p-1.5 hover:bg-gray-100 rounded transition-colors scale-95"
-            onClick={() => navigator.clipboard.writeText(container.Id)}
-            title='Copiar ID'
-          >
-            <IoCopyOutline className="h-4 w-4" />
+            {loading ? <CgSpinner className="animate-spin" /> : container.State === 'running' ? <CiStop1 size={18} /> : <CiPlay1 size={18} />}
           </button>
 
           <button
-            title={container.State === 'paused' ? 'Despausar container' : 'Pausar Container'}
             onClick={() => onTogglePause(container.Id, container.State)}
-            className="p-1.5 hover:bg-gray-100 rounded transition-colors scale-95"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-50 text-gray-600 transition-all hover:bg-amber-100 hover:text-amber-600 active:scale-95 dark:bg-white/5 dark:text-gray-400 dark:hover:bg-amber-500/20 dark:hover:text-amber-400"
+            title={container.State === 'paused' ? 'Retomar' : 'Pausar'}
           >
-            {container.State === 'paused' ? (
-              <CiPlay1 className="h-4 w-4" />
-            ) : (
-              <CiPause1 className="h-4 w-4" />
-            )}
-            <span className="sm:hidden">
-              {container.State === 'paused' ? 'Iniciar' : 'Pausar'}
-            </span>
+            {container.State === 'paused' ? <CiPlay1 size={18} /> : <CiPause1 size={18} />}
           </button>
 
-          <div className="relative w-full sm:w-auto">
-            <button
-              title="menu"
-              onClick={() => (isOpened ? onCloseMenu() : onOpenMenu())}
-              className="p-1.5 hover:bg-gray-100 rounded transition-colors scale-95"
-            >
-              <HiOutlineDotsVertical className="h-4 w-4" />
-              <span className="sm:hidden">Ações</span>
-            </button>
-            {isOpened && (
-              <ContainersMenuModal
-                id={container.Id}
-                isOpen={!!isOpened}
-                onDeleted={onDeleted}
-                onOpenLogs={onOpenLogs}
-                setMenuModal={onCloseMenu}
-                onOpenTerminal={onOpenTerminal}
-                name={container.Names?.[0] ?? name}
-              />
-            )}
-          </div>
-        </div>
-      </div>
-      <div className="space-y-3 text-sm">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Criado</p>
-            <p className="text-sm">{FmtAgo(container.Created)}</p>
-          </div>
-          <div>
-            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Status</p>
-            <p className="text-sm">{container.Status || '—'}</p>
-          </div>
+          <button
+            onClick={() => navigator.clipboard.writeText(container.Id)}
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-50 text-gray-600 transition-all hover:bg-blue-100 hover:text-blue-600 active:scale-95 dark:bg-white/5 dark:text-gray-400 dark:hover:bg-blue-500/20 dark:hover:text-blue-400"
+            title="Copiar ID"
+          >
+            <IoCopyOutline size={16} />
+          </button>
         </div>
 
-        <div className="pt-3 border-t border-gray-100">
-          <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Portas</p>
-          <div className="space-y-1">
-            {container?.Ports?.map((port) => (
-              <div key={`${port.IP}-${port.PrivatePort}-${port.Type ?? ''}`} className="flex items-center gap-2 text-xs font-mono  whitespace-nowrap">
-                <span>{port.IP} {port.PrivatePort}</span>
-                <FaLongArrowAltRight />
-                <span>{port.PublicPort}/{port.Type}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <div className="relative flex items-center gap-1">
+          <button
+            onClick={() => (isOpened ? onCloseMenu() : onOpenMenu())}
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-white/10 dark:hover:text-white"
+          >
+            <HiOutlineDotsVertical size={18} />
+          </button>
 
-        <CardFooter id={container.Id} />
+          {isOpened && (
+            <ContainersMenuModal
+              id={container.Id}
+              isOpen={!!isOpened}
+              onDeleted={onDeleted}
+              onOpenLogs={onOpenLogs}
+              setMenuModal={onCloseMenu}
+              onOpenTerminal={onOpenTerminal}
+              name={container.Names?.[0] ?? name}
+            />
+          )}
+        </div>
       </div>
+
+      {isSeeing && <LogsModal id={container.Id} setLogsModal={onCloseLogs} />}
     </div>
   );
 };

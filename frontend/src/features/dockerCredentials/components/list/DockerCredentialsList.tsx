@@ -1,6 +1,6 @@
-import { useMemo, useEffect } from "react";
 import iziToast from 'izitoast';
 import { FiKey } from "react-icons/fi";
+import { useMemo, useEffect } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useAuth } from "../../../../contexts/AuthContext";
 import { useDockerClient } from "../../../../contexts/DockerClientContext";
@@ -57,34 +57,39 @@ const DockerCredentialsList: React.FC = () => {
                         return (
                             <div
                                 key={credential.id}
-                                className="border border-gray-200 rounded-xl p-6 text-black bg-white flex items-center justify-between"
+                                className="group flex items-center justify-between gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 dark:border-white/5 dark:bg-[#0f172a]/80 dark:backdrop-blur-xl"
                             >
-                                <div className="flex items-start gap-4">
-                                    <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
-                                        <FiKey className="w-5 h-5 text-purple-600" />
+                                <div className="flex items-center gap-4">
+                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400">
+                                        <FiKey className="h-6 w-6" />
                                     </div>
-                                    <div>
-                                        <h3 className="text-sm font-semibold">{credential.alias}</h3>
-                                        <p className="text-xs text-gray-500 dark:text-zinc-400">
-                                            {credential.description ? credential.description : "N/A"}
-                                        </p>
-                                        {credential.createdAt && (
-                                            <p className="text-gray-400 text-xs">
-                                                Criado em {new Date(credential.createdAt).toLocaleDateString('pt-BR')}
-                                            </p>
-                                        )}
+                                    <div className="space-y-0.5">
+                                        <h3 className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
+                                            {credential.alias}
+                                        </h3>
+                                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                            <span>
+                                                {credential.description ? credential.description : "N/A"}
+                                            </span>
+                                            {credential.createdAt && (
+                                                <>
+                                                    <span className="text-gray-300 dark:text-gray-700">•</span>
+                                                    <span>Criado em {new Date(credential.createdAt).toLocaleDateString('pt-BR')}</span>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <div className="flex gap-1">
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             handleDelete(credential.id, credential.alias);
                                         }}
                                         title="Excluir Conexão"
-                                        className="p-2 hover:bg-gray-100 hover:scale-90 rounded-lg transition-colors"
+                                        className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
                                     >
-                                        <FaRegTrashAlt className="text-red-600 h-5 w-5" />
+                                        <FaRegTrashAlt className="h-4 w-4" />
                                     </button>
                                 </div>
                             </div>

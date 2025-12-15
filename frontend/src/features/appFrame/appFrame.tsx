@@ -36,8 +36,8 @@ export function AppFrame() {
         flex items-center
         px-1
         rounded-t-sm
-        bg-slate-900
-        border-b border-white/10
+        bg-gradient-to-br dark:from-slate-800 dark:via-blue-900 dark:to-slate-800 from-gray-50 via-blue-50 to-purple-50
+        
         shadow-sm
         select-none
       "

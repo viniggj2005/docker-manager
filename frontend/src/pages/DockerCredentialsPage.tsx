@@ -23,7 +23,7 @@ const DockerCredentialsPage: React.FC = () => {
       <div className="mb-6">
         <button
           onClick={() => setShowNewCredentialForm(true)}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-blue-600 shadow-sm transition hover:scale-[0.99] hover:shadow-md sm:w-fit"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 px-4 py-3 text-sm font-semibold text-blue-600 shadow-sm transition hover:scale-[0.99] hover:shadow-md sm:w-fit"
         >
           <IoMdAddCircleOutline className="h-5 w-5" />
           Nova conexão

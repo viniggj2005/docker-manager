@@ -55,10 +55,22 @@ export function EpochToDateStr(created?: number) {
 
 export function classState(state: string) {
   const status = state?.toLowerCase();
-  if (status === 'paused') return 'bg-amber-100 text-amber-700';
-  if (status === 'running') return 'bg-emerald-100 text-emerald-700';
-  if (status === 'exited') return 'bg-rose-100 text-red-600';
-  return 'bg-gray-100 text-black';
+
+  const base = "border font-medium bg-opacity-10 backdrop-blur-sm";
+
+  if (status === 'paused')
+    return `${base} bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20`;
+
+  if (status === 'running')
+    return `${base} bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]`;
+
+  if (status === 'exited')
+    return `${base} bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20`;
+
+  if (status === 'restarting')
+    return `${base} bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20 animate-pulse`;
+
+  return `${base} bg-gray-500/10 text-gray-700 dark:text-gray-400 border-gray-500/20`;
 }
 
 export function BytesToMB(numberOfBytes: number) {

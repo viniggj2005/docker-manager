@@ -1,81 +1,58 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { HiOutlinePhotograph, HiOutlinePlus, HiOutlineViewGrid } from 'react-icons/hi';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import { dtos } from '../../wailsjs/go/models';
+import React, { useEffect, useState } from 'react';
+import { useDockerClient } from '../contexts/DockerClientContext';
+import StatsGrid from '../features/dashboard/components/cards/StatsGrid';
+import { GetInfo } from '../../wailsjs/go/handlers/DockerSdkHandlerStruct';
+import RecentActivity from '../features/dashboard/components/cards/RecentActivity';
+import ManagementCards from '../features/dashboard/components/cards/ManagementCards';
+import ConnectServerCard from '../features/dashboard/components/cards/ConnectServerCard';
 
 const HomePage: React.FC = () => {
-  const navigate = useNavigate();
+  const { selectedCredentialId, dockerClientId } = useDockerClient();
+  const [info, setInfo] = useState<dtos.SystemInfoDto | null>(null);
+
+  useEffect(() => {
+    const fetchInfo = async () => {
+      if (!dockerClientId || dockerClientId !== selectedCredentialId) return;
+
+      try {
+        const data = await GetInfo(dockerClientId);
+        setInfo(data);
+      } catch (error) {
+        console.error("Failed to fetch info:", error);
+        iziToast.error({
+          title: 'Erro',
+          message: `Falha ao buscar informações do sistema: ${error}`,
+          position: 'topRight'
+        });
+      }
+    };
+    fetchInfo();
+  }, [dockerClientId, selectedCredentialId]);
+
   return (
-    <div className="flex flex-1 flex-col h-full gap-8">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold">
-          Bem-vindo ao painel Docker Manager
-        </h1>
-        <p className="text-sm text-gray-500 dark:text-zinc-400">
-          Acompanhe o status dos seus containers e imagens em um só lugar.
+    <div className="max-w-6xl w-full mx-auto p-6 pb-24">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Bem-vindo ao painel Docker Manager</h1>
+        {info && <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{info.Name}</h2>}
+        <p className="text-gray-600 dark:text-white/70">
+          Acompanhe o status do seu sistema Docker em um só lugar.
         </p>
-      </header>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <article className="flex flex-col gap-4 rounded-2xl border border-gray-300 bg-white p-6 shadow-sm transition hover:border-blue-600 hover:shadow-md dark:border-white/10 dark:bg-zinc-800">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/60 text-blue-600 dark:bg-white/10">
-            <HiOutlineViewGrid className="h-6 w-6" />
-          </span>
-          <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-semibold">
-              Gerencie containers
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-zinc-400">
-              Acesse o painel completo para iniciar, pausar ou renomear containers a qualquer
-              momento.
-            </p>
+        {info && (
+          <div className="mt-2 text-xs text-gray-500 font-mono">
+            {info.OperatingSystem} - {info.ServerVersion} ({info.Architecture})
           </div>
-          <button
-            onClick={() => navigate('/containers')}
-            className="mt-auto inline-flex items-center justify-center gap-2 self-start rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow transition hover:scale-[0.99] hover:shadow-md"
-          >
-            Acessar containers
-          </button>
-        </article>
-
-        <article className="flex flex-col gap-4 rounded-2xl border border-gray-300 bg-white p-6 shadow-sm transition hover:border-blue-600 hover:shadow-md dark:border-white/10 dark:bg-zinc-800">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/60 text-blue-600 dark:bg-white/10">
-            <HiOutlinePhotograph className="h-6 w-6" />
-          </span>
-          <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-semibold">
-              Gerencie imagens
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-zinc-400">
-              Filtre e exclua imagens rapidamente para manter seu ambiente organizado.
-            </p>
-          </div>
-          <button
-            onClick={() => navigate('/images')}
-            className="mt-auto inline-flex items-center justify-center gap-2 self-start rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow transition hover:scale-[0.99] hover:shadow-md"
-          >
-            Acessar imagens
-          </button>
-        </article>
+        )}
       </div>
 
-      <div className="flex flex-col gap-3 rounded-2xl border border-dashed border-blue-600 bg-white/60 p-6 dark:border-blue-600 dark:bg-white/10 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-lg font-semibold">
-            Precisa conectar em um servidor?
-          </h2>
-          <p className="text-sm text-gray-500 dark:text-zinc-400">
-            Crie uma nova conexão SSH e gerencie seus terminais com rapidez.
-          </p>
-        </div>
-        <button
-          onClick={() => navigate('/createConnectionForm')}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow transition hover:scale-[0.99] hover:shadow-md"
-        >
-          <HiOutlinePlus className="h-5 w-5" />
-          Criar conexão SSH
-        </button>
-      </div>
+      <StatsGrid info={info} />
+      <ManagementCards />
+      <RecentActivity info={info} />
+      <ConnectServerCard />
     </div>
   );
 };
+
 export default HomePage;

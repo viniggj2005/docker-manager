@@ -80,90 +80,80 @@ const NetworkCards: React.FC<NetworkCardProps> = ({
 
   return (
     <>
-      <div className="gap-4 text-black rounded-2xl border border-gray-300 bg-white p-5 shadow-sm transition hover:shadow-md">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h3 className="mb-1 ">{Name}</h3>
-            <p className="text-xs  mb-2"></p>
+      <div className="group relative flex flex-col gap-5 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 dark:border-white/5 dark:bg-[#0f172a]/80 dark:backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-2">
+              <h3 className="truncate text-lg font-semibold tracking-tight text-gray-900 dark:text-white" title={Name}>
+                {Name}
+              </h3>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-md border border-gray-100 bg-gray-50 px-2.5 py-0.5 text-xs font-medium text-gray-600 dark:border-white/5 dark:bg-white/5 dark:text-gray-400">
+                <span className="opacity-50">Driver:</span> {Driver}
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-md border border-gray-100 bg-gray-50 px-2.5 py-0.5 text-xs font-medium text-gray-600 dark:border-white/5 dark:bg-white/5 dark:text-gray-400">
+                <span className="opacity-50">Scope:</span> {Scope}
+              </span>
+            </div>
           </div>
+
           <div className="flex gap-1">
             <button
               onClick={handleOpenInspect}
               disabled={isInspectLoading}
               title="Inspecionar rede"
-              className="p-1.5 hover:bg-gray-100 rounded transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-white/10 dark:hover:text-white"
             >
-              <FiInfo className="w-4 h-4 " />
+              <FiInfo className="h-4 w-4" />
             </button>
             <button
               onClick={() => copyToClipboard(Id)}
-              className="p-1.5 hover:bg-gray-100 rounded transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-white/10 dark:hover:text-white"
               title="Copiar ID"
             >
-              <MdContentCopy className="w-4 h-4 " />
+              <MdContentCopy className="h-4 w-4" />
             </button>
             <button
               onClick={handleDelete}
               disabled={deleteLoading}
-              className="p-1.5 hover:bg-red-50 rounded transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
               title="Remover rede"
             >
-              <FaRegTrashAlt className="w-4 h-4 text-red-600 " />
+              <FaRegTrashAlt className="h-4 w-4" />
             </button>
           </div>
         </div>
-        <div className="space-y-3 text-sm">
-          <div className="flex items-center">
-            <span className=" mr-2">Driver:</span>
-            <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">{Driver}</span>
-            <span className="text-gray-600 dark:text-gray-400 mx-2">• Scope:</span>
-            <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">{Scope}</span>
+
+        {/* Info Grid */}
+        <div className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-4 dark:border-white/5">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Subnet</p>
+            <p className="truncate text-sm font-medium text-gray-700 dark:text-gray-300 font-mono" title={mainSubnet}>{mainSubnet}</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Gateway</p>
+            <p className="truncate text-sm font-medium text-gray-700 dark:text-gray-300 font-mono" title={mainGateway}>{mainGateway}</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-100 ">
-            <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Criado</p>
-              <p className="text-sm">{createdTimestamp ? FmtAgo(createdTimestamp) : '—'}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">IPv4 / IPv6</p>
-              <p className="text-sm ">{EnableIPv4 ? 'IPv4: ativo' : 'IPv4: desativado'}
-                {' • '}
-                {EnableIPv6 ? 'IPv6: ativo' : 'IPv6: desativado'}</p>
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Configuração</p>
+            <div className="flex flex-wrap gap-2 text-xs text-gray-600 dark:text-gray-400">
+              <span className={Internal ? "text-emerald-500" : "text-gray-400"}>{Internal ? 'Internal' : 'External'}</span>
+              <span>•</span>
+              <span className={Attachable ? "text-emerald-500" : "text-gray-400"}>{Attachable ? 'Attachable' : 'Non-attachable'}</span>
+              <span>•</span>
+              <span className={Ingress ? "text-purple-500" : "text-gray-400"}>{Ingress ? 'Ingres' : 'No Ingress'}</span>
             </div>
           </div>
-
-          <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-100 ">
-            <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Interna / Attachável</p>
-              <p className="text-sm">
-                {Internal ? 'Interna' : 'Externa'}
-                {' • '}
-                {Attachable ? 'Atachável' : 'Não atachável'}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Ingress</p>
-              <p className="text-sm">{Ingress ? 'Sim' : 'Não'}</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-100">
-            <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Subnet Principal</p>
-              <p className="text-sm">{mainSubnet}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Gateway Principal</p>
-              <p className="text-sm">{mainGateway}</p>
-            </div>
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Criado</p>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{createdTimestamp ? FmtAgo(createdTimestamp) : '—'}</p>
           </div>
         </div>
 
-
-
-
-      </div >
+      </div>
 
       {isInspectOpen && (
         <InspectModal

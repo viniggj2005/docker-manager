@@ -44,6 +44,8 @@ export function DeleteNetwork(arg1:number,arg2:string):Promise<void>;
 
 export function DeleteVolume(arg1:number,arg2:string):Promise<void>;
 
+export function GetInfo(arg1:number):Promise<dtos.SystemInfoDto>;
+
 export function ImageCreate(arg1:number,arg2:dtos.ImageCreateDto):Promise<void>;
 
 export function ImagesList(arg1:number):Promise<Array<image.Summary>>;
