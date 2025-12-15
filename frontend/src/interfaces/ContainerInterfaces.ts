@@ -39,6 +39,7 @@ export interface ContainerProps {
   id: string;
   name: string;
   isOpen: boolean;
+  onOpenLogs: () => void;
   onDeleted?: () => void;
   setMenuModal: (state: boolean) => void;
   onOpenTerminal: () => void;

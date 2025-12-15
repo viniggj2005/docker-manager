@@ -3,7 +3,7 @@ import { classState } from '../../../shared/functions/TreatmentFunction';
 
 const StatusBadge: React.FC<{ state: string; title?: string }> = ({ state, title }) => (
   <span
-    className={`rounded-full px-2.5 py-1 text-md font-medium ${classState(state)}`}
+    className={`px-2 py-0.5 rounded text-xs ${classState(state)}`}
     title={title || state}
   >
     {state}

@@ -1,5 +1,6 @@
 import iziToast from 'izitoast';
 import { FaTrashCan } from 'react-icons/fa6';
+import { RiFileList2Line } from 'react-icons/ri';
 import { useTheme } from '../../../../hooks/use-theme';
 import ContainerStatsModal from './ContainerStatsModal';
 import ArrowTip from '../../../shared/components/ArrowTip';
@@ -21,6 +22,7 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   name,
   isOpen,
   onDeleted,
+  onOpenLogs,
   setMenuModal,
   onOpenTerminal,
 }) => {
@@ -108,20 +110,28 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
   return (
     <div
       ref={modalRef}
-      className="absolute left-full  -top-14 z-20 w-fit-translate-y-1/2 border border-gray-300 dark:border-white/10 rounded-xl shadow-lg"
+      className="absolute left-full  -top-14 z-20 w-fit-translate-y-1/2 border border-gray-300  rounded-xl shadow-lg"
       role="dialog"
       aria-label="Menu do container"
     >
       <ArrowTip
         position="left"
         size={8}
-        color={`${theme.theme === 'dark' ? '#27272a' : '#ffffff'} `}
+        color={`#ffffff`}
         offset={0}
       />
       <div
-        className="bg-white dark:bg-zinc-900 rounded-xl shadow-lg p-3 flex flex-col items-stretch gap-2"
+        className="bg-white  rounded-xl shadow-lg p-3 flex flex-col items-stretch gap-2"
         style={{ transformOrigin: 'center left' }}
       >
+        <button
+          onClick={onOpenLogs}
+          title="Logs"
+          className="w-full flex items-center justify-start gap-2 cursor-pointer hover:scale-95 text-red-600 py-2 px-2 rounded-md"
+        >
+          <RiFileList2Line className="h-5 w-5" />
+          <span className="sm:hidden">Logs</span>
+        </button>
         <button
           onClick={handleDelete}
           title="Excluir"
