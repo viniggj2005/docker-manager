@@ -97,3 +97,18 @@ export interface MemoryChartsProps {
   percentPoints: Point[];
   usageMBPoints: Point[];
 }
+
+export interface CreateContainerPortMapping {
+  hostPort: string;
+  containerPort: string;
+}
+
+export interface CreateContainerEnvVar {
+  key: string;
+  value: string;
+}
+
+export interface CreateContainerVolumeMapping {
+  hostPath: string;
+  containerPath: string;
+}

@@ -17,6 +17,20 @@ export namespace client {
 
 export namespace container {
 	
+	export class CreateResponse {
+	    Id: string;
+	    Warnings: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new CreateResponse(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Id = source["Id"];
+	        this.Warnings = source["Warnings"];
+	    }
+	}
 	export class MountPoint {
 	    Source: string;
 	    Destination: string;
@@ -147,6 +161,44 @@ export namespace container {
 
 export namespace dtos {
 	
+	export class ContainerCreateOptions {
+	    config: Record<string, any>;
+	    platform?: v1.Platform;
+	    hostConfig: Record<string, any>;
+	    networkingConfig: Record<string, any>;
+	    containerName: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ContainerCreateOptions(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.config = source["config"];
+	        this.platform = this.convertValues(source["platform"], v1.Platform);
+	        this.hostConfig = source["hostConfig"];
+	        this.networkingConfig = source["networkingConfig"];
+	        this.containerName = source["containerName"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class CreateDockerConnectionDto {
 	    alias: string;
 	    description: string;

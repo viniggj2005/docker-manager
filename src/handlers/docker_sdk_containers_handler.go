@@ -1,14 +1,47 @@
 package handlers
 
 import (
+	"docker-manager-go/src/dtos"
 	"docker-manager-go/src/functions"
 	"encoding/json"
 	"fmt"
 	"io"
 
 	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/network"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
+
+func (handlerStruct *DockerSdkHandlerStruct) CreateContainer(clientId int, config dtos.ContainerCreateOptions) (container.CreateResponse, error) {
+	cli, ctx, err := handlerStruct.CatchClient(clientId)
+	if err != nil {
+		return container.CreateResponse{}, err
+	}
+
+	var containerConfig container.Config
+	if config.Config != nil {
+		bytes, _ := json.Marshal(config.Config)
+		json.Unmarshal(bytes, &containerConfig)
+	}
+
+	var hostConfig container.HostConfig
+	if config.HostConfig != nil {
+		bytes, _ := json.Marshal(config.HostConfig)
+		json.Unmarshal(bytes, &hostConfig)
+	}
+
+	var networkingConfig network.NetworkingConfig
+	if config.NetworkingConfig != nil {
+		bytes, _ := json.Marshal(config.NetworkingConfig)
+		json.Unmarshal(bytes, &networkingConfig)
+	}
+
+	resp, err := cli.ContainerCreate(ctx, &containerConfig, &hostConfig, &networkingConfig, config.Platform, config.ContainerName)
+	if err != nil {
+		return container.CreateResponse{}, err
+	}
+	return resp, nil
+}
 
 func (handlerStruct *DockerSdkHandlerStruct) ContainerStart(clientId int, containerId string) error {
 	cli, ctx, err := handlerStruct.CatchClient(clientId)

@@ -58,6 +58,10 @@ export function ContainersList(arg1) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['ContainersList'](arg1);
 }
 
+export function CreateContainer(arg1, arg2) {
+  return window['go']['handlers']['DockerSdkHandlerStruct']['CreateContainer'](arg1, arg2);
+}
+
 export function CreateNetwork(arg1, arg2, arg3) {
   return window['go']['handlers']['DockerSdkHandlerStruct']['CreateNetwork'](arg1, arg2, arg3);
 }
