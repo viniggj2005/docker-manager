@@ -7,8 +7,6 @@ Aplicação desktop construída com [Wails](https://wails.io/) que une backend e
 
 A ferramenta permite autenticação de usuários, conexão segura a daemons Docker expostos com TLS, criação de sessões SSH e controle de containers, imagens e redes. Tudo é orquestrado por um backend em Go que usa SQLite para persistência e a SDK oficial do Docker para executar comandos.
 
-![Dashboard inicial da aplicação](mk\images\dashboard.png)
-
 ## Funcionalidades principais
 
 - **Autenticação e sessões**: gerenciamento de login e persistência de sessão com o `auth.ManagerStruct`. 
