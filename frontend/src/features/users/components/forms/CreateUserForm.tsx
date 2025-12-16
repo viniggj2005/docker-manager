@@ -1,12 +1,10 @@
 import iziToast from 'izitoast';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
-import { FaCheck } from 'react-icons/fa';
 import 'izitoast/dist/css/iziToast.min.css';
 import { useNavigate } from 'react-router-dom';
-import { LuLock, LuMail } from 'react-icons/lu';
-import { FiEye, FiEyeOff, FiUser } from 'react-icons/fi';
 import { createUserApi } from '../../services/UserService';
+import { Mail, User, Lock, EyeClosed, Eye, Check } from 'lucide-react';
 import { CreateUserPayload } from '../../../../interfaces/UsersInterface';
 
 const CreateUserForm: React.FC = () => {
@@ -95,7 +93,7 @@ const CreateUserForm: React.FC = () => {
           Nome completo
         </label>
         <div className="relative">
-          <FiUser className="absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
+          <User className="absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
           <input
             type="text"
             placeholder="Seu nome"
@@ -111,7 +109,7 @@ const CreateUserForm: React.FC = () => {
           Email
         </label>
         <div className="relative">
-          <LuMail className="absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
+          <Mail className="absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
           <input
             type="email"
             placeholder="seu@email.com"
@@ -127,7 +125,7 @@ const CreateUserForm: React.FC = () => {
           Senha
         </label>
         <div className="relative">
-          <LuLock className="absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
+          <Lock className="absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
           <input
             type={showPassword ? 'text' : 'password'}
             placeholder="••••••••"
@@ -142,9 +140,9 @@ const CreateUserForm: React.FC = () => {
             className="absolute right-4 top-1/2 -translate-y-1/2 text-purple-300/70 hover:text-purple-200 transition-colors"
           >
             {showPassword ? (
-              <FiEyeOff className="w-5 h-5" />
+              <EyeClosed className="w-5 h-5" />
             ) : (
-              <FiEye className="w-5 h-5" />
+              <Eye className="w-5 h-5" />
             )}
           </button>
         </div>
@@ -172,19 +170,19 @@ const CreateUserForm: React.FC = () => {
             </div>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div className={`flex items-center gap-1 ${passwordStrength.hasLength ? 'text-green-300' : 'text-white/50'}`}>
-                <FaCheck className="w-3 h-3" />
+                <Check className="w-3 h-3" />
                 <span>8+ caracteres</span>
               </div>
               <div className={`flex items-center gap-1 ${passwordStrength.hasNumber ? 'text-green-300' : 'text-white/50'}`}>
-                <FaCheck className="w-3 h-3" />
+                <Check className="w-3 h-3" />
                 <span>Número</span>
               </div>
               <div className={`flex items-center gap-1 ${passwordStrength.hasUpperCase ? 'text-green-300' : 'text-white/50'}`}>
-                <FaCheck className="w-3 h-3" />
+                <Check className="w-3 h-3" />
                 <span>Maiúscula</span>
               </div>
               <div className={`flex items-center gap-1 ${passwordStrength.hasSpecial ? 'text-green-300' : 'text-white/50'}`}>
-                <FaCheck className="w-3 h-3" />
+                <Check className="w-3 h-3" />
                 <span>Especial</span>
               </div>
             </div>
@@ -197,7 +195,7 @@ const CreateUserForm: React.FC = () => {
           Confirmar senha
         </label>
         <div className="relative">
-          <LuLock className="absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
+          <Lock className="absolute z-10 left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
           <input
             type={showConfirmPassword ? 'text' : 'password'}
             placeholder="••••••••"
@@ -212,9 +210,9 @@ const CreateUserForm: React.FC = () => {
             className="absolute right-4 top-1/2 -translate-y-1/2 text-purple-300/70 hover:text-purple-200 transition-colors"
           >
             {showConfirmPassword ? (
-              <FiEyeOff className="w-5 h-5" />
+              <EyeClosed className="w-5 h-5" />
             ) : (
-              <FiEye className="w-5 h-5" />
+              <Eye className="w-5 h-5" />
             )}
           </button>
         </div>

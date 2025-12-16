@@ -1,5 +1,4 @@
-import { Plus } from 'lucide-react';
-import { FiRefreshCw } from 'react-icons/fi';
+import { Plus, RefreshCcw } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import ContainersListView, { ContainersListFetchRef } from '../features/containers/ContainersList';
 import { CreateContainerModal } from '../features/containers/components/modals/CreateContainerModal';
@@ -29,7 +28,7 @@ const ContainersPage: React.FC = () => {
             className="px-4 py-2 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl hover:bg-gray-50 dark:hover:bg-white/10 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-200"
             title="Atualizar"
           >
-            <FiRefreshCw className="h-4 w-4" />
+            <RefreshCcw className="h-4 w-4" />
             <span className="hidden sm:inline">Atualizar</span>
           </button>
 

@@ -1,8 +1,5 @@
 import React from 'react';
-import { RxMinus } from 'react-icons/rx';
-import { TbAnchor, TbAnchorOff } from "react-icons/tb";
-import { IoMdCloseCircleOutline } from 'react-icons/io';
-import { FaRegWindowRestore, FaTerminal } from 'react-icons/fa';
+import { CircleX, Copy, Minus, Pin, PinOff, Terminal } from 'lucide-react';
 import { TerminalHeaderProps } from '../../../../interfaces/TerminalInterfaces';
 
 const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
@@ -21,7 +18,7 @@ const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
       {!docked && (
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
-            <FaTerminal className="w-5 h-5 text-white" />
+            <Terminal className="w-5 h-5 text-white" />
           </div>
 
           <div>
@@ -38,7 +35,7 @@ const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
             title={docked ? 'Desancorar (modal)' : 'Ancorar embaixo (painel)'}
             type="button"
           >
-            {docked ? <TbAnchorOff className="w-5 h-5" /> : <TbAnchor className="w-5 h-5" />}
+            {docked ? <PinOff className="w-5 h-5" /> : <Pin className="w-5 h-5" />}
           </button>
         )}
 
@@ -49,7 +46,7 @@ const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
             title="Minimizar"
             type="button"
           >
-            <RxMinus className="w-5 h-5" />
+            <Minus className="w-5 h-5" />
           </button>
         )}
 
@@ -59,7 +56,7 @@ const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
           title={maximized ? 'Restaurar' : 'Tela cheia'}
           type="button"
         >
-          {maximized ? <FaRegWindowRestore className="w-5 h-5" /> : !docked ? <FaRegWindowRestore className="w-5 h-5" /> : <></>}
+          {maximized ? <Copy className="w-5 h-5 rotate-90" /> : !docked ? <Copy className="w-5 h-5 rotate-90" /> : <></>}
         </button>
 
         <button
@@ -69,7 +66,7 @@ const TerminalModalHeader: React.FC<TerminalHeaderProps> = ({
                       hover:bg-red-600 hover:text-white hover:scale-95 transition"
           aria-label="Fechar"
         >
-          <IoMdCloseCircleOutline className="w-5 h-5" />
+          <CircleX className="w-5 h-5" />
         </button>
       </div>
     </div>

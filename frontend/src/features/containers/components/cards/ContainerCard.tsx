@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
-import { GoPencil } from 'react-icons/go';
-import { CgSpinner } from 'react-icons/cg';
 import LogsModal from '../modals/LogsModal';
-import CardFooter from './ContainerCardFooter';
 import StatusBadge from '../badges/StatusBadge';
-import { IoCopyOutline } from "react-icons/io5";
 import ContainersMenuModal from '../modals/MenuModal';
-import { HiOutlineDotsVertical } from 'react-icons/hi';
-import { CiPlay1, CiPause1, CiStop1 } from 'react-icons/ci';
 import { FmtAgo } from '../../../shared/functions/TreatmentFunction';
 import EditContainerNameModal from '../modals/EditContainerNameModal';
 import { ContainerCardProps } from '../../../../interfaces/ContainerInterfaces';
-import { FaLongArrowAltRight } from 'react-icons/fa';
+import { Copy, EllipsisVertical, LoaderCircle, MoveRight, Pause, Pencil, Play, Square } from 'lucide-react';
+
 
 const ContainerCard: React.FC<ContainerCardProps> = ({
   name,
@@ -36,7 +31,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
 
   return (
     <div className="group relative flex flex-col gap-5 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 dark:border-white/5 dark:bg-[#0f172a]/80 dark:backdrop-blur-xl">
-      {/* Header Section */}
+
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <div className="mb-2 flex items-center gap-2">
@@ -50,7 +45,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
                 className="opacity-0 transition-opacity group-hover:opacity-100 text-gray-400 hover:text-blue-500"
                 title="Renomear container"
               >
-                <GoPencil className="h-3.5 w-3.5" />
+                <Pencil className="h-3.5 w-3.5" />
               </button>
             )}
           </div>
@@ -64,7 +59,6 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
             </span>
           </div>
 
-          {/* Editing Overlay */}
           {isEditing && (
             <div className="absolute left-0 top-0 z-10 w-full p-2">
               <div className="rounded-lg bg-white p-4 shadow-xl ring-1 ring-black/5 dark:bg-slate-800 dark:ring-white/10">
@@ -84,7 +78,6 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
         </div>
       </div>
 
-      {/* Metrics Grid */}
       <div className="grid grid-cols-2 gap-4 py-2">
         <div className="space-y-1">
           <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Criado</p>
@@ -96,7 +89,6 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
         </div>
       </div>
 
-      {/* Ports Section */}
       {container?.Ports && container.Ports.length > 0 && (
         <div className="space-y-2 border-t border-gray-100 pt-3 dark:border-white/5">
           <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Portas</p>
@@ -107,7 +99,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
                 className="flex items-center gap-1.5 rounded border border-gray-200 bg-gray-50 px-2 py-1 text-[10px] font-mono text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-gray-400"
               >
                 <span className="opacity-75">{port.PrivatePort}</span>
-                <FaLongArrowAltRight className="text-gray-400" />
+                <MoveRight className="text-gray-400" />
                 <span className="font-semibold text-blue-600 dark:text-blue-400">{port.PublicPort}</span>
                 <span className="text-[9px] uppercase opacity-50">/{port.Type}</span>
               </div>
@@ -116,7 +108,6 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
         </div>
       )}
 
-      {/* Footer / Actions */}
       <div className="mt-auto flex items-center justify-between border-t border-gray-100 pt-4 dark:border-white/5">
 
         <div className="flex gap-1">
@@ -137,7 +128,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
               }`}
             title={container.State === 'running' ? 'Parar' : 'Iniciar'}
           >
-            {loading ? <CgSpinner className="animate-spin" /> : container.State === 'running' ? <CiStop1 size={18} /> : <CiPlay1 size={18} />}
+            {loading ? <LoaderCircle className="animate-spin" /> : container.State === 'running' ? <Square size={18} /> : <Play size={18} />}
           </button>
 
           <button
@@ -145,7 +136,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
             className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-50 text-gray-600 transition-all hover:bg-amber-100 hover:text-amber-600 active:scale-95 dark:bg-white/5 dark:text-gray-400 dark:hover:bg-amber-500/20 dark:hover:text-amber-400"
             title={container.State === 'paused' ? 'Retomar' : 'Pausar'}
           >
-            {container.State === 'paused' ? <CiPlay1 size={18} /> : <CiPause1 size={18} />}
+            {container.State === 'paused' ? <Play size={18} /> : <Pause size={18} />}
           </button>
 
           <button
@@ -153,7 +144,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
             className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-50 text-gray-600 transition-all hover:bg-blue-100 hover:text-blue-600 active:scale-95 dark:bg-white/5 dark:text-gray-400 dark:hover:bg-blue-500/20 dark:hover:text-blue-400"
             title="Copiar ID"
           >
-            <IoCopyOutline size={16} />
+            <Copy size={16} />
           </button>
         </div>
 
@@ -162,7 +153,7 @@ const ContainerCard: React.FC<ContainerCardProps> = ({
             onClick={() => (isOpened ? onCloseMenu() : onOpenMenu())}
             className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-white/10 dark:hover:text-white"
           >
-            <HiOutlineDotsVertical size={18} />
+            <EllipsisVertical size={18} />
           </button>
 
           {isOpened && (

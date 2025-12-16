@@ -1,4 +1,4 @@
-import { IoMdArrowBack } from 'react-icons/io';
+import { CornerUpLeft } from 'lucide-react';
 
 const GoBackButton: React.FC<{ onGoBack?: () => void }> = ({ onGoBack }) => {
   const goBack = () => {
@@ -15,7 +15,7 @@ const GoBackButton: React.FC<{ onGoBack?: () => void }> = ({ onGoBack }) => {
         className="inline-flex items-center gap-2 rounded-lg border border-gray-300 dark:border-white/10 px-3 py-2 text-sm hover:scale-[0.98]"
         aria-label="Voltar"
       >
-        <IoMdArrowBack className="h-5 w-5" />
+        <CornerUpLeft className="h-5 w-5" />
         <span className="hidden sm:inline">Voltar</span>
       </button>
     </>

@@ -1,6 +1,6 @@
+import { Plus } from 'lucide-react';
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { IoMdAddCircleOutline } from 'react-icons/io';
 import SshConnectionList from '../features/terminal/components/list/SshConnectionList';
 import SshConnectionModal from '../features/terminal/components/modals/CreateSshConnectionModal';
 
@@ -40,9 +40,9 @@ const TerminalFormPage: React.FC = () => {
 
       <button
         onClick={() => setOpen(true)}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 px-4 py-3 text-sm font-semibold text-blue-600 shadow-sm transition hover:scale-[0.99] hover:shadow-md sm:w-fit"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:scale-[0.99] hover:bg-blue-700 hover:shadow-md sm:w-fit"
       >
-        <IoMdAddCircleOutline className="h-5 w-5" />
+        <Plus className="h-5 w-5" />
         Nova conexão
       </button>
 

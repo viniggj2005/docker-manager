@@ -1,28 +1,28 @@
-import React, { useEffect, useRef } from 'react';
-import { IoMdCloseCircleOutline } from 'react-icons/io';
+import { CircleX } from 'lucide-react';
 import { createPortal } from 'react-dom';
+import React, { useEffect, useRef } from 'react';
 
 export interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
     title: string;
+    isOpen: boolean;
+    className?: string;
+    onClose: () => void;
     description?: string;
-    children: React.ReactNode;
     icon?: React.ReactNode;
     footer?: React.ReactNode;
-    size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
     theme?: 'light' | 'dark';
-    className?: string;
+    children: React.ReactNode;
+    size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
 }
 
 export const Modal: React.FC<ModalProps> = ({
-    isOpen,
-    onClose,
-    title,
-    description,
-    children,
     icon,
+    title,
+    isOpen,
     footer,
+    onClose,
+    children,
+    description,
     size = 'md',
     className = '',
 }) => {
@@ -96,7 +96,7 @@ export const Modal: React.FC<ModalProps> = ({
                         title="Fechar"
                         aria-label="Fechar modal"
                     >
-                        <IoMdCloseCircleOutline className="h-5 w-5" />
+                        <CircleX className="h-5 w-5" />
                     </button>
                 </div>
 

@@ -3,8 +3,8 @@ import { navItems } from './SidebarItems';
 import { NavLink } from 'react-router-dom';
 import appIcon from '../../../../assets/images/appicon.png';
 import ToggleThemeButton from '../buttons/ToggleThemeButton';
+import { ChevronLeft, ChevronRight, CircleX } from 'lucide-react';
 import { SidebarProps } from '../../../../interfaces/SharedInterfaces';
-import { HiOutlineX, HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import DockerCredentialSelector from '../../../dockerCredentials/components/DockerCredentialSelector';
 
 const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCollapse }) => {
@@ -52,7 +52,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition hover:bg-white/60 dark:border-white/10 dark:text-white lg:hidden"
             aria-label="Fechar menu"
           >
-            <HiOutlineX className="h-5 w-5" />
+            <CircleX className="h-5 w-5" />
           </button>
 
           <button
@@ -62,9 +62,9 @@ const Sidebar: React.FC<SidebarProps> = ({ open, collapsed, onClose, onToggleCol
             title={collapsed ? 'Expandir menu' : 'Recolher menu'}
           >
             {collapsed ? (
-              <HiOutlineChevronRight className="h-5 w-5" />
+              <ChevronRight className="h-5 w-5" />
             ) : (
-              <HiOutlineChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-5 w-5" />
             )}
           </button>
         </div>

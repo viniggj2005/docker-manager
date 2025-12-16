@@ -1,10 +1,8 @@
 import React from 'react';
-import { FaRegTrashAlt } from 'react-icons/fa';
-import { FiSearch, FiGrid, FiList } from 'react-icons/fi';
-import { HiOutlineWrenchScrewdriver } from "react-icons/hi2";
 import { useDockerClient } from '../../../../contexts/DockerClientContext';
 import { ToolbarProps } from '../../../../interfaces/ContainerImagesInterfaces';
 import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
+import { Blocks, LayoutGrid, Search, TextAlignJustify, Trash2 } from 'lucide-react';
 import { PruneImages } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
 
 const Toolbar: React.FC<ToolbarProps> = ({
@@ -32,7 +30,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   return (
     <div className="mb-6 flex items-center justify-between gap-4">
       <div className="flex-1 max-w-md relative">
-        <FiSearch className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+        <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
         <input
           type="text"
           placeholder="Buscar por nome, tag, ID ou label"
@@ -48,7 +46,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
           disabled={disabled}
           className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:opacity-90 disabled:opacity-50 text-sm transition-colors whitespace-nowrap"
         >
-          <p className='flex items-center gap-2'><HiOutlineWrenchScrewdriver className='h-5 w-5' />
+          <p className='flex items-center gap-2'><Blocks className='h-5 w-5' />
             Construir Imagem</p>
         </button>
 
@@ -61,7 +59,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
             }`}
           title="Grade"
         >
-          <FiGrid className="h-5 w-5" />
+          <LayoutGrid className="h-5 w-5" />
         </button>
         <button
           onClick={() => !disabled && setView('table')}
@@ -72,7 +70,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
             }`}
           title="Tabela"
         >
-          <FiList className="h-5 w-5" />
+          <TextAlignJustify className="h-5 w-5" />
         </button>
         <button
           onClick={handleDelete}
@@ -80,7 +78,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
           className={`p-2  hover:scale-90 rounded-lg items-center justify-center text-gray-400 transition-all hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"`}
           title="Tabela"
         >
-          <FaRegTrashAlt className="h-5 w-5" />
+          <Trash2 className="h-5 w-5" />
         </button>
       </div>
     </div>

@@ -1,8 +1,6 @@
 import React from 'react';
-import { Activity, Image, HardDrive, Network } from 'lucide-react';
 import { dtos } from '../../../../../wailsjs/go/models';
-import { BsCpu } from "react-icons/bs";
-import { LuMemoryStick } from "react-icons/lu";
+import { Activity, Image, MemoryStick, Cpu } from 'lucide-react';
 
 interface StatsGridProps {
     info: dtos.SystemInfoDto | null;
@@ -12,8 +10,8 @@ const StatsGrid: React.FC<StatsGridProps> = ({ info }) => {
     const stats = [
         { label: 'Containers Ativos', value: info?.ContainersRunning ?? '0', icon: Activity, color: 'from-green-400 to-emerald-600' },
         { label: 'Imagens', value: info?.Images ?? '0', icon: Image, color: 'from-blue-400 to-blue-600' },
-        { label: 'CPUs', value: info?.NCPU ?? '0', icon: BsCpu, color: 'from-orange-400 to-orange-600' },
-        { label: 'Memória (GB)', value: info?.MemTotal ? (info.MemTotal / (1024 * 1024 * 1024)).toFixed(2) : '0', icon: LuMemoryStick, color: 'from-purple-400 to-purple-600' },
+        { label: 'CPUs', value: info?.NCPU ?? '0', icon: Cpu, color: 'from-orange-400 to-orange-600' },
+        { label: 'Memória (GB)', value: info?.MemTotal ? (info.MemTotal / (1024 * 1024 * 1024)).toFixed(2) : '0', icon: MemoryStick, color: 'from-purple-400 to-purple-600' },
     ];
 
     return (

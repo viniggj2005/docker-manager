@@ -1,11 +1,9 @@
-import React, { useEffect, useMemo } from 'react';
-import { Modal } from '../../../shared/components/modals/Modal';
+import React, { useMemo } from 'react';
+import { FilePen } from 'lucide-react';
 import { toBase64 } from '../../functions/TreatmentFunctions';
+import { Modal } from '../../../shared/components/modals/Modal';
 import EditSshConnectionForm from '../forms/EditSshConnectionForm';
-import {
-  CreateSshConnectionInterface,
-  EditSshConnectionModalProps,
-} from '../../../../interfaces/TerminalInterfaces';
+import { EditSshConnectionModalProps, CreateSshConnectionInterface } from '../../../../interfaces/TerminalInterfaces';
 
 const EditSshConnectionModal: React.FC<EditSshConnectionModalProps> = ({
   open,
@@ -35,7 +33,7 @@ const EditSshConnectionModal: React.FC<EditSshConnectionModalProps> = ({
       onClose={onClose}
       title="Editar conexão SSH"
       description="modifique os dados necessários"
-      icon={<span className="inline-block h-2 w-2 rounded-full bg-blue-500" />}
+      icon={<FilePen className="w-5 h-5 text-blue-500" />}
     >
       <div className="pb-2">
         <EditSshConnectionForm

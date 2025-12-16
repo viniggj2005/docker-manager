@@ -1,6 +1,6 @@
 import iziToast from 'izitoast';
 import Convert from 'ansi-to-html';
-import { FaFolderOpen } from 'react-icons/fa';
+import { FolderOpen } from 'lucide-react';
 import React, { useEffect, useState, useRef } from 'react';
 import { GetFilePath } from '../../../../../wailsjs/go/main/App';
 import TextField from '../../../login/components/fields/TextField';
@@ -133,7 +133,7 @@ const ImageBuildForm: React.FC<ImageBuildFormProps> = ({ clientId, onClose, onSu
                         className="mt-1 flex items-center justify-center rounded-xl bg-gray-100 px-4 text-black hover:brightness-95 dark:bg-white/10 dark:text-white h-[42px]"
                         title="Selecionar Dockerfile"
                     >
-                        <FaFolderOpen className="h-5 w-5" />
+                        <FolderOpen className="h-5 w-5" />
                     </button>
                 </div>
             </div>

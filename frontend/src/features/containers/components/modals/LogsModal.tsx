@@ -1,5 +1,5 @@
 import iziToast from 'izitoast';
-import { FiSearch } from 'react-icons/fi';
+import { Search } from 'lucide-react';
 import 'izitoast/dist/css/iziToast.min.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { Modal } from '../../../shared/components/modals/Modal';
@@ -83,7 +83,7 @@ const LogsModal: React.FC<LogsProps> = ({ id, setLogsModal }) => {
       <div className="flex flex-col h-full">
         <div className="flex items-center gap-2 mb-4 px-1">
           <div className="relative w-full">
-            <FiSearch className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search className="pointer-events-none z-10 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               value={filter}
               onChange={(event) => setFilter(event.target.value)}

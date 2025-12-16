@@ -1,53 +1,45 @@
-import {
-  HiOutlineCube,
-  HiOutlineHome,
-  HiOutlineServer,
-  HiOutlinePhotograph,
-} from 'react-icons/hi';
-import { FiKey } from "react-icons/fi";
-import { PiNetworkBold } from "react-icons/pi";
-import { RiHardDrive3Line } from "react-icons/ri";
+import { Box, HardDrive, Key, Network, Server, Image, LayoutDashboard } from 'lucide-react';
 export const navItems = [
   {
-    label: 'Painel',
+    label: 'Dashboard',
     description: 'Visão geral dos contêineres',
     to: '/home',
-    icon: HiOutlineHome,
+    icon: LayoutDashboard,
   },
   {
     label: 'Networks',
     description: 'Visão das redes do docker',
     to: '/networks',
-    icon: PiNetworkBold,
+    icon: Network,
   },
   {
     label: 'Volumes',
     description: 'Gerencie volumes Docker',
     to: '/volumes',
-    icon: RiHardDrive3Line,
+    icon: HardDrive,
   },
   {
     label: 'Containers',
     description: 'Gerencie contêineres locais',
     to: '/containers',
-    icon: HiOutlineCube,
+    icon: Box,
   },
   {
     label: 'Imagens Docker',
     description: 'Organize suas imagens',
     to: '/images',
-    icon: HiOutlinePhotograph,
+    icon: Image,
   },
   {
     label: 'Credenciais Docker',
     description: 'Gerencie conexões TLS do Docker',
     to: '/docker-credentials',
-    icon: FiKey,
+    icon: Key,
   },
   {
     label: 'Conexões SSH',
     description: 'Acesse servidores remotos',
     to: '/createConnectionForm',
-    icon: HiOutlineServer,
+    icon: Server,
   },
 ];

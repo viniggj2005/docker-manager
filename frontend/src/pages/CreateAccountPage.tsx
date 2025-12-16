@@ -1,10 +1,9 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import appIcon from '../assets/images/appicon.png';
+import { Container, Layers, Server } from 'lucide-react';
 import CreateUserForm from '../features/users/components/forms/CreateUserForm';
-import { motion } from 'framer-motion';
-import { GoContainer } from 'react-icons/go';
-import { LuLayers, LuServer } from 'react-icons/lu';
 const CreateAccountPage: React.FC = () => {
   const navigate = useNavigate();
 
@@ -21,7 +20,7 @@ const CreateAccountPage: React.FC = () => {
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-10 right-20 text-purple-400/20"
         >
-          <GoContainer size={90} />
+          <Container size={90} />
         </motion.div>
 
         <motion.div
@@ -32,7 +31,7 @@ const CreateAccountPage: React.FC = () => {
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
           className="absolute bottom-10 left-10 text-blue-400/20"
         >
-          <LuLayers size={110} />
+          <Layers size={110} />
         </motion.div>
 
         <motion.div
@@ -43,7 +42,7 @@ const CreateAccountPage: React.FC = () => {
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-1/2 left-20 text-cyan-400/20"
         >
-          <LuServer size={70} />
+          <Server size={70} />
         </motion.div>
       </div>
 

@@ -1,9 +1,7 @@
 import iziToast from 'izitoast';
 import React, { useState } from 'react';
-import { FaTag } from 'react-icons/fa6';
-import { FaRegTrashAlt } from 'react-icons/fa';
 import { DockerImageIcon } from '../../../shared/Icons';
-import { MdContentCopy, MdContentPasteSearch } from 'react-icons/md';
+import { BookSearch, Copy, Tag, Trash2 } from 'lucide-react';
 import { copyToClipboard } from '../../../shared/functions/clipboard';
 import InspectModal from '../../../shared/components/modals/InspectModal';
 import { useDockerClient } from '../../../../contexts/DockerClientContext';
@@ -80,7 +78,7 @@ const ImageCard: React.FC<ImageProps> = ({ image, onDeleted }) => {
             </h3>
             <div className="flex flex-wrap gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-md border border-blue-100 bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-400">
-                <FaTag className="h-3 w-3" />
+                <Tag className="h-3 w-3" />
                 {tag}
               </span>
             </div>
@@ -93,14 +91,14 @@ const ImageCard: React.FC<ImageProps> = ({ image, onDeleted }) => {
             className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-white/10 dark:hover:text-white"
             title="Inspecionar"
           >
-            <MdContentPasteSearch className="h-4 w-4" />
+            <BookSearch className="h-4 w-4" />
           </button>
           <button
             onClick={handleDelete}
             className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
             title="Excluir"
           >
-            <FaRegTrashAlt className="h-4 w-4" />
+            <Trash2 className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -124,14 +122,14 @@ const ImageCard: React.FC<ImageProps> = ({ image, onDeleted }) => {
           onClick={() => copyToClipboard(id.replace('sha256:', ''), 'ID copiador')}
           className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-gray-50 py-2 text-xs font-medium text-gray-600 transition-all hover:bg-gray-100 active:scale-95 dark:border-white/10 dark:bg-white/5 dark:text-gray-400 dark:hover:bg-white/10"
         >
-          <MdContentCopy className="h-3.5 w-3.5" />
+          <Copy className="h-3.5 w-3.5" />
           Copiar ID
         </button>
         <button
           onClick={() => copyToClipboard(`${name}:${tag}`, 'Nome:Tag copiado')}
           className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-gray-50 py-2 text-xs font-medium text-gray-600 transition-all hover:bg-gray-100 active:scale-95 dark:border-white/10 dark:bg-white/5 dark:text-gray-400 dark:hover:bg-white/10"
         >
-          <MdContentCopy className="h-3.5 w-3.5" />
+          <Copy className="h-3.5 w-3.5" />
           Copiar Tag
         </button>
       </div>

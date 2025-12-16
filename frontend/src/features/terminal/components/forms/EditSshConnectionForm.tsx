@@ -4,10 +4,7 @@ import { FileUploader } from 'react-drag-drop-files';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { toBase64 } from '../../functions/TreatmentFunctions';
 import { TerminalServices } from '../../services/TerminalServices';
-import {
-  EditSshConnectionFormProps,
-  CreateSshConnectionInterface,
-} from '../../../../interfaces/TerminalInterfaces';
+import { EditSshConnectionFormProps, CreateSshConnectionInterface } from '../../../../interfaces/TerminalInterfaces';
 
 const labelBase = 'text-xs font-medium text-zinc-400';
 

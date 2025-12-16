@@ -1,7 +1,6 @@
 import iziToast from 'izitoast';
-import { FiKey } from "react-icons/fi";
 import { useMemo, useEffect } from "react";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { Key, Trash2 } from 'lucide-react';
 import { useAuth } from "../../../../contexts/AuthContext";
 import { useDockerClient } from "../../../../contexts/DockerClientContext";
 import { DockerCredentialService } from "../../services/DockerCredentialService";
@@ -61,7 +60,7 @@ const DockerCredentialsList: React.FC = () => {
                             >
                                 <div className="flex items-center gap-4">
                                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400">
-                                        <FiKey className="h-6 w-6" />
+                                        <Key className="h-6 w-6" />
                                     </div>
                                     <div className="space-y-0.5">
                                         <h3 className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
@@ -89,7 +88,7 @@ const DockerCredentialsList: React.FC = () => {
                                         title="Excluir Conexão"
                                         className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
                                     >
-                                        <FaRegTrashAlt className="h-4 w-4" />
+                                        <Trash2 className="h-4 w-4" />
                                     </button>
                                 </div>
                             </div>

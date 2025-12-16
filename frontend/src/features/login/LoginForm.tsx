@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
-import { LuMail, LuLock } from 'react-icons/lu';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
+import { Mail, Lock, Eye, EyeClosed } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
@@ -27,7 +26,7 @@ const LoginForm: React.FC = () => {
           Email
         </label>
         <div className="relative">
-          <LuMail className="absolute left-4 z-10 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300" />
+          <Mail className="absolute left-4 z-10 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300" />
           <input
             type="email"
             name="email"
@@ -45,7 +44,7 @@ const LoginForm: React.FC = () => {
           Senha
         </label>
         <div className="relative">
-          <LuLock className="absolute left-4 top-1/2 z-10 -translate-y-1/2 w-5 h-5 text-blue-300" />
+          <Lock className="absolute left-4 top-1/2 z-10 -translate-y-1/2 w-5 h-5 text-blue-300" />
           <input
             type={showPassword ? 'text' : 'password'}
             name="password"
@@ -62,9 +61,9 @@ const LoginForm: React.FC = () => {
             className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-300/70 hover:text-blue-200 transition-colors"
           >
             {showPassword ? (
-              <FiEyeOff className="w-5 h-5" />
+              <EyeClosed className="w-5 h-5" />
             ) : (
-              <FiEye className="w-5 h-5" />
+              <Eye className="w-5 h-5" />
             )}
           </button>
         </div>

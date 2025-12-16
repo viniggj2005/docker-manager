@@ -1,7 +1,4 @@
 import iziToast from 'izitoast';
-import { FaTrashCan } from 'react-icons/fa6';
-import { RiFileList2Line } from 'react-icons/ri';
-import { useTheme } from '../../../../hooks/use-theme';
 import ContainerStatsModal from './ContainerStatsModal';
 import React, { useEffect, useRef, useState } from 'react';
 import { FmtName } from '../../../shared/functions/TreatmentFunction';
@@ -9,13 +6,8 @@ import InspectModal from '../../../shared/components/modals/InspectModal';
 import { useDockerClient } from '../../../../contexts/DockerClientContext';
 import { ContainerProps } from '../../../../interfaces/ContainerInterfaces';
 import { useConfirmToast } from '../../../shared/components/toasts/ConfirmToast';
-import { MdContentPasteSearch, MdOutlineQueryStats, MdRestartAlt } from 'react-icons/md';
-import { GoTerminal } from 'react-icons/go';
-import {
-  ContainerRemove,
-  ContainerInspect,
-  ContainerRestart,
-} from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
+import { BookSearch, ChartSpline, ClipboardList, RotateCcw, SquareTerminal, Trash2 } from 'lucide-react';
+import { ContainerRemove, ContainerInspect, ContainerRestart } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
 
 const ContainersMenuModal: React.FC<ContainerProps> = ({
   id,
@@ -135,22 +127,22 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
       >
         <div className="flex flex-col gap-0.5">
           <MenuItem
-            icon={GoTerminal}
+            icon={SquareTerminal}
             label="Terminal"
             onClick={() => { onOpenTerminal(); setMenuModal(false); }}
           />
           <MenuItem
-            icon={RiFileList2Line}
+            icon={ClipboardList}
             label="Ver Logs"
             onClick={onOpenLogs}
           />
           <MenuItem
-            icon={MdOutlineQueryStats}
+            icon={ChartSpline}
             label="Estatísticas"
             onClick={() => setIsStatsOpen(true)}
           />
           <MenuItem
-            icon={MdContentPasteSearch}
+            icon={BookSearch}
             label="Inspecionar"
             onClick={handleInspect}
           />
@@ -158,12 +150,12 @@ const ContainersMenuModal: React.FC<ContainerProps> = ({
           <div className="my-1 h-px bg-gray-100 dark:bg-white/5" />
 
           <MenuItem
-            icon={MdRestartAlt}
+            icon={RotateCcw}
             label="Reiniciar"
             onClick={handleRestart}
           />
           <MenuItem
-            icon={FaTrashCan}
+            icon={Trash2}
             label="Excluir"
             onClick={handleDelete}
             danger

@@ -1,4 +1,7 @@
-import { IoMdAddCircleOutline } from 'react-icons/io';
+
+import iziToast from 'izitoast';
+import { Plus } from 'lucide-react';
+import 'izitoast/dist/css/iziToast.min.css';
 import { NetworkItem } from '../interfaces/NetworkInterfaces';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDockerClient } from '../contexts/DockerClientContext';
@@ -24,6 +27,11 @@ const NetworksPage: React.FC = () => {
       setNetworks(Array.isArray(result) ? result : []);
     } catch (error) {
       console.error('Erro ao carregar redes Docker:', error);
+      iziToast.error({
+        title: 'Erro',
+        message: 'Erro ao carregar redes Docker',
+        position: 'topRight',
+      });
       setError('Erro ao carregar redes Docker');
     } finally {
       setLoading(false);
@@ -36,7 +44,7 @@ const NetworksPage: React.FC = () => {
   }, [selectedCredentialId, credentialsLoading, connecting, fetchNetworks]);
 
   const handleDeleted = (networkId: string) => {
-    setNetworks((prev) => prev.filter((network) => network.Id !== networkId));
+    setNetworks((previousNetworks) => previousNetworks.filter((network) => network.Id !== networkId));
   };
 
   const showStatusMessage = (message: string, isError = false) => (
@@ -65,9 +73,9 @@ const NetworksPage: React.FC = () => {
 
         <button
           onClick={() => setOpenCreateModal(true)}
-          className="inline-flex w-full items-center mb-3 justify-center gap-2 rounded-xl   bg-white/10 px-4 py-3 text-sm font-semibold text-blue-600 shadow-sm transition hover:scale-[0.99] hover:shadow-md sm:w-fit"
+          className="mb-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:scale-[0.99] hover:bg-blue-700 hover:shadow-md sm:w-fit"
         >
-          <IoMdAddCircleOutline className="h-5 w-5" />
+          <Plus className="h-5 w-5" />
           Nova rede
         </button>
 

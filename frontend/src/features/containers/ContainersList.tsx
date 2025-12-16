@@ -1,17 +1,11 @@
-import ContainerCard from './components/cards/ContainerCard';
 import iziToast from 'izitoast';
+import ContainerCard from './components/cards/ContainerCard';
+import { useTerminalStore } from '../terminal/TerminalStore';
 import { FmtName } from '../shared/functions/TreatmentFunction';
 import { ContainerItem } from '../../interfaces/ContainerInterfaces';
 import { useDockerClient } from '../../contexts/DockerClientContext';
-import React, { useCallback, useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
-import {
-  getContainers,
-  stopContainer,
-  startContainer,
-  renameContainer,
-  toggleContainerState,
-} from './services/ContainersService';
-import { useTerminalStore } from '../terminal/TerminalStore';
+import { useCallback, useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
+import { getContainers, stopContainer, startContainer, renameContainer, toggleContainerState } from './services/ContainersService';
 
 export interface ContainersListFetchRef {
   refresh: () => Promise<void>;
@@ -22,11 +16,8 @@ const ContainersListView = forwardRef<ContainersListFetchRef>((_, ref) => {
   const [LogsModalId, setLogsModalId] = useState<string | null>(null);
   const [MenuModalId, setMenuModalId] = useState<string | null>(null);
   const [containers, setcontainers] = useState<ContainerItem[] | null>(null);
-
   const [editNameModalId, setEditNameModalId] = useState<string | null>(null);
   const { selectedCredentialId, loading: credentialsLoading, connecting } = useDockerClient();
-
-
 
   const fetchContainers = useCallback(async () => {
     if (selectedCredentialId == null) {

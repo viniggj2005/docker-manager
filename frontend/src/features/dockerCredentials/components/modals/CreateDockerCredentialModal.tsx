@@ -1,11 +1,11 @@
 import iziToast from "izitoast";
-import React, { useState } from "react";
 import { Shield } from "lucide-react";
+import React, { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
-import { DockerCredentialService } from "../../services/DockerCredentialService";
-import { CreateDockerCredentialModalProps } from "../../../../interfaces/DockerCredentialInterfaces";
 import { Modal } from "../../../shared/components/modals/Modal";
 import { ModalButton } from "../../../shared/components/modals/ModalButton";
+import { DockerCredentialService } from "../../services/DockerCredentialService";
+import { CreateDockerCredentialModalProps } from "../../../../interfaces/DockerCredentialInterfaces";
 
 export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalProps> = ({
   open,

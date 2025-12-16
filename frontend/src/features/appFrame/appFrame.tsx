@@ -1,13 +1,7 @@
-import {
-  Quit,
-  WindowMinimise,
-  WindowIsMaximised,
-  WindowToggleMaximise,
-} from "../../../wailsjs/runtime/runtime";
 import { useEffect, useState } from "react";
-import { FaRegWindowRestore } from "react-icons/fa";
+import { CircleX, Copy, Minus } from "lucide-react";
 import appIcon from "../../assets/images/appicon.png";
-import { IoIosRemoveCircleOutline, IoMdCloseCircleOutline } from "react-icons/io";
+import { Quit, WindowMinimise, WindowIsMaximised, WindowToggleMaximise } from "../../../wailsjs/runtime/runtime";
 
 export function AppFrame() {
   const [maximized, setMaximized] = useState(false);
@@ -75,7 +69,7 @@ export function AppFrame() {
           "
           aria-label="Minimizar"
         >
-          <IoIosRemoveCircleOutline className="w-6 h-6" />
+          <Minus className="w-6 h-6" />
         </button>
 
         <button
@@ -89,7 +83,7 @@ export function AppFrame() {
           "
           aria-label={maximized ? "Restaurar" : "Maximizar"}
         >
-          <FaRegWindowRestore className="w-5 h-5" />
+          <Copy className="w-5 h-5 rotate-90" />
         </button>
 
         <button
@@ -103,7 +97,7 @@ export function AppFrame() {
           "
           aria-label="Fechar"
         >
-          <IoMdCloseCircleOutline className="w-6 h-6" />
+          <CircleX className="w-6 h-6" />
         </button>
       </div>
     </div>

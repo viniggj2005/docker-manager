@@ -1,6 +1,6 @@
+import { Modal } from './Modal';
 import React, { useEffect, useRef } from 'react';
 import { InspectProps } from '../../../../interfaces/SharedInterfaces';
-import { Modal } from './Modal';
 
 const InspectModal: React.FC<InspectProps> = ({ name, data, title, onClose }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -12,10 +12,6 @@ const InspectModal: React.FC<InspectProps> = ({ name, data, title, onClose }) =>
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [onClose]);
-
-  const closeOnBackdrop = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) onClose();
-  };
 
   const highlightQuotedStrings = (text: string) => {
     const regex = /"([^"\\]|\\.)*":/g;

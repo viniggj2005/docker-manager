@@ -7,6 +7,8 @@ export interface TerminalProps {
   title?: string;
   onClose: () => void;
   configure?: SSHConnectionDto;
+  minimized?: boolean;
+  onMinimize?: (value: boolean) => void;
 }
 
 export interface TerminalHeaderProps {
@@ -75,7 +77,9 @@ export interface PasswordModalProps {
 
 export interface TerminalStateProps {
   open: boolean;
+  minimized: boolean;
   close: () => void;
+  minimize: (value: boolean) => void;
   askPassword: boolean;
   error: string | null;
   config: SSHConnectionDto | null;

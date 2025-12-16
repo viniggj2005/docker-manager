@@ -1,12 +1,12 @@
 import iziToast from 'izitoast';
-import React, { useState } from 'react';
 import { Network } from 'lucide-react';
-import { ModalProps } from '../../../../interfaces/TerminalInterfaces';
-import { Modal } from '../../../shared/components/modals/Modal';
-import { ModalButton } from '../../../shared/components/modals/ModalButton';
-import { NetworkService } from '../../services/NetworkService';
-import { useDockerClient } from '../../../../contexts/DockerClientContext';
+import React, { useState } from 'react';
 import { network } from '../../../../../wailsjs/go/models';
+import { NetworkService } from '../../services/NetworkService';
+import { Modal } from '../../../shared/components/modals/Modal';
+import { ModalProps } from '../../../../interfaces/TerminalInterfaces';
+import { useDockerClient } from '../../../../contexts/DockerClientContext';
+import { ModalButton } from '../../../shared/components/modals/ModalButton';
 
 const CreateNetworkModal: React.FC<ModalProps> = ({ open, onClose, onCreated }) => {
   const { selectedCredentialId } = useDockerClient();

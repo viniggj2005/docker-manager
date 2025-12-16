@@ -1,15 +1,12 @@
 import { CPUChart } from '../charts/CpuChart';
-import { Modal } from '../../../shared/components/modals/Modal';
 import { MemoryChart } from '../charts/MemoryChart';
+import { Modal } from '../../../shared/components/modals/Modal';
 import { EventsOn } from '../../../../../wailsjs/runtime/runtime';
-import { BytesToMB } from '../../../shared/functions/TreatmentFunction';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ContainerStatsProps, StatsPayload } from '../../../../interfaces/ContainerInterfaces';
-import {
-  StartContainerStats,
-  StopContainerStats,
-} from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
+import { BytesToMB } from '../../../shared/functions/TreatmentFunction';
 import { useDockerClient } from '../../../../contexts/DockerClientContext';
+import { ContainerStatsProps, StatsPayload } from '../../../../interfaces/ContainerInterfaces';
+import { StartContainerStats, StopContainerStats } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
 
 const maxPoints = 10;
 

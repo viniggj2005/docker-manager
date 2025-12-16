@@ -1,7 +1,5 @@
 import iziToast from 'izitoast';
-import { FiInfo } from 'react-icons/fi';
-import { MdContentCopy } from 'react-icons/md';
-import { FaRegTrashAlt } from 'react-icons/fa';
+import { Copy, Info, Trash2 } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 import { NetworkService } from '../../services/NetworkService';
 import { FmtAgo } from '../../../shared/functions/TreatmentFunction';
@@ -106,14 +104,14 @@ const NetworkCards: React.FC<NetworkCardProps> = ({
               title="Inspecionar rede"
               className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-white/10 dark:hover:text-white"
             >
-              <FiInfo className="h-4 w-4" />
+              <Info className="h-4 w-4" />
             </button>
             <button
               onClick={() => copyToClipboard(Id)}
               className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-white/10 dark:hover:text-white"
               title="Copiar ID"
             >
-              <MdContentCopy className="h-4 w-4" />
+              <Copy className="h-4 w-4" />
             </button>
             <button
               onClick={handleDelete}
@@ -121,12 +119,11 @@ const NetworkCards: React.FC<NetworkCardProps> = ({
               className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
               title="Remover rede"
             >
-              <FaRegTrashAlt className="h-4 w-4" />
+              <Trash2 className="h-4 w-4" />
             </button>
           </div>
         </div>
 
-        {/* Info Grid */}
         <div className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-4 dark:border-white/5">
           <div className="space-y-1">
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Subnet</p>

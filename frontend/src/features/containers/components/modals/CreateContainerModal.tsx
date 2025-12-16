@@ -1,14 +1,14 @@
 import iziToast from 'izitoast';
+import { Box } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
+import { PortsSection } from '../create-modal/PortsSection';
 import { dtos, image } from '../../../../../wailsjs/go/models';
 import { Modal } from '../../../shared/components/modals/Modal';
-import { Box } from 'lucide-react';
-import { useDockerClient } from '../../../../contexts/DockerClientContext';
-import { CreateContainer, ImagesList, ListVolumes, ListNetworks } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
-import { BasicInfoSection } from '../create-modal/BasicInfoSection';
-import { PortsSection } from '../create-modal/PortsSection';
 import { EnvVarsSection } from '../create-modal/EnvVarsSection';
 import { VolumesSection } from '../create-modal/VolumesSection';
+import { BasicInfoSection } from '../create-modal/BasicInfoSection';
+import { useDockerClient } from '../../../../contexts/DockerClientContext';
+import { CreateContainer, ImagesList, ListVolumes, ListNetworks } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
 import { CreateContainerPortMapping, CreateContainerEnvVar, CreateContainerVolumeMapping } from '../../../../interfaces/ContainerInterfaces';
 
 
@@ -22,15 +22,15 @@ export const CreateContainerModal: React.FC<CreateContainerModalProps> = ({ isOp
     const { dockerClientId } = useDockerClient();
     const [loading, setLoading] = useState(false);
 
-    const [availableImages, setAvailableImages] = useState<image.Summary[]>([]);
     const [availableVolumes, setAvailableVolumes] = useState<any[]>([]);
     const [availableNetworks, setAvailableNetworks] = useState<any[]>([]);
+    const [availableImages, setAvailableImages] = useState<image.Summary[]>([]);
 
-    const [containerName, setContainerName] = useState('');
     const [imageName, setImageName] = useState('');
+    const [containerName, setContainerName] = useState('');
     const [selectedNetwork, setSelectedNetwork] = useState('bridge');
-    const [ports, setPorts] = useState<CreateContainerPortMapping[]>([]);
     const [envVars, setEnvVars] = useState<CreateContainerEnvVar[]>([]);
+    const [ports, setPorts] = useState<CreateContainerPortMapping[]>([]);
     const [volumes, setVolumes] = useState<CreateContainerVolumeMapping[]>([]);
 
 

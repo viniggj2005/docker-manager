@@ -1,10 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { GoContainer } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 import appIcon from '../assets/images/appicon.png';
 import LoginForm from '../features/login/LoginForm';
-import { LuLayers, LuServer } from 'react-icons/lu';
+import { Container, Layers, Server } from 'lucide-react';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -22,7 +21,7 @@ const LoginPage: React.FC = () => {
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-20 left-10 text-blue-400/20"
         >
-          <GoContainer size={80} />
+          <Container size={80} />
         </motion.div>
 
         <motion.div
@@ -33,7 +32,7 @@ const LoginPage: React.FC = () => {
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           className="absolute bottom-20 right-20 text-purple-400/20"
         >
-          <LuLayers size={100} />
+          <Layers size={100} />
         </motion.div>
 
         <motion.div
@@ -44,7 +43,7 @@ const LoginPage: React.FC = () => {
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-1/2 right-10 text-cyan-400/20"
         >
-          <LuServer size={60} />
+          <Server size={60} />
         </motion.div>
       </div>
 

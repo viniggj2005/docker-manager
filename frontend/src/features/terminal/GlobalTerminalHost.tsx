@@ -15,7 +15,7 @@ function ensureRoot(): HTMLElement {
 
 export default function GlobalTerminalHost() {
   const root = ensureRoot();
-  const { open, config, containerId, containerName, askPassword, close, submitPassword } = useTerminalStore();
+  const { open, config, containerId, containerName, askPassword, close, submitPassword, minimized, minimize } = useTerminalStore();
 
   const isSsh = !!config;
   const isContainer = !!containerId;
@@ -26,6 +26,8 @@ export default function GlobalTerminalHost() {
         <TerminalModal
           open={true}
           onClose={close}
+          minimized={minimized}
+          onMinimize={minimize}
           configure={config || undefined}
           id={containerId || undefined}
           title={isContainer ? `Terminal: ${containerName}` : (config ? `${config.User}@${config.Host}` : 'Terminal SSH')}

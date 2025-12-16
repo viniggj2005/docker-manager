@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiRefreshCw } from 'react-icons/fi';
+import { RefreshCw } from 'lucide-react';
 
 const ContainersHeader: React.FC<{ onRefresh: () => void }> = ({ onRefresh }) => (
   <header className="mb-4 flex items-center justify-between">
@@ -13,7 +13,7 @@ const ContainersHeader: React.FC<{ onRefresh: () => void }> = ({ onRefresh }) =>
         border border-gray-300 dark:border-white/10 "
       title="Atualizar"
     >
-      <FiRefreshCw className="h-4 w-4" />
+      <RefreshCw className="h-4 w-4" />
       <span>Atualizar</span>
     </button>
   </header>

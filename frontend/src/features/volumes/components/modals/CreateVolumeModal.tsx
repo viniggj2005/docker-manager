@@ -1,11 +1,11 @@
-import React, { useState, useMemo } from 'react';
 import iziToast from 'izitoast';
 import { Database } from 'lucide-react';
-import { ModalProps } from '../../../../interfaces/TerminalInterfaces';
-import { Modal } from '../../../shared/components/modals/Modal';
-import { ModalButton } from '../../../shared/components/modals/ModalButton';
-import { useDockerClient } from '../../../../contexts/DockerClientContext';
+import React, { useState, useMemo } from 'react';
 import { VolumeService } from '../../services/VolumeService';
+import { Modal } from '../../../shared/components/modals/Modal';
+import { ModalProps } from '../../../../interfaces/TerminalInterfaces';
+import { useDockerClient } from '../../../../contexts/DockerClientContext';
+import { ModalButton } from '../../../shared/components/modals/ModalButton';
 
 interface KeyValueInput {
   key: string;

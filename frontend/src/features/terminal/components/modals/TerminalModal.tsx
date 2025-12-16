@@ -2,31 +2,27 @@ import 'xterm/css/xterm.css';
 import iziToast from 'izitoast';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
-import { MdOpenInNew } from "react-icons/md";
 import React, { useEffect, useRef, useState } from 'react';
+import { ExternalLink, SquareTerminal } from 'lucide-react';
 import TerminalModalHeader from '../headers/TerminalModalHeader';
 import { TerminalProps } from '../../../../interfaces/TerminalInterfaces';
 import { useDockerClient } from '../../../../contexts/DockerClientContext';
 import { EventsOff, EventsOn } from '../../../../../wailsjs/runtime/runtime';
-import {
-  Send,
-  Resize,
-  Disconnect,
-  ConnectWith,
-} from '../../../../../wailsjs/go/handlers/TerminalHandlerStruct';
 import { containerExec, terminalWrite } from '../../../containers/services/ContainersService';
+import { Send, Resize, Disconnect, ConnectWith } from '../../../../../wailsjs/go/handlers/TerminalHandlerStruct';
 
 const TerminalModal: React.FC<TerminalProps> = ({
   id,
   open,
   onClose,
   configure,
+  onMinimize,
+  minimized = false,
   title = 'Terminal SSH',
 }) => {
   const dragRef = useRef(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
 
-  const [minimized, setMinimized] = useState(false);
   const [miniPos, setMiniPos] = useState({ x: 40, y: 40 });
 
   useEffect(() => {
@@ -174,19 +170,19 @@ const TerminalModal: React.FC<TerminalProps> = ({
     let offData: any;
     let offExit: any;
     if (!id) {
-      subscription = terminal.onData((d) => Send(d));
+      subscription = terminal.onData((data: string) => Send(data));
       offData = EventsOn('ssh:data', (chunk: string) => terminal.write(chunk));
       offExit = EventsOn('ssh:exit', (msg: string) =>
         terminal.write(`\r\n[conexão encerrada] ${msg || ''}\r\n`)
       );
 
       ConnectWith({ ...(configure as any), Cols: terminal.cols, Rows: terminal.rows }).catch(
-        (e: any) => terminal.write(`\r\n[erro] ${String(e)}\r\n`)
+        (event: any) => terminal.write(`\r\n[erro] ${String(event)}\r\n`)
       );
     } else if (id) {
       terminal.onData((data: string) => {
         if (connectedRef.current) {
-          terminalWrite(id, data).catch((err) => console.error(err));
+          terminalWrite(id, data).catch((error) => console.error(error));
         }
       });
 
@@ -324,23 +320,30 @@ const TerminalModal: React.FC<TerminalProps> = ({
             top: miniPos.y,
             zIndex: 99999,
           }}
-          className="cursor-move
-                       text-black dark:text-white 
-                     shadow-xl rounded-md px-3 py-2 flex items-center gap-3 select-none bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700"
-          onMouseDown={(e) => {
+          className="group flex cursor-grab active:cursor-grabbing items-center gap-3 rounded-2xl border border-gray-200 bg-white/80 p-3 shadow-2xl backdrop-blur-xl transition-all hover:-translate-y-0.5 dark:border-white/10 dark:bg-zinc-900/80"
+          onMouseDown={(event) => {
             dragRef.current = true;
-            dragStartRef.current = { x: e.clientX - miniPos.x, y: e.clientY - miniPos.y };
+            dragStartRef.current = { x: event.clientX - miniPos.x, y: event.clientY - miniPos.y };
           }}
         >
-          <span className="font-semibold">{title}</span>
+          <div className="flex items-center gap-3 pl-1">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-white/5 dark:text-gray-400">
+              <SquareTerminal className="h-4 w-4" />
+            </div>
+            <span className="text-sm font-semibold text-gray-700 dark:text-gray-200 select-none">
+              {title}
+            </span>
+          </div>
+
+          <div className="h-4 w-px bg-gray-200 dark:bg-white/10" />
 
           <button
-            className="px-2 py-1 bg-emerald-500 hover:scale-95 text-black 
-                       dark:text-white rounded"
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={() => setMinimized(false)}
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-500/10 dark:hover:text-blue-400"
+            onMouseDown={(event) => event.stopPropagation()}
+            onClick={() => onMinimize?.(false)}
+            title="Restaurar"
           >
-            <MdOpenInNew />
+            <ExternalLink className="h-4 w-4" />
           </button>
         </div>
       )}
@@ -370,9 +373,9 @@ const TerminalModal: React.FC<TerminalProps> = ({
             docked={docked}
             onClose={onClose}
             maximized={maximized}
-            onToggleDock={() => setDocked((v) => !v)}
-            onToggleMax={() => setMaximized((v) => !v)}
-            onMinimize={() => setMinimized(true)}
+            onToggleDock={() => setDocked((value) => !value)}
+            onToggleMax={() => setMaximized((value) => !value)}
+            onMinimize={() => onMinimize?.(true)}
           />
 
           <div className="flex h-[calc(100%-52px)] flex-col rounded-b-lg  mb-5 pb-5 bg-[#0e172a]">
