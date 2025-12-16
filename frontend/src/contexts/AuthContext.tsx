@@ -1,3 +1,4 @@
+import iziToast from 'izitoast';
 import { EventsOn } from '../../wailsjs/runtime/runtime';
 import { loginApi, logoutApi } from '../features/login/services/Auth';
 import { AuthContextType, LoginResponse, UserDTO } from '../interfaces/AuthInterfaces';
@@ -23,7 +24,13 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       setUser(loginResponse.user);
       tokenRef.current = loginResponse.token;
     } catch (error: any) {
-      setError(error?.message ?? 'Falha no login');
+      const msg = error?.message || error || 'Falha no login';
+      setError(msg);
+      iziToast.error({
+        title: 'Erro',
+        message: msg,
+        position: 'bottomRight',
+      });
       setToken(null);
       setUser(null);
       tokenRef.current = null;
