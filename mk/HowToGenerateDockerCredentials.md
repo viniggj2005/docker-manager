@@ -45,7 +45,7 @@ Agora você define em quais IPs/hostnames o certificado será válido.
 Crie o arquivo extfile.cnf:
 
 ```bash
-cat > extfile.cnf <<EOF
+cat <<EOF | sudo tee extfile.cnf
 subjectAltName = IP:IP_DO_SEU_SERVIDOR,IP:127.0.0.1,DNS:meu-docker
 extendedKeyUsage = serverAuth
 EOF
@@ -53,8 +53,8 @@ EOF
 Substitua SEU_IP pelo IP real do servidor, por exemplo:
 
 ```bash
-cat > extfile.cnf <<EOF
-subjectAltName = IP:192.168.155.19,IP:127.0.0.1,DNS:meu-docker
+cat <<EOF | sudo tee extfile.cnf
+subjectAltName = IP:192.168.159.123,IP:127.0.0.1,DNS:meu-docker
 extendedKeyUsage = serverAuth
 EOF
 ```
