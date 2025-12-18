@@ -35,10 +35,10 @@ Pode preencher qualquer coisa, mas guarde ca.pem e ca-key.pem com cuidado (não 
 ## 2.2. Gerar chave e certificado do servidor Docker
 ```bash
 # chave privada do servidor
-openssl genrsa -out server-key.pem 4096
+sudo openssl genrsa -out server-key.pem 4096
 
 # CSR do servidor
-openssl req -subj "/CN=meu-docker" -new -key server-key.pem -out server.csr
+sudo openssl req -subj "/CN=meu-docker" -new -key server-key.pem -out server.csr
 ```
 Agora você define em quais IPs/hostnames o certificado será válido.
 
@@ -46,7 +46,7 @@ Crie o arquivo extfile.cnf:
 
 ```bash
 cat > extfile.cnf <<EOF
-subjectAltName = IP:SEU_IP,IP:127.0.0.1,DNS:meu-docker
+subjectAltName = IP:IP_DO_SEU_SERVIDOR,IP:127.0.0.1,DNS:meu-docker
 extendedKeyUsage = serverAuth
 EOF
 ```
