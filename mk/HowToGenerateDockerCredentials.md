@@ -24,10 +24,10 @@ cd /etc/docker/ssl
 ## 2.1. Gerar CA (autoridade certificadora)
 ```bash
 # chave privada da CA
-openssl genrsa -aes256 -out ca-key.pem 4096
+sudo openssl genrsa -aes256 -out ca-key.pem 4096
 
 # certificado da CA
-openssl req -new -x509 -days 365 -key ca-key.pem -sha256 -out ca.pem
+sudo openssl req -new -x509 -days 365 -key ca-key.pem -sha256 -out ca.pem
 ```
 Ele vai pedir algumas informações (Country, Org, etc.).
 Pode preencher qualquer coisa, mas guarde ca.pem e ca-key.pem com cuidado (não envie para o cliente).
@@ -61,7 +61,7 @@ EOF
 Agora assine o certificado do servidor com a CA:
 
 ```bash
-openssl x509 -req -days 365 -sha256 \
+sudo openssl x509 -req -days 365 -sha256 \
     -in server.csr \
     -CA ca.pem -CAkey ca-key.pem -CAcreateserial \
     -out server-cert.pem \
@@ -80,22 +80,22 @@ Esses são os arquivos que vão alimentar os campos Cert (PEM) e Key (PEM) da su
 
 ```bash
 # chave privada do cliente
-openssl genrsa -out key.pem 4096
+sudo openssl genrsa -out key.pem 4096
 
 # CSR do cliente
-openssl req -subj "/CN=client" -new -key key.pem -out client.csr
+sudo openssl req -subj "/CN=client" -new -key key.pem -out client.csr
 ```
 Crie o arquivo extfile-client.cnf:
 
 ```bash
-cat > extfile-client.cnf <<EOF
+cat <<EOF | sudo tee extfile-client.cnf
 extendedKeyUsage = clientAuth
 EOF
 ```
 Assine com a CA:
 
 ```bash
-openssl x509 -req -days 365 -sha256 \
+sudo openssl x509 -req -days 365 -sha256 \
     -in client.csr \
     -CA ca.pem -CAkey ca-key.pem -CAcreateserial \
     -out cert.pem \
