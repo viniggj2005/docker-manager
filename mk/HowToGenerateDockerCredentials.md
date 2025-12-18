@@ -145,6 +145,21 @@ Recarregue e reinicie o Docker:
 sudo systemctl daemon-reload
 sudo systemctl restart docker
 ```
+se der erro :
+```bash
+sudo systemctl edit docker.service
+```
+e adicione essa duas linhas:
+```bash
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd
+```
+salve o arquivo e rode novamente :
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
 Verifique se a porta 2376 está escutando:
 
 ```bash
