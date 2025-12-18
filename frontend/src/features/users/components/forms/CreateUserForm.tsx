@@ -1,8 +1,8 @@
 import iziToast from 'izitoast';
 import { motion } from 'framer-motion';
-import React, { useState } from 'react';
 import 'izitoast/dist/css/iziToast.min.css';
 import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { createUserApi } from '../../services/UserService';
 import { Mail, User, Lock, EyeClosed, Eye, Check } from 'lucide-react';
 import { CreateUserPayload } from '../../../../interfaces/UsersInterface';
@@ -17,6 +17,10 @@ const CreateUserForm: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState<{ hasLength: boolean; hasNumber: boolean; hasSpecial: boolean; hasUpperCase: boolean; strength: number } | null>(null);
+
+  useEffect(() => {
+    setPasswordStrength(getPasswordStrength());
+  }, [password]);
 
   const getPasswordStrength = () => {
     if (!password) return null;
@@ -37,7 +41,7 @@ const CreateUserForm: React.FC = () => {
       iziToast.warning({
         title: 'Atenção',
         message: 'Preencha todos os campos obrigatórios.',
-        position: 'topRight'
+        position: 'bottomRight'
       });
       return;
     }
@@ -46,16 +50,18 @@ const CreateUserForm: React.FC = () => {
       iziToast.warning({
         title: 'Atenção',
         message: 'As senhas informadas não conferem.',
-        position: 'topRight'
+        position: 'bottomRight'
       });
       return;
     }
-    setPasswordStrength(getPasswordStrength());
-    if (!passwordStrength) {
+    const strength = getPasswordStrength();
+    setPasswordStrength(strength);
+
+    if (!strength || strength.strength < 4) {
       iziToast.warning({
         title: 'Senha Fraca',
-        message: 'A senha deve ter pelo menos 8 caracteres, incluindo números e caracteres especiais.',
-        position: 'topRight'
+        message: 'A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, números e caracteres especiais.',
+        position: 'bottomRight'
       });
       return;
     }
@@ -72,14 +78,14 @@ const CreateUserForm: React.FC = () => {
       iziToast.success({
         title: 'Sucesso',
         message: 'Conta criada com sucesso! Redirecionando...',
-        position: 'topRight',
+        position: 'bottomRight',
         onClosing: () => navigate('/login'),
       });
     } catch (createError: any) {
       iziToast.error({
         title: 'Erro',
         message: createError.message || 'Não foi possível criar a conta.',
-        position: 'topRight',
+        position: 'bottomRight',
       });
     } finally {
       setLoading(false);
