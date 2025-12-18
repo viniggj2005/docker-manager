@@ -169,9 +169,9 @@ export const CreateDockerCredentialModal: React.FC<CreateDockerCredentialModalPr
         <div className="space-y-4 pt-2 border-t border-gray-100 dark:border-white/10">
           <h3 className="text-sm font-medium text-gray-900 dark:text-white">Certificados TLS</h3>
 
-          {renderFileField("CA Certificate", ca, setCa, "-----BEGIN CERTIFICATE-----\n...")}
-          {renderFileField("Client Certificate", cert, setCert, "-----BEGIN CERTIFICATE-----\n...")}
-          {renderFileField("Client Key", key, setKey, "-----BEGIN RSA PRIVATE KEY-----\n...")}
+          {renderFileField("ca.pem", ca, setCa, "-----BEGIN CERTIFICATE-----\n...")}
+          {renderFileField("cert.pem", cert, setCert, "-----BEGIN CERTIFICATE-----\n...")}
+          {renderFileField("key.pem", key, setKey, "-----BEGIN RSA PRIVATE KEY-----\n...")}
         </div>
       </form>
     </Modal>
