@@ -267,6 +267,7 @@ export namespace dtos {
 	    path: string;
 	    name: string;
 	    tag: string;
+	    dockerfile: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new ImageCreateDto(source);
@@ -277,6 +278,7 @@ export namespace dtos {
 	        this.path = source["path"];
 	        this.name = source["name"];
 	        this.tag = source["tag"];
+	        this.dockerfile = source["dockerfile"];
 	    }
 	}
 	export class LoginInputDto {
