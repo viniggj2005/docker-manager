@@ -32,10 +32,9 @@ const ImageBuildForm: React.FC<ImageBuildFormProps> = ({ clientId, onClose, onSu
 
     const handleBrowseClick = async () => {
         try {
-            const path = await GetFilePath();
-
-            if (path) {
-                setPath(path.replace("Dockerfile", ""));
+            const fullPath = await GetFilePath();
+            if (fullPath) {
+                setPath(fullPath);
             }
         } catch (error) {
             console.error(error);
@@ -59,6 +58,15 @@ const ImageBuildForm: React.FC<ImageBuildFormProps> = ({ clientId, onClose, onSu
             return;
         }
 
+        let contextPath = path;
+        let dockerfileName = 'Dockerfile';
+
+        const lastSeparatorIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
+        if (lastSeparatorIndex !== -1) {
+            contextPath = path.substring(0, lastSeparatorIndex);
+            dockerfileName = path.substring(lastSeparatorIndex + 1);
+        }
+
         setBuilding(true);
         setLogs([]);
 
@@ -70,9 +78,10 @@ const ImageBuildForm: React.FC<ImageBuildFormProps> = ({ clientId, onClose, onSu
 
         try {
             await ImageCreate(clientId, {
-                path,
+                path: contextPath,
                 name,
                 tag,
+                dockerfile: dockerfileName
             });
             iziToast.success({ title: 'Sucesso', message: 'Imagem construída com sucesso!', position: 'bottomRight' });
             onSuccess?.();
@@ -112,7 +121,7 @@ const ImageBuildForm: React.FC<ImageBuildFormProps> = ({ clientId, onClose, onSu
 
             <div className="flex flex-col gap-1">
                 <label className="text-sm font-medium text-black dark:text-white">
-                    Caminho do Dockerfile (Contexto)
+                    Arquivo Dockerfile
                 </label>
                 <div className="flex gap-2">
                     <div className="flex-1">
@@ -121,7 +130,7 @@ const ImageBuildForm: React.FC<ImageBuildFormProps> = ({ clientId, onClose, onSu
                             name="path"
                             value={path}
                             onChange={(e) => setPath(e.target.value)}
-                            placeholder="Selecione ou digite o caminho"
+                            placeholder="Selecione o arquivo Dockerfile"
                             required
                             disabled={building || builded}
                         />

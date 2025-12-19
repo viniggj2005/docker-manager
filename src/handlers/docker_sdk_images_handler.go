@@ -30,8 +30,12 @@ func (handlerStruct *DockerSdkHandlerStruct) ImageCreate(clientId int, body dtos
 		return &APIError{Code: 500, Message: err.Error()}
 	}
 
+	if body.Dockerfile == "" {
+		body.Dockerfile = "Dockerfile"
+	}
+
 	options := types.ImageBuildOptions{
-		Dockerfile: "Dockerfile",
+		Dockerfile: body.Dockerfile,
 		Tags:       []string{body.Name + ":" + body.Tag},
 		Remove:     true,
 	}

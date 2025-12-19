@@ -52,8 +52,8 @@ func (a *App) GetFilePath() string {
 		Title: "Selecione um arquivo",
 		Filters: []runtime.FileFilter{
 			{
-				DisplayName: "Dockerfile",
-				Pattern:     "Dockerfile",
+				DisplayName: "Dockerfiles (Dockerfile*)",
+				Pattern:     "Dockerfile*",
 			},
 			{
 				DisplayName: "Todos os arquivos (*.*)",
