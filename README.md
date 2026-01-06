@@ -89,8 +89,8 @@ O guia [`Como criar par de chaves para conexão ssh`](mk/HowtogenerateSshKeyToSe
 - Dev server isolado do frontend: `npm run dev` (apenas interface, útil para ajustes de UI)
 
 ## Downloads
-- [Windows](https://github.com/viniggj2005/docker-manager/releases/latest/download/docker-manager-go.exe)
-- [linux](https://github.com/viniggj2005/docker-manager/releases/latest/download/docker-manager-go)
+- [Windows](https://github.com/viniggj2005/docker-manager/releases/latest/download/Docker.Manager.exe)
+- [linux](https://github.com/viniggj2005/docker-manager/releases/latest/download/Docker.Manager)
 ## Licença
 
 Distribuído sob a licença MIT. Consulte o arquivo [`LICENSE`](LICENSE) para mais detalhes.
