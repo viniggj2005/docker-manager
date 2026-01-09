@@ -7,6 +7,7 @@ import { Modal } from '../../../shared/components/modals/Modal';
 import { EnvVarsSection } from '../create-modal/EnvVarsSection';
 import { VolumesSection } from '../create-modal/VolumesSection';
 import { BasicInfoSection } from '../create-modal/BasicInfoSection';
+import { ResourceLimitsSection } from '../create-modal/ResourceLimitsSection';
 import { useDockerClient } from '../../../../contexts/DockerClientContext';
 import { CreateContainer, ImagesList, ListVolumes, ListNetworks } from '../../../../../wailsjs/go/handlers/DockerSdkHandlerStruct';
 import { CreateContainerPortMapping, CreateContainerEnvVar, CreateContainerVolumeMapping } from '../../../../interfaces/ContainerInterfaces';
@@ -32,6 +33,10 @@ export const CreateContainerModal: React.FC<CreateContainerModalProps> = ({ isOp
     const [envVars, setEnvVars] = useState<CreateContainerEnvVar[]>([]);
     const [ports, setPorts] = useState<CreateContainerPortMapping[]>([]);
     const [volumes, setVolumes] = useState<CreateContainerVolumeMapping[]>([]);
+
+    const [memory, setMemory] = useState('');
+    const [cpu, setCpu] = useState('');
+    const [pidsLimit, setPidsLimit] = useState('');
 
 
     useEffect(() => {
@@ -91,12 +96,12 @@ export const CreateContainerModal: React.FC<CreateContainerModalProps> = ({ isOp
             });
 
             const envList = envVars
-                .filter(e => e.key)
-                .map(e => `${e.key}=${e.value}`);
+                .filter(event => event.key)
+                .map(event => `${event.key}=${event.value}`);
 
             const binds = volumes
-                .filter(v => v.hostPath && v.containerPath)
-                .map(v => `${v.hostPath}:${v.containerPath}`);
+                .filter(value => value.hostPath && value.containerPath)
+                .map(value => `${value.hostPath}:${value.containerPath}`);
 
             const options = new dtos.ContainerCreateOptions({
                 containerName: containerName,
@@ -108,6 +113,9 @@ export const CreateContainerModal: React.FC<CreateContainerModalProps> = ({ isOp
                 hostConfig: {
                     PortBindings: portBindings,
                     Binds: binds,
+                    Memory: memory ? parseInt(memory) * 1024 * 1024 : 0,
+                    NanoCpus: cpu ? parseFloat(cpu) * 1000000000 : 0,
+                    PidsLimit: pidsLimit ? parseInt(pidsLimit) : 0,
                 },
                 networkingConfig: {
                     EndpointsConfig: {
@@ -128,6 +136,9 @@ export const CreateContainerModal: React.FC<CreateContainerModalProps> = ({ isOp
             setPorts([]);
             setEnvVars([]);
             setVolumes([]);
+            setMemory('');
+            setCpu('');
+            setPidsLimit('');
 
         } catch (error) {
             console.error(error);
@@ -162,6 +173,15 @@ export const CreateContainerModal: React.FC<CreateContainerModalProps> = ({ isOp
                 <EnvVarsSection envVars={envVars} setEnvVars={setEnvVars} />
 
                 <VolumesSection volumes={volumes} setVolumes={setVolumes} availableVolumes={availableVolumes} />
+
+                <ResourceLimitsSection
+                    memory={memory}
+                    setMemory={setMemory}
+                    cpu={cpu}
+                    setCpu={setCpu}
+                    pidsLimit={pidsLimit}
+                    setPidsLimit={setPidsLimit}
+                />
             </div>
 
             <div className="mt-8 flex justify-end gap-3">
