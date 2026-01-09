@@ -16,7 +16,7 @@ A ferramenta permite autenticação de usuários, conexão segura a daemons Dock
 - **Redes Docker**: visualização e gerenciamento básico das redes disponíveis. 
 - **Terminais SSH**: criação de conexões SSH para servidores remotos e abertura de terminais interativos pela interface.
 
-## Features Futuras
+## $\textcolor{green}{\textsf{Features Futuras}}$
 -  **Docker Compose**: suporte para visualização, gerenciamento de arquivos compose e gereciamentos de contêineres usando compose.
 - **Uploads e assets**: suporte para carregar e salvar imagens base64 (por exemplo, avatares) pelo backend.
 - **Configuração de Docker registry**: suporte para configuração de Docker registry para push e pull de imagens(docker registry privado ou docker hub).
@@ -38,7 +38,7 @@ A ferramenta permite autenticação de usuários, conexão segura a daemons Dock
   - Componentes protegidos por rota (`ProtectedRoute.tsx`) e estado global leve com Zustand.
   - Biblioteca Chart.js para gráficos e xterm.js para terminais interativos.
 
-## Pré-requisitos
+## $\textcolor{orange}{\textsf{Pré-requisitos}}$
 
 - Go **1.24** ou superior (ver `go.mod`).
 - Node.js **>= 18** e npm para o frontend (Vite).
