@@ -39,8 +39,9 @@ func InitDb() {
 
 	if err := DataBase.AutoMigrate(
 		&models.UserModel{},
-		&models.DockerCredentialsModel{},
+		&models.ComposeModel{},
 		&models.SshConnectionModel{},
+		&models.DockerCredentialsModel{},
 	); err != nil {
 		log.Fatalf("erro ao migrar modelos: %v", err)
 	}
