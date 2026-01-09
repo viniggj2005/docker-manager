@@ -14,16 +14,16 @@ const NetworksPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [networks, setNetworks] = useState<NetworkItem[]>([]);
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const { connecting, selectedCredentialId, loading: credentialsLoading } = useDockerClient();
+  const { connecting, dockerClientId, loading: credentialsLoading } = useDockerClient();
 
   const fetchNetworks = useCallback(async () => {
-    if (!selectedCredentialId) return;
+    if (!dockerClientId) return;
 
     try {
       setLoading(true);
       setError(null);
 
-      const result = await NetworkService.findAllNetworks(selectedCredentialId);
+      const result = await NetworkService.findAllNetworks(dockerClientId);
       setNetworks(Array.isArray(result) ? result : []);
     } catch (error) {
       console.error('Erro ao carregar redes Docker:', error);
@@ -36,12 +36,12 @@ const NetworksPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [selectedCredentialId]);
+  }, [dockerClientId]);
 
   useEffect(() => {
-    if (!selectedCredentialId || credentialsLoading || connecting) return;
+    if (!dockerClientId || credentialsLoading || connecting) return;
     fetchNetworks();
-  }, [selectedCredentialId, credentialsLoading, connecting, fetchNetworks]);
+  }, [dockerClientId, credentialsLoading, connecting, fetchNetworks]);
 
   const handleDeleted = (networkId: string) => {
     setNetworks((previousNetworks) => previousNetworks.filter((network) => network.Id !== networkId));
@@ -81,7 +81,7 @@ const NetworksPage: React.FC = () => {
 
         {credentialsLoading || connecting ? (
           showStatusMessage('Conectando ao cliente Docker...')
-        ) : !selectedCredentialId ? (
+        ) : !dockerClientId ? (
           showStatusMessage('Nenhuma credencial Docker selecionada.', true)
         ) : (
           <div className="flex flex-col gap-4">
@@ -95,7 +95,7 @@ const NetworksPage: React.FC = () => {
               {networks.map((network) => (
                 <NetworkCards
                   key={network.Id}
-                  clientId={selectedCredentialId}
+                  clientId={dockerClientId}
                   onDeleted={handleDeleted}
                   {...network}
                 />

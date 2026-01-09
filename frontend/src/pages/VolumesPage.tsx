@@ -12,15 +12,15 @@ const VolumesPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [volumes, setVolumes] = useState<VolumeItem[]>([]);
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const { connecting, selectedCredentialId, loading: credentialsLoading } = useDockerClient();
+  const { connecting, dockerClientId, loading: credentialsLoading } = useDockerClient();
 
   const fetchVolumes = useCallback(async () => {
-    if (!selectedCredentialId) return;
+    if (!dockerClientId) return;
 
     try {
       setLoading(true);
       setError(null);
-      const response = await VolumeService.listVolumes(selectedCredentialId);
+      const response = await VolumeService.listVolumes(dockerClientId);
 
       const volumesList = response?.Volumes ?? [];
       const warningsList = response?.Warnings ?? [];
@@ -34,12 +34,12 @@ const VolumesPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [selectedCredentialId]);
+  }, [dockerClientId]);
 
   useEffect(() => {
-    if (!selectedCredentialId || credentialsLoading || connecting) return;
+    if (!dockerClientId || credentialsLoading || connecting) return;
     fetchVolumes();
-  }, [selectedCredentialId, credentialsLoading, connecting, fetchVolumes]);
+  }, [dockerClientId, credentialsLoading, connecting, fetchVolumes]);
 
   const handleDeleted = (name: string) => {
     setVolumes((prev) => prev.filter((volume) => volume.Name !== name));
@@ -51,7 +51,7 @@ const VolumesPage: React.FC = () => {
     return <div>Conectando ao cliente Docker...</div>;
   }
 
-  if (!selectedCredentialId) {
+  if (!dockerClientId) {
     return <div>Nenhuma credencial Docker selecionada.</div>;
   }
 
@@ -92,7 +92,7 @@ const VolumesPage: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {safeVolumes.map((volume) => (
-          <VolumeCard key={volume.Name} clientId={selectedCredentialId} onDeleted={handleDeleted} {...volume} />
+          <VolumeCard key={volume.Name} clientId={dockerClientId} onDeleted={handleDeleted} {...volume} />
         ))}
       </div>
 
