@@ -17,36 +17,36 @@ const ContainersListView = forwardRef<ContainersListFetchRef>((_, ref) => {
   const [MenuModalId, setMenuModalId] = useState<string | null>(null);
   const [containers, setcontainers] = useState<ContainerItem[] | null>(null);
   const [editNameModalId, setEditNameModalId] = useState<string | null>(null);
-  const { selectedCredentialId, loading: credentialsLoading, connecting } = useDockerClient();
+  const { dockerClientId, loading: credentialsLoading, connecting } = useDockerClient();
 
   const fetchContainers = useCallback(async () => {
-    if (selectedCredentialId == null) {
+    if (dockerClientId == null) {
       setcontainers(null);
       return;
     }
-    const containersList = await getContainers(selectedCredentialId);
+    const containersList = await getContainers(dockerClientId);
     setcontainers(containersList);
-  }, [selectedCredentialId]);
+  }, [dockerClientId]);
 
   useImperativeHandle(ref, () => ({
     refresh: fetchContainers
   }));
 
   const handleRename = async (name: string, id: string) => {
-    if (selectedCredentialId == null) return;
-    await renameContainer(selectedCredentialId, id, name);
+    if (dockerClientId == null) return;
+    await renameContainer(dockerClientId, id, name);
     await fetchContainers();
     setEditNameModalId(null);
   };
 
   const changeContainerStage = async (id: string, state: string) => {
-    if (selectedCredentialId == null) return;
-    await toggleContainerState(selectedCredentialId, id, state);
+    if (dockerClientId == null) return;
+    await toggleContainerState(dockerClientId, id, state);
     await fetchContainers();
   };
 
   useEffect(() => {
-    if (selectedCredentialId == null) {
+    if (dockerClientId == null) {
       setcontainers(null);
       if (timerRef.current) {
         window.clearInterval(timerRef.current);
@@ -62,7 +62,7 @@ const ContainersListView = forwardRef<ContainersListFetchRef>((_, ref) => {
     return () => {
       if (timerRef.current) window.clearInterval(timerRef.current);
     };
-  }, [fetchContainers, selectedCredentialId]);
+  }, [fetchContainers, dockerClientId]);
 
   useEffect(() => {
     if (credentialsLoading) {
@@ -71,12 +71,14 @@ const ContainersListView = forwardRef<ContainersListFetchRef>((_, ref) => {
         message: 'Carregando credenciais...',
         position: 'bottomRight',
       });
-    } else if (selectedCredentialId == null) {
-      iziToast.warning({
-        title: 'Atenção',
-        message: 'Selecione uma credencial Docker para visualizar os containers.',
-        position: 'bottomRight',
-      });
+    } else if (dockerClientId == null) {
+      if (!connecting) {
+        iziToast.warning({
+          title: 'Atenção',
+          message: 'Selecione uma credencial Docker para visualizar os containers.',
+          position: 'bottomRight',
+        });
+      }
     } else if (connecting) {
       iziToast.info({
         title: 'Conectando',
@@ -96,17 +98,17 @@ const ContainersListView = forwardRef<ContainersListFetchRef>((_, ref) => {
         position: 'bottomRight',
       });
     }
-  }, [credentialsLoading, selectedCredentialId, connecting, containers]);
+  }, [credentialsLoading, dockerClientId, connecting, containers]);
 
   const handleStart = async (id: string) => {
-    if (selectedCredentialId == null) return;
-    await startContainer(selectedCredentialId, id);
+    if (dockerClientId == null) return;
+    await startContainer(dockerClientId, id);
     await fetchContainers();
   };
 
   const handleStop = async (id: string) => {
-    if (selectedCredentialId == null) return;
-    await stopContainer(selectedCredentialId, id);
+    if (dockerClientId == null) return;
+    await stopContainer(dockerClientId, id);
     await fetchContainers();
   };
 

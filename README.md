@@ -12,9 +12,12 @@ A ferramenta permite autenticação de usuários, conexão segura a daemons Dock
 - **Autenticação e sessões**: gerenciamento de login e persistência de sessão com o `auth.ManagerStruct`. 
 - **Credenciais Docker TLS**: cadastro e conexão de endpoints Docker (CA/Cert/Key), com criptografia de campos sensíveis antes de salvar no banco. 
 - **Painel de containers**: iniciar, parar, pausar, remover e visualizar estatísticas em tempo real (CPU, memória, rede) dos containers conectados. 
-- **Imagens Docker**: listar, filtrar e remover imagens rapidamente.
+- **Imagens Docker**: listar,filtrar, remover imagens rapidamente e buildar imagens remotamente.
 - **Redes Docker**: visualização e gerenciamento básico das redes disponíveis. 
 - **Terminais SSH**: criação de conexões SSH para servidores remotos e abertura de terminais interativos pela interface.
+
+## Features Futuras
+-  **Docker Compose**: suporte para visualização, gerenciamento de arquivos compose e gereciamentos de contêineres usando compose.
 - **Uploads e assets**: suporte para carregar e salvar imagens base64 (por exemplo, avatares) pelo backend.
 
 ## Arquitetura
@@ -32,7 +35,7 @@ A ferramenta permite autenticação de usuários, conexão segura a daemons Dock
 - **Frontend (React + Vite + Tailwind + Zustand)**
   - Estrutura em `frontend/src` com páginas de Containers, Imagens, Redes, Credenciais Docker, Login/Criação de conta e Terminal SSH.
   - Componentes protegidos por rota (`ProtectedRoute.tsx`) e estado global leve com Zustand.
-  - Biblioteca HeroUI para UI, Chart.js para gráficos e xterm.js para terminais interativos.
+  - Biblioteca Chart.js para gráficos e xterm.js para terminais interativos.
 
 ## Pré-requisitos
 
@@ -91,6 +94,9 @@ O guia [`Como criar par de chaves para conexão ssh`](mk/HowtogenerateSshKeyToSe
 ## Downloads
 - [Windows](https://github.com/viniggj2005/docker-manager/releases/latest/download/Docker.Manager.exe)
 - [linux](https://github.com/viniggj2005/docker-manager/releases/latest/download/Docker.Manager)
+
+## Screenshots
+<!-- ![](./mk/images/) -->
 ## Licença
 
 Distribuído sob a licença MIT. Consulte o arquivo [`LICENSE`](LICENSE) para mais detalhes.

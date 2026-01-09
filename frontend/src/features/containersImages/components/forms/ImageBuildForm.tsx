@@ -1,6 +1,6 @@
 import iziToast from 'izitoast';
 import Convert from 'ansi-to-html';
-import { FolderOpen } from 'lucide-react';
+import { FolderOpen, AlertTriangle } from 'lucide-react';
 import React, { useEffect, useState, useRef } from 'react';
 import { GetFilePath } from '../../../../../wailsjs/go/main/App';
 import TextField from '../../../login/components/fields/TextField';
@@ -98,6 +98,16 @@ const ImageBuildForm: React.FC<ImageBuildFormProps> = ({ clientId, onClose, onSu
 
     return (
         <form onSubmit={handleBuild} className="grid gap-4">
+            <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-900/50 dark:bg-red-900/20">
+                <div className="flex gap-3">
+                    <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0" />
+                    <div className="text-sm text-red-800 dark:text-red-200">
+                        <span className="font-semibold block mb-1">Atenção</span>
+                        Para um build mais rápido, certifique-se de ter um arquivo <code className="bg-red-100 dark:bg-red-900/50 px-1 py-0.5 rounded text-xs">.dockerignore</code> excluindo pastas pesadas como <code className="bg-red-100 dark:bg-red-900/50 px-1 py-0.5 rounded text-xs">node_modules</code>.
+                    </div>
+                </div>
+            </div>
+
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <TextField
                     label="Nome da Imagem"

@@ -12,8 +12,8 @@ const ListContainersImages: React.FC = () => {
   const [query, setQuery] = useState('');
   const [view, setView] = useState<ViewMode>('grid');
   const [showBuildModal, setShowBuildModal] = useState(false);
-  const { selectedCredentialId, loading: credentialsLoading, connecting } = useDockerClient();
-  const { images, loading, fetchImages } = ContainerImagesService(selectedCredentialId);
+  const { dockerClientId, loading: credentialsLoading, connecting } = useDockerClient();
+  const { images, loading, fetchImages } = ContainerImagesService(dockerClientId);
 
   const filteredSorted = useMemo(() => {
     const lowerCaseQuery = query.trim().toLowerCase();
@@ -49,12 +49,14 @@ const ListContainersImages: React.FC = () => {
   useEffect(() => {
     if (credentialsLoading) {
       iziToast.info({ title: 'Carregando', message: 'Carregando credenciais...', position: 'bottomRight' });
-    } else if (selectedCredentialId == null) {
-      iziToast.warning({ title: 'Atenção', message: 'Selecione uma credencial Docker.', position: 'bottomRight' });
+    } else if (dockerClientId == null) {
+      if (!connecting) {
+        iziToast.warning({ title: 'Atenção', message: 'Selecione uma credencial Docker.', position: 'bottomRight' });
+      }
     } else if (connecting) {
       iziToast.info({ title: 'Conectando', message: 'Conectando ao daemon Docker...', position: 'bottomRight' });
     }
-  }, [credentialsLoading, selectedCredentialId, connecting, loading, filteredSorted.length]);
+  }, [credentialsLoading, dockerClientId, connecting, loading, filteredSorted.length]);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
@@ -65,7 +67,7 @@ const ListContainersImages: React.FC = () => {
         setQuery={setQuery}
         onDeleted={handleDeleted}
         onBuildImage={() => setShowBuildModal(true)}
-        disabled={selectedCredentialId == null || connecting || credentialsLoading}
+        disabled={dockerClientId == null || connecting || credentialsLoading}
       />
 
       {view === 'grid' ? (
@@ -90,9 +92,9 @@ const ListContainersImages: React.FC = () => {
         </div>
       )}
 
-      {showBuildModal && selectedCredentialId && (
+      {showBuildModal && dockerClientId && (
         <ImageBuildModal
-          clientId={selectedCredentialId!}
+          clientId={dockerClientId!}
           onClose={() => setShowBuildModal(false)}
           onSuccess={() => {
             fetchImages();
