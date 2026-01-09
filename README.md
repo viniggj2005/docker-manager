@@ -19,6 +19,7 @@ A ferramenta permite autenticação de usuários, conexão segura a daemons Dock
 ## Features Futuras
 -  **Docker Compose**: suporte para visualização, gerenciamento de arquivos compose e gereciamentos de contêineres usando compose.
 - **Uploads e assets**: suporte para carregar e salvar imagens base64 (por exemplo, avatares) pelo backend.
+- **Configuração de Docker registry**: suporte para configuração de Docker registry para push e pull de imagens(docker registry privado ou docker hub).
 
 ## Arquitetura
 
