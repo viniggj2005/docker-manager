@@ -37,7 +37,7 @@ export const router = createBrowserRouter(
         { path: 'create-account', element: <CreateAccountPage /> },
       ],
     },
-    // { path: '*', element: <NotFoundPage /> },
+
   ],
   { basename: '/' }
 );
