@@ -13,7 +13,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-// #################### Stats ################################################################
+
 
 func (handlerStruct *DockerSdkHandlerStruct) StartContainerStats(clientId int, containerID string) error {
 	dockerId := fmt.Sprintf("%d", clientId)

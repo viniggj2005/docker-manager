@@ -97,7 +97,17 @@ O guia [`Como criar par de chaves para conexão ssh`](mk/HowtogenerateSshKeyToSe
 - [linux](https://github.com/viniggj2005/docker-manager/releases/latest/download/Docker.Manager)
 
 ## Screenshots
-<!-- ![](./mk/images/) -->
+## Screenshots
+
+![Dashboard](./mk/images/dashboard.png)
+![Docker Credentials](./mk/images/docker-credentials.png)
+![Docker Images](./mk/images/docker-images.png)
+![Network](./mk/images/network.png)
+![Volume](./mk/images/volume.png)
+![SSH Connection](./mk/images/ssh-connection.png)
+![Terminal](./mk/images/terminal.png)
+![Containers](./mk/images/containers.png)
+
 ## Licença
 
 Distribuído sob a licença MIT. Consulte o arquivo [`LICENSE`](LICENSE) para mais detalhes.
