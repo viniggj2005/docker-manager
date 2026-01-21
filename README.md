@@ -95,6 +95,7 @@ O guia [`Como criar par de chaves para conexão ssh`](mk/HowtogenerateSshKeyToSe
 ## Downloads
 - [Windows](https://github.com/viniggj2005/docker-manager/releases/latest/download/Docker.Manager.exe)
 - [linux](https://github.com/viniggj2005/docker-manager/releases/latest/download/Docker.Manager)
+- [linux (Ubuntu 24.04)](https://github.com/viniggj2005/docker-manager/releases/latest/download/docker-manager-ubuntu24)
 
 ## Screenshots
 ## Screenshots
